@@ -1,0 +1,147 @@
+C:\PowerTAM\.Net_(C#)\Template_Tesoreria\bin\Debug\Template_Tesoreria.exe.config
+C:\PowerTAM\.Net_(C#)\Template_Tesoreria\bin\Debug\Template_Tesoreria.exe
+C:\PowerTAM\.Net_(C#)\Template_Tesoreria\bin\Debug\Template_Tesoreria.pdb
+C:\PowerTAM\.Net_(C#)\Template_Tesoreria\bin\Debug\HtmlAgilityPack.dll
+C:\PowerTAM\.Net_(C#)\Template_Tesoreria\bin\Debug\Newtonsoft.Json.dll
+C:\PowerTAM\.Net_(C#)\Template_Tesoreria\bin\Debug\System.Configuration.ConfigurationManager.dll
+C:\PowerTAM\.Net_(C#)\Template_Tesoreria\bin\Debug\System.Data.SqlClient.dll
+C:\PowerTAM\.Net_(C#)\Template_Tesoreria\bin\Debug\HtmlAgilityPack.pdb
+C:\PowerTAM\.Net_(C#)\Template_Tesoreria\bin\Debug\HtmlAgilityPack.xml
+C:\PowerTAM\.Net_(C#)\Template_Tesoreria\bin\Debug\Newtonsoft.Json.xml
+C:\PowerTAM\.Net_(C#)\Template_Tesoreria\bin\Debug\System.Configuration.ConfigurationManager.xml
+C:\PowerTAM\.Net_(C#)\Template_Tesoreria\bin\Debug\System.Data.SqlClient.xml
+C:\PowerTAM\.Net_(C#)\Template_Tesoreria\obj\Debug\Template_Tesoreria.csproj.AssemblyReference.cache
+C:\PowerTAM\.Net_(C#)\Template_Tesoreria\obj\Debug\Template_Tesoreria.csproj.ResolveComReference.cache
+C:\PowerTAM\.Net_(C#)\Template_Tesoreria\obj\Debug\Template_Tesoreria.csproj.CoreCompileInputs.cache
+C:\PowerTAM\.Net_(C#)\Template_Tesoreria\obj\Debug\Template.0C98FE87.Up2Date
+C:\PowerTAM\.Net_(C#)\Template_Tesoreria\obj\Debug\Template_Tesoreria.exe
+C:\PowerTAM\.Net_(C#)\Template_Tesoreria\obj\Debug\Template_Tesoreria.pdb
+C:\Users\OracleFin11\Documents\DOCUMENTOS PROGRAMACIÓN\INTEGRACION\TESORERIA\Extracto Bancario\Template_Tesoreria\bin\Debug\Template_Tesoreria.exe.config
+C:\Users\OracleFin11\Documents\DOCUMENTOS PROGRAMACIÓN\INTEGRACION\TESORERIA\Extracto Bancario\Template_Tesoreria\bin\Debug\Template_Tesoreria.exe
+C:\Users\OracleFin11\Documents\DOCUMENTOS PROGRAMACIÓN\INTEGRACION\TESORERIA\Extracto Bancario\Template_Tesoreria\bin\Debug\Template_Tesoreria.pdb
+C:\Users\OracleFin11\Documents\DOCUMENTOS PROGRAMACIÓN\INTEGRACION\TESORERIA\Extracto Bancario\Template_Tesoreria\bin\Debug\HtmlAgilityPack.dll
+C:\Users\OracleFin11\Documents\DOCUMENTOS PROGRAMACIÓN\INTEGRACION\TESORERIA\Extracto Bancario\Template_Tesoreria\bin\Debug\Newtonsoft.Json.dll
+C:\Users\OracleFin11\Documents\DOCUMENTOS PROGRAMACIÓN\INTEGRACION\TESORERIA\Extracto Bancario\Template_Tesoreria\bin\Debug\System.Configuration.ConfigurationManager.dll
+C:\Users\OracleFin11\Documents\DOCUMENTOS PROGRAMACIÓN\INTEGRACION\TESORERIA\Extracto Bancario\Template_Tesoreria\bin\Debug\System.Data.SqlClient.dll
+C:\Users\OracleFin11\Documents\DOCUMENTOS PROGRAMACIÓN\INTEGRACION\TESORERIA\Extracto Bancario\Template_Tesoreria\bin\Debug\HtmlAgilityPack.pdb
+C:\Users\OracleFin11\Documents\DOCUMENTOS PROGRAMACIÓN\INTEGRACION\TESORERIA\Extracto Bancario\Template_Tesoreria\bin\Debug\HtmlAgilityPack.xml
+C:\Users\OracleFin11\Documents\DOCUMENTOS PROGRAMACIÓN\INTEGRACION\TESORERIA\Extracto Bancario\Template_Tesoreria\bin\Debug\Newtonsoft.Json.xml
+C:\Users\OracleFin11\Documents\DOCUMENTOS PROGRAMACIÓN\INTEGRACION\TESORERIA\Extracto Bancario\Template_Tesoreria\bin\Debug\System.Configuration.ConfigurationManager.xml
+C:\Users\OracleFin11\Documents\DOCUMENTOS PROGRAMACIÓN\INTEGRACION\TESORERIA\Extracto Bancario\Template_Tesoreria\bin\Debug\System.Data.SqlClient.xml
+C:\Users\OracleFin11\Documents\DOCUMENTOS PROGRAMACIÓN\INTEGRACION\TESORERIA\Extracto Bancario\Template_Tesoreria\obj\Debug\Template_Tesoreria.csproj.AssemblyReference.cache
+C:\Users\OracleFin11\Documents\DOCUMENTOS PROGRAMACIÓN\INTEGRACION\TESORERIA\Extracto Bancario\Template_Tesoreria\obj\Debug\Template_Tesoreria.exe.config
+C:\Users\OracleFin11\Documents\DOCUMENTOS PROGRAMACIÓN\INTEGRACION\TESORERIA\Extracto Bancario\Template_Tesoreria\obj\Debug\Template_Tesoreria.csproj.ResolveComReference.cache
+C:\Users\OracleFin11\Documents\DOCUMENTOS PROGRAMACIÓN\INTEGRACION\TESORERIA\Extracto Bancario\Template_Tesoreria\obj\Debug\Template_Tesoreria.csproj.CoreCompileInputs.cache
+C:\Users\OracleFin11\Documents\DOCUMENTOS PROGRAMACIÓN\INTEGRACION\TESORERIA\Extracto Bancario\Template_Tesoreria\obj\Debug\Template.0C98FE87.Up2Date
+C:\Users\OracleFin11\Documents\DOCUMENTOS PROGRAMACIÓN\INTEGRACION\TESORERIA\Extracto Bancario\Template_Tesoreria\obj\Debug\Template_Tesoreria.exe
+C:\Users\OracleFin11\Documents\DOCUMENTOS PROGRAMACIÓN\INTEGRACION\TESORERIA\Extracto Bancario\Template_Tesoreria\obj\Debug\Template_Tesoreria.pdb
+C:\Users\OracleFin11\Documents\DOCUMENTOS PROGRAMACIÓN\INTEGRACION\TESORERIA\Extracto Bancario\Template_Tesoreria\bin\Debug\HarfBuzzSharp.dll
+C:\Users\OracleFin11\Documents\DOCUMENTOS PROGRAMACIÓN\INTEGRACION\TESORERIA\Extracto Bancario\Template_Tesoreria\bin\Debug\Spire.XLS.dll
+C:\Users\OracleFin11\Documents\DOCUMENTOS PROGRAMACIÓN\INTEGRACION\TESORERIA\Extracto Bancario\Template_Tesoreria\bin\Debug\System.Buffers.dll
+C:\Users\OracleFin11\Documents\DOCUMENTOS PROGRAMACIÓN\INTEGRACION\TESORERIA\Extracto Bancario\Template_Tesoreria\bin\Debug\System.Memory.dll
+C:\Users\OracleFin11\Documents\DOCUMENTOS PROGRAMACIÓN\INTEGRACION\TESORERIA\Extracto Bancario\Template_Tesoreria\bin\Debug\System.Numerics.Vectors.dll
+C:\Users\OracleFin11\Documents\DOCUMENTOS PROGRAMACIÓN\INTEGRACION\TESORERIA\Extracto Bancario\Template_Tesoreria\bin\Debug\System.Runtime.CompilerServices.Unsafe.dll
+C:\Users\OracleFin11\Documents\DOCUMENTOS PROGRAMACIÓN\INTEGRACION\TESORERIA\Extracto Bancario\Template_Tesoreria\bin\Debug\HarfBuzzSharp.pdb
+C:\Users\OracleFin11\Documents\DOCUMENTOS PROGRAMACIÓN\INTEGRACION\TESORERIA\Extracto Bancario\Template_Tesoreria\bin\Debug\Spire.XLS.xml
+C:\Users\OracleFin11\Documents\DOCUMENTOS PROGRAMACIÓN\INTEGRACION\TESORERIA\Extracto Bancario\Template_Tesoreria\bin\Debug\System.Buffers.xml
+C:\Users\OracleFin11\Documents\DOCUMENTOS PROGRAMACIÓN\INTEGRACION\TESORERIA\Extracto Bancario\Template_Tesoreria\bin\Debug\System.Memory.xml
+C:\Users\OracleFin11\Documents\DOCUMENTOS PROGRAMACIÓN\INTEGRACION\TESORERIA\Extracto Bancario\Template_Tesoreria\bin\Debug\System.Numerics.Vectors.xml
+C:\Users\OracleFin11\Documents\DOCUMENTOS PROGRAMACIÓN\INTEGRACION\TESORERIA\Extracto Bancario\Template_Tesoreria\bin\Debug\System.Runtime.CompilerServices.Unsafe.xml
+C:\Users\OracleFin11\Documents\DOCUMENTOS PROGRAMACIÓN\INTEGRACION\TESORERIA\Extracto Bancario\Template_Tesoreria\bin\Debug\EPPlus.dll
+C:\Users\OracleFin11\Documents\DOCUMENTOS PROGRAMACIÓN\INTEGRACION\TESORERIA\Extracto Bancario\Template_Tesoreria\bin\Debug\EPPlus.Interfaces.dll
+C:\Users\OracleFin11\Documents\DOCUMENTOS PROGRAMACIÓN\INTEGRACION\TESORERIA\Extracto Bancario\Template_Tesoreria\bin\Debug\Microsoft.IO.RecyclableMemoryStream.dll
+C:\Users\OracleFin11\Documents\DOCUMENTOS PROGRAMACIÓN\INTEGRACION\TESORERIA\Extracto Bancario\Template_Tesoreria\bin\Debug\System.ComponentModel.Annotations.dll
+C:\Users\OracleFin11\Documents\DOCUMENTOS PROGRAMACIÓN\INTEGRACION\TESORERIA\Extracto Bancario\Template_Tesoreria\bin\Debug\System.Security.Cryptography.Xml.dll
+C:\Users\OracleFin11\Documents\DOCUMENTOS PROGRAMACIÓN\INTEGRACION\TESORERIA\Extracto Bancario\Template_Tesoreria\bin\Debug\EPPlus.xml
+C:\Users\OracleFin11\Documents\DOCUMENTOS PROGRAMACIÓN\INTEGRACION\TESORERIA\Extracto Bancario\Template_Tesoreria\bin\Debug\Microsoft.IO.RecyclableMemoryStream.xml
+C:\Users\OracleFin11\Documents\DOCUMENTOS PROGRAMACIÓN\INTEGRACION\TESORERIA\Extracto Bancario\Template_Tesoreria\bin\Debug\System.Security.Cryptography.Xml.xml
+C:\Users\OracleFin11\Documents\DOCUMENTOS PROGRAMACIÓN\INTEGRACION\TESORERIA\Extracto Bancario\Template_Tesoreria\bin\Debug\Template_Tesoreria.exe.manifest
+C:\Users\OracleFin11\Documents\DOCUMENTOS PROGRAMACIÓN\INTEGRACION\TESORERIA\Extracto Bancario\Template_Tesoreria\bin\Debug\Template_Tesoreria.application
+C:\Users\OracleFin11\Documents\DOCUMENTOS PROGRAMACIÓN\INTEGRACION\TESORERIA\Extracto Bancario\Template_Tesoreria\obj\Debug\Template_Tesoreria.exe.manifest
+C:\Users\OracleFin11\Documents\DOCUMENTOS PROGRAMACIÓN\INTEGRACION\TESORERIA\Extracto Bancario\Template_Tesoreria\obj\Debug\Template_Tesoreria.application
+C:\Users\OracleFin11\Documents\DOCUMENTOS PROGRAMACIÓN\INTEGRACION\TESORERIA\Extracto Bancario\bin\Debug\Template_Tesoreria.exe.config
+C:\Users\OracleFin11\Documents\DOCUMENTOS PROGRAMACIÓN\INTEGRACION\TESORERIA\Extracto Bancario\bin\Debug\Template_Tesoreria.exe.manifest
+C:\Users\OracleFin11\Documents\DOCUMENTOS PROGRAMACIÓN\INTEGRACION\TESORERIA\Extracto Bancario\bin\Debug\Template_Tesoreria.application
+C:\Users\OracleFin11\Documents\DOCUMENTOS PROGRAMACIÓN\INTEGRACION\TESORERIA\Extracto Bancario\bin\Debug\Template_Tesoreria.exe
+C:\Users\OracleFin11\Documents\DOCUMENTOS PROGRAMACIÓN\INTEGRACION\TESORERIA\Extracto Bancario\bin\Debug\Template_Tesoreria.pdb
+C:\Users\OracleFin11\Documents\DOCUMENTOS PROGRAMACIÓN\INTEGRACION\TESORERIA\Extracto Bancario\bin\Debug\EPPlus.dll
+C:\Users\OracleFin11\Documents\DOCUMENTOS PROGRAMACIÓN\INTEGRACION\TESORERIA\Extracto Bancario\bin\Debug\EPPlus.Interfaces.dll
+C:\Users\OracleFin11\Documents\DOCUMENTOS PROGRAMACIÓN\INTEGRACION\TESORERIA\Extracto Bancario\bin\Debug\HarfBuzzSharp.dll
+C:\Users\OracleFin11\Documents\DOCUMENTOS PROGRAMACIÓN\INTEGRACION\TESORERIA\Extracto Bancario\bin\Debug\HtmlAgilityPack.dll
+C:\Users\OracleFin11\Documents\DOCUMENTOS PROGRAMACIÓN\INTEGRACION\TESORERIA\Extracto Bancario\bin\Debug\Microsoft.IO.RecyclableMemoryStream.dll
+C:\Users\OracleFin11\Documents\DOCUMENTOS PROGRAMACIÓN\INTEGRACION\TESORERIA\Extracto Bancario\bin\Debug\Newtonsoft.Json.dll
+C:\Users\OracleFin11\Documents\DOCUMENTOS PROGRAMACIÓN\INTEGRACION\TESORERIA\Extracto Bancario\bin\Debug\Spire.XLS.dll
+C:\Users\OracleFin11\Documents\DOCUMENTOS PROGRAMACIÓN\INTEGRACION\TESORERIA\Extracto Bancario\bin\Debug\System.Buffers.dll
+C:\Users\OracleFin11\Documents\DOCUMENTOS PROGRAMACIÓN\INTEGRACION\TESORERIA\Extracto Bancario\bin\Debug\System.ComponentModel.Annotations.dll
+C:\Users\OracleFin11\Documents\DOCUMENTOS PROGRAMACIÓN\INTEGRACION\TESORERIA\Extracto Bancario\bin\Debug\System.Configuration.ConfigurationManager.dll
+C:\Users\OracleFin11\Documents\DOCUMENTOS PROGRAMACIÓN\INTEGRACION\TESORERIA\Extracto Bancario\bin\Debug\System.Data.SqlClient.dll
+C:\Users\OracleFin11\Documents\DOCUMENTOS PROGRAMACIÓN\INTEGRACION\TESORERIA\Extracto Bancario\bin\Debug\System.Memory.dll
+C:\Users\OracleFin11\Documents\DOCUMENTOS PROGRAMACIÓN\INTEGRACION\TESORERIA\Extracto Bancario\bin\Debug\System.Numerics.Vectors.dll
+C:\Users\OracleFin11\Documents\DOCUMENTOS PROGRAMACIÓN\INTEGRACION\TESORERIA\Extracto Bancario\bin\Debug\System.Runtime.CompilerServices.Unsafe.dll
+C:\Users\OracleFin11\Documents\DOCUMENTOS PROGRAMACIÓN\INTEGRACION\TESORERIA\Extracto Bancario\bin\Debug\System.Security.Cryptography.Xml.dll
+C:\Users\OracleFin11\Documents\DOCUMENTOS PROGRAMACIÓN\INTEGRACION\TESORERIA\Extracto Bancario\bin\Debug\EPPlus.xml
+C:\Users\OracleFin11\Documents\DOCUMENTOS PROGRAMACIÓN\INTEGRACION\TESORERIA\Extracto Bancario\bin\Debug\HarfBuzzSharp.pdb
+C:\Users\OracleFin11\Documents\DOCUMENTOS PROGRAMACIÓN\INTEGRACION\TESORERIA\Extracto Bancario\bin\Debug\HtmlAgilityPack.pdb
+C:\Users\OracleFin11\Documents\DOCUMENTOS PROGRAMACIÓN\INTEGRACION\TESORERIA\Extracto Bancario\bin\Debug\HtmlAgilityPack.xml
+C:\Users\OracleFin11\Documents\DOCUMENTOS PROGRAMACIÓN\INTEGRACION\TESORERIA\Extracto Bancario\bin\Debug\Microsoft.IO.RecyclableMemoryStream.xml
+C:\Users\OracleFin11\Documents\DOCUMENTOS PROGRAMACIÓN\INTEGRACION\TESORERIA\Extracto Bancario\bin\Debug\Newtonsoft.Json.xml
+C:\Users\OracleFin11\Documents\DOCUMENTOS PROGRAMACIÓN\INTEGRACION\TESORERIA\Extracto Bancario\bin\Debug\Spire.XLS.xml
+C:\Users\OracleFin11\Documents\DOCUMENTOS PROGRAMACIÓN\INTEGRACION\TESORERIA\Extracto Bancario\bin\Debug\System.Buffers.xml
+C:\Users\OracleFin11\Documents\DOCUMENTOS PROGRAMACIÓN\INTEGRACION\TESORERIA\Extracto Bancario\bin\Debug\System.Configuration.ConfigurationManager.xml
+C:\Users\OracleFin11\Documents\DOCUMENTOS PROGRAMACIÓN\INTEGRACION\TESORERIA\Extracto Bancario\bin\Debug\System.Data.SqlClient.xml
+C:\Users\OracleFin11\Documents\DOCUMENTOS PROGRAMACIÓN\INTEGRACION\TESORERIA\Extracto Bancario\bin\Debug\System.Memory.xml
+C:\Users\OracleFin11\Documents\DOCUMENTOS PROGRAMACIÓN\INTEGRACION\TESORERIA\Extracto Bancario\bin\Debug\System.Numerics.Vectors.xml
+C:\Users\OracleFin11\Documents\DOCUMENTOS PROGRAMACIÓN\INTEGRACION\TESORERIA\Extracto Bancario\bin\Debug\System.Runtime.CompilerServices.Unsafe.xml
+C:\Users\OracleFin11\Documents\DOCUMENTOS PROGRAMACIÓN\INTEGRACION\TESORERIA\Extracto Bancario\bin\Debug\System.Security.Cryptography.Xml.xml
+C:\Users\OracleFin11\Documents\DOCUMENTOS PROGRAMACIÓN\INTEGRACION\TESORERIA\Extracto Bancario\obj\Debug\Template_Tesoreria.csproj.AssemblyReference.cache
+C:\Users\OracleFin11\Documents\DOCUMENTOS PROGRAMACIÓN\INTEGRACION\TESORERIA\Extracto Bancario\obj\Debug\Template_Tesoreria.exe.config
+C:\Users\OracleFin11\Documents\DOCUMENTOS PROGRAMACIÓN\INTEGRACION\TESORERIA\Extracto Bancario\obj\Debug\Template_Tesoreria.csproj.ResolveComReference.cache
+C:\Users\OracleFin11\Documents\DOCUMENTOS PROGRAMACIÓN\INTEGRACION\TESORERIA\Extracto Bancario\obj\Debug\Template_Tesoreria.csproj.CoreCompileInputs.cache
+C:\Users\OracleFin11\Documents\DOCUMENTOS PROGRAMACIÓN\INTEGRACION\TESORERIA\Extracto Bancario\obj\Debug\Template_Tesoreria.exe.manifest
+C:\Users\OracleFin11\Documents\DOCUMENTOS PROGRAMACIÓN\INTEGRACION\TESORERIA\Extracto Bancario\obj\Debug\Template_Tesoreria.application
+C:\Users\OracleFin11\Documents\DOCUMENTOS PROGRAMACIÓN\INTEGRACION\TESORERIA\Extracto Bancario\obj\Debug\Template.0C98FE87.Up2Date
+C:\Users\OracleFin11\Documents\DOCUMENTOS PROGRAMACIÓN\INTEGRACION\TESORERIA\Extracto Bancario\obj\Debug\Template_Tesoreria.exe
+C:\Users\OracleFin11\Documents\DOCUMENTOS PROGRAMACIÓN\INTEGRACION\TESORERIA\Extracto Bancario\obj\Debug\Template_Tesoreria.pdb
+C:\Users\OracleFin11\source\repos\Template_Tesoreria\bin\Debug\Template_Tesoreria.exe.config
+C:\Users\OracleFin11\source\repos\Template_Tesoreria\bin\Debug\Template_Tesoreria.exe.manifest
+C:\Users\OracleFin11\source\repos\Template_Tesoreria\bin\Debug\Template_Tesoreria.application
+C:\Users\OracleFin11\source\repos\Template_Tesoreria\bin\Debug\Template_Tesoreria.exe
+C:\Users\OracleFin11\source\repos\Template_Tesoreria\bin\Debug\Template_Tesoreria.pdb
+C:\Users\OracleFin11\source\repos\Template_Tesoreria\bin\Debug\EPPlus.dll
+C:\Users\OracleFin11\source\repos\Template_Tesoreria\bin\Debug\EPPlus.Interfaces.dll
+C:\Users\OracleFin11\source\repos\Template_Tesoreria\bin\Debug\HarfBuzzSharp.dll
+C:\Users\OracleFin11\source\repos\Template_Tesoreria\bin\Debug\HtmlAgilityPack.dll
+C:\Users\OracleFin11\source\repos\Template_Tesoreria\bin\Debug\Microsoft.IO.RecyclableMemoryStream.dll
+C:\Users\OracleFin11\source\repos\Template_Tesoreria\bin\Debug\Newtonsoft.Json.dll
+C:\Users\OracleFin11\source\repos\Template_Tesoreria\bin\Debug\Spire.XLS.dll
+C:\Users\OracleFin11\source\repos\Template_Tesoreria\bin\Debug\System.Buffers.dll
+C:\Users\OracleFin11\source\repos\Template_Tesoreria\bin\Debug\System.ComponentModel.Annotations.dll
+C:\Users\OracleFin11\source\repos\Template_Tesoreria\bin\Debug\System.Configuration.ConfigurationManager.dll
+C:\Users\OracleFin11\source\repos\Template_Tesoreria\bin\Debug\System.Data.SqlClient.dll
+C:\Users\OracleFin11\source\repos\Template_Tesoreria\bin\Debug\System.Memory.dll
+C:\Users\OracleFin11\source\repos\Template_Tesoreria\bin\Debug\System.Numerics.Vectors.dll
+C:\Users\OracleFin11\source\repos\Template_Tesoreria\bin\Debug\System.Runtime.CompilerServices.Unsafe.dll
+C:\Users\OracleFin11\source\repos\Template_Tesoreria\bin\Debug\System.Security.Cryptography.Xml.dll
+C:\Users\OracleFin11\source\repos\Template_Tesoreria\bin\Debug\EPPlus.xml
+C:\Users\OracleFin11\source\repos\Template_Tesoreria\bin\Debug\HarfBuzzSharp.pdb
+C:\Users\OracleFin11\source\repos\Template_Tesoreria\bin\Debug\HtmlAgilityPack.pdb
+C:\Users\OracleFin11\source\repos\Template_Tesoreria\bin\Debug\HtmlAgilityPack.xml
+C:\Users\OracleFin11\source\repos\Template_Tesoreria\bin\Debug\Microsoft.IO.RecyclableMemoryStream.xml
+C:\Users\OracleFin11\source\repos\Template_Tesoreria\bin\Debug\Newtonsoft.Json.xml
+C:\Users\OracleFin11\source\repos\Template_Tesoreria\bin\Debug\Spire.XLS.xml
+C:\Users\OracleFin11\source\repos\Template_Tesoreria\bin\Debug\System.Buffers.xml
+C:\Users\OracleFin11\source\repos\Template_Tesoreria\bin\Debug\System.Configuration.ConfigurationManager.xml
+C:\Users\OracleFin11\source\repos\Template_Tesoreria\bin\Debug\System.Data.SqlClient.xml
+C:\Users\OracleFin11\source\repos\Template_Tesoreria\bin\Debug\System.Memory.xml
+C:\Users\OracleFin11\source\repos\Template_Tesoreria\bin\Debug\System.Numerics.Vectors.xml
+C:\Users\OracleFin11\source\repos\Template_Tesoreria\bin\Debug\System.Runtime.CompilerServices.Unsafe.xml
+C:\Users\OracleFin11\source\repos\Template_Tesoreria\bin\Debug\System.Security.Cryptography.Xml.xml
+C:\Users\OracleFin11\source\repos\Template_Tesoreria\obj\Debug\Template_Tesoreria.csproj.AssemblyReference.cache
+C:\Users\OracleFin11\source\repos\Template_Tesoreria\obj\Debug\Template_Tesoreria.exe.config
+C:\Users\OracleFin11\source\repos\Template_Tesoreria\obj\Debug\Template_Tesoreria.csproj.ResolveComReference.cache
+C:\Users\OracleFin11\source\repos\Template_Tesoreria\obj\Debug\Template_Tesoreria.csproj.CoreCompileInputs.cache
+C:\Users\OracleFin11\source\repos\Template_Tesoreria\obj\Debug\Template_Tesoreria.exe.manifest
+C:\Users\OracleFin11\source\repos\Template_Tesoreria\obj\Debug\Template_Tesoreria.application
+C:\Users\OracleFin11\source\repos\Template_Tesoreria\obj\Debug\Template.0C98FE87.Up2Date
+C:\Users\OracleFin11\source\repos\Template_Tesoreria\obj\Debug\Template_Tesoreria.exe
+C:\Users\OracleFin11\source\repos\Template_Tesoreria\obj\Debug\Template_Tesoreria.pdb
