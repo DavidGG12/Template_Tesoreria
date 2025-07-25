@@ -1,16 +1,17 @@
 ﻿//using Microsoft.Office.Interop.ExcKel;
+using OfficeOpenXml;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.IO;
 using System.Linq;
+using System.Runtime.ExceptionServices;
+using System.Runtime.InteropServices;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Template_Tesoreria.Models;
-using OfficeOpenXml;
-using System.IO;
-using System.ComponentModel.DataAnnotations;
 using Excel = Microsoft.Office.Interop.Excel;
-using System.Runtime.InteropServices;
-using System.Runtime.ExceptionServices;
 //using Spire.Xls;
 
 
@@ -76,8 +77,20 @@ namespace Template_Tesoreria.Helpers.Files
                     var sheet = package.Workbook.Worksheets["Statement Lines"];
                     var sheetHeader = package.Workbook.Worksheets["Statement Headers"];
                     var sheetBalances = package.Workbook.Worksheets["Statement Balances"];
-                    var dateDoc = DateTime.Parse(data.Find(x => x.Fecha != null && x.Fecha.Any(f => f != null)).Fecha);
-                    var formDate = dateDoc.ToString("MM/dd/yyyy");
+                    var dateDoc = data.Find(x => x.Fecha != null && x.Fecha.Any(f => f != null)).Fecha;
+
+                    string[] formats = { "MM/dd/yyyy", "dd/MM/yyyy", "yyyy-MM-dd" };
+                    DateTime dateParse;
+
+                    bool tryParse = DateTime.TryParseExact(
+                        dateDoc,
+                        formats,
+                        System.Globalization.CultureInfo.InvariantCulture,
+                        System.Globalization.DateTimeStyles.None,
+                        out dateParse
+                    );
+
+                    var formDate = dateParse.ToString("MM/dd/yyyy");
                     var i = 5;
                     var j = 1;
                     
@@ -131,8 +144,30 @@ namespace Template_Tesoreria.Helpers.Files
                             sheet.Cells[$"G{i}"].Value  = rows.Moneda;
                             sheet.Cells[$"H{i}"].Value  = formDate;
                             sheet.Cells[$"J{i}"].Value  = rows.Cargo != "0.0" ? "DBIT" : "CRDT";
-                            sheet.Cells[$"L{i}"].Value  = rows.Referencia ?? "";
-                            sheet.Cells[$"S{i}"].Value  = rows.RFC_Ordenante ?? "";
+
+                            if (string.IsNullOrEmpty(rows.Informacion_Env))
+                            {
+                                sheet.Cells[$"L{i}"].Value = rows.Referencia ?? "";
+                                sheet.Cells[$"S{i}"].Value  = rows.RFC_Ordenante ?? "";
+                            }
+                            else
+                            {
+                                var addText = "";       //Columna R dentro del template: "Addenda Text"
+                                var accServRef = "";    //Columna S dentro del template: "Account Servicer Reference"
+
+                                foreach(var letter in rows.Informacion_Env)
+                                {
+                                    if (string.Equals(letter, ' '))
+                                        break;
+                                    addText += letter;
+                                }
+
+                                accServRef = rows.Informacion_Env.Replace(addText, "").Trim();
+
+                                sheet.Cells[$"R{i}"].Value = addText;
+                                sheet.Cells[$"S{i}"].Value = accServRef;
+                            }
+
                             sheet.Cells[$"T{i}"].Value  = rows.Ordenante ?? "";
                             sheet.Cells[$"W{i}"].Value  = rows.Movimiento ?? "";
                             sheet.Cells[$"X{i}"].Value  = rows.Referencia_Leyenda ?? "";

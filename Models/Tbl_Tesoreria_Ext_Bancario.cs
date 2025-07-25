@@ -11,6 +11,7 @@ namespace Template_Tesoreria.Models
         public string Cuenta { get; set; }
         public string Fecha { get; set; }
         public string Referencia { get; set; }
+        public string Informacion_Env { get; set; }
         public string Referencia_Ext { get; set; }
         public string Referencia_Leyenda { get; set; }
         public string Referencia_Numerica { get; set; }
