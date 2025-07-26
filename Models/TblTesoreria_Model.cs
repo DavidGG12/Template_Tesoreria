@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Template_Tesoreria.Models
 {
-    public class Tbl_Tesoreria_Ext_Bancario
+    public class TblTesoreria_Model
     {
         public string Cuenta { get; set; }
         public string Fecha { get; set; }

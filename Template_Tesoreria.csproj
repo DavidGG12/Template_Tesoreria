@@ -162,6 +162,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="GUI\Main_GUI.cs" />
     <Compile Include="Helpers\DataAccess\ConnectionDb.cs" />
     <Compile Include="Helpers\DataAccess\DataService.cs" />
     <Compile Include="Helpers\Db\DbFactory.cs" />
@@ -170,11 +171,11 @@
     <Compile Include="Helpers\Files\Log.cs" />
     <Compile Include="Helpers\Files\ManagementExcel.cs" />
     <Compile Include="Helpers\ProcessExe\ProcessPython.cs" />
-    <Compile Include="Models\BancoPrefijoModel.cs" />
-    <Compile Include="Models\MenuOptionModel.cs" />
-    <Compile Include="Models\SheetError.cs" />
-    <Compile Include="Models\Tbl_Tesoreria_Ext_Bancario.cs" />
-    <Compile Include="Models\ValueFileModel.cs" />
+    <Compile Include="Models\PrefixBank_Model.cs" />
+    <Compile Include="Models\MenuOption_Model.cs" />
+    <Compile Include="Models\SheetError_Model.cs" />
+    <Compile Include="Models\TblTesoreria_Model.cs" />
+    <Compile Include="Models\ValueFile_Model.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

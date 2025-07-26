@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 
 namespace Template_Tesoreria.Models
 {
-    public class ValueFileModel
+    public class PrefixBank_Model
     {
-        public string FileName { get; set; }
-        public string SPName { get; set; }
+        public string NombreBanco { get; set; }
+        public string Prefijo { get; set; }
     }
 }

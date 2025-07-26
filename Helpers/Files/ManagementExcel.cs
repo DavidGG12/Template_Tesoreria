@@ -25,7 +25,7 @@ namespace Template_Tesoreria.Helpers.Files
         private int _rowBalances;
         private FileInfo _file;
         private Log _log;
-        private List<BancoPrefijoModel> _preBank;
+        private List<PrefixBank_Model> _preBank;
         public ManagementExcel(string pathExcel, string bank) 
         {
             this._rowHeader = 5;
@@ -34,15 +34,15 @@ namespace Template_Tesoreria.Helpers.Files
             this._path = pathExcel;
             this._file = new FileInfo(this._path);
             this._log = new Log();
-            this._preBank = new List<BancoPrefijoModel>()
+            this._preBank = new List<PrefixBank_Model>()
             {
-                new BancoPrefijoModel(){ NombreBanco = "Inbursa",       Prefijo = "INB"  },
-                new BancoPrefijoModel(){ NombreBanco = "HSBC",          Prefijo = "HSBC" },
-                new BancoPrefijoModel(){ NombreBanco = "Bancomer",      Prefijo = "BBVA" },
-                new BancoPrefijoModel(){ NombreBanco = "Scotiabank",    Prefijo = "SCOT" },
-                new BancoPrefijoModel(){ NombreBanco = "Citibanamex",   Prefijo = "CITI" },
-                new BancoPrefijoModel(){ NombreBanco = "Santander",     Prefijo = "SANT" },
-                new BancoPrefijoModel(){ NombreBanco = "Banorte",       Prefijo = "BAN"  }
+                new PrefixBank_Model(){ NombreBanco = "Inbursa",       Prefijo = "INB"  },
+                new PrefixBank_Model(){ NombreBanco = "HSBC",          Prefijo = "HSBC" },
+                new PrefixBank_Model(){ NombreBanco = "Bancomer",      Prefijo = "BBVA" },
+                new PrefixBank_Model(){ NombreBanco = "Scotiabank",    Prefijo = "SCOT" },
+                new PrefixBank_Model(){ NombreBanco = "Citibanamex",   Prefijo = "CITI" },
+                new PrefixBank_Model(){ NombreBanco = "Santander",     Prefijo = "SANT" },
+                new PrefixBank_Model(){ NombreBanco = "Banorte",       Prefijo = "BAN"  }
             };
             ExcelPackage.License.SetNonCommercialOrganization("Grupo Sanborns");
         }
@@ -68,7 +68,7 @@ namespace Template_Tesoreria.Helpers.Files
             }
         }
 
-        public string getTemplate(List<Tbl_Tesoreria_Ext_Bancario> data)
+        public string getTemplate(List<TblTesoreria_Model> data)
         {
             try
             {
@@ -193,7 +193,7 @@ namespace Template_Tesoreria.Helpers.Files
             }
         }
 
-        private void fillHeader(Tbl_Tesoreria_Ext_Bancario data)
+        private void fillHeader(TblTesoreria_Model data)
         {
             try
             {

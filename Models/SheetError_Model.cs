@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Template_Tesoreria.Models
 {
-    public class SheetError
+    public class SheetError_Model
     {
         public string Sheet { get; set; }
         public string Message { get; set; }
