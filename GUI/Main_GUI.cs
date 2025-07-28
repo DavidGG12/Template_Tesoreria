@@ -105,5 +105,10 @@ namespace Template_Tesoreria.GUI
             Console.Write($"\r{new string(' ', Console.WindowWidth)}");
             Console.Write("\rTerminado\n");
         }
+
+        public void setErrorMessage()
+        {
+
+        }
     }
 }
