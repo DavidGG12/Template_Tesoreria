@@ -21,6 +21,8 @@ namespace Template_Tesoreria.Models
         public string Customer_Reference { get; set; }
         public string Clearing_System_Reference { get; set; }
         public string Contract_Identifier { get; set; }
+        public string Instruction_Identifier { get; set; }
+        public string End_To_End_Identifier { get; set; }
         public string Servicer_Status { get; set; }
         public string Commision_Waiver_Indicator_Flag { get; set; }
         public string Reversal_Indicator_Flag { get; set; }

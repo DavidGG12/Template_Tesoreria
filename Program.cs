@@ -254,7 +254,7 @@ namespace Template_Tesoreria
                 {
                     case "Inbursa":
                         //valueFile.FileName = $"INBM{DateTime.Now.ToString("ddMMyy")}.xlsx";
-                        valueFile.FileName = $"INBD230625.xlsx";
+                        valueFile.FileName = $"INBM230625.xlsx";
                         valueFile.SPName = $"pa_Tesoreria_CargaExcel_Inbursa";
                         break;
 

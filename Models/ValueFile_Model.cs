@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Template_Tesoreria.Models
 {
-    public class ValueFileModel
+    public class ValueFile_Model
     {
         public string FileName { get; set; }
         public string SPName { get; set; }
