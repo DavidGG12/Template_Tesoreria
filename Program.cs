@@ -100,15 +100,15 @@ namespace Template_Tesoreria
             var cnn = new ConnectionDb();
             var cts = new CancellationTokenSource();
             var log = new Log();
-            var options = new List<MenuOptionModel>()
+            var options = new List<MenuOption_Model>()
             {
-                new MenuOptionModel() { ID = "1", Option = "1. - INBURSA", Value = "Inbursa" },
-                new MenuOptionModel() { ID = "2", Option = "2. - HSBC", Value = "HSBC" },
-                new MenuOptionModel() { ID = "3", Option = "3. - BANCOMER", Value = "Bancomer" },
-                new MenuOptionModel() { ID = "4", Option = "4. - SCOTIABANK", Value = "Scotiabank" },
-                new MenuOptionModel() { ID = "5", Option = "5. - CITIBANAMEX", Value = "Citibanamex" },
-                new MenuOptionModel() { ID = "6", Option = "6. - SANTANDER", Value = "Santander" },
-                new MenuOptionModel() { ID = "7", Option = "7. - BANORTE", Value = "Banorte" }
+                new MenuOption_Model() { ID = "1", Option = "1. - INBURSA", Value = "Inbursa" },
+                new MenuOption_Model() { ID = "2", Option = "2. - HSBC", Value = "HSBC" },
+                new MenuOption_Model() { ID = "3", Option = "3. - BANCOMER", Value = "Bancomer" },
+                new MenuOption_Model() { ID = "4", Option = "4. - SCOTIABANK", Value = "Scotiabank" },
+                new MenuOption_Model() { ID = "5", Option = "5. - CITIBANAMEX", Value = "Citibanamex" },
+                new MenuOption_Model() { ID = "6", Option = "6. - SANTANDER", Value = "Santander" },
+                new MenuOption_Model() { ID = "7", Option = "7. - BANORTE", Value = "Banorte" }
             };
             string opc = "", opc2 = "", nombreBanco = "", rutaCarpeta = "", urlArchivoDescaga = "", pathDestino = "";
             var id = 1;
@@ -248,7 +248,7 @@ namespace Template_Tesoreria
                 //var file = menuFiles("10.128.10.19");
                 //var file = "INBURSA EJEMPLO EXTRACTO BANCARIO 100725 M.N.xlsx";
 
-                var valueFile = new ValueFileModel();
+                var valueFile = new ValueFile_Model();
 
                 switch (nombreBanco)
                 {
@@ -273,7 +273,7 @@ namespace Template_Tesoreria
 
                 #region Inserción de Datos en Template
                 //Empezamos con la recolección de datos y el llenado de la información
-                var data = new List<Tbl_Tesoreria_Ext_Bancario>();
+                var data = new List<TblTesoreria_Model>();
                 var parameters = new Dictionary<string, object>()
                 {
                     { "@Ip", "10.128.10.19" },
@@ -284,7 +284,7 @@ namespace Template_Tesoreria
 
                 Task.Run(() =>
                     {
-                        data = dtService.GetDataList<Tbl_Tesoreria_Ext_Bancario>(cnn.DbTesoreria1019(), valueFile.SPName, parameters);
+                        data = dtService.GetDataList<TblTesoreria_Model>(cnn.DbTesoreria1019(), valueFile.SPName, parameters);
                         cts.Cancel();
                     }
                 );
@@ -294,14 +294,14 @@ namespace Template_Tesoreria
 
                 //Limpiamos el template para trabajar con él
                 log.writeLog($"LIMPIAMOS EL TEMPLATE PARA PODER INSERTAR LOS DATOS");
-                var errorList = new List<SheetError>()
+                var errorList = new List<SheetError_Model>()
                 {
-                    new SheetError() { Sheet = "Statement Headers", Message = mngmntExcel.cleanSheets("Statement Headers") },
-                    new SheetError() { Sheet = "Statement Balances", Message = mngmntExcel.cleanSheets("Statement Balances") },
-                    new SheetError() { Sheet = "Statement Balance Availability", Message = mngmntExcel.cleanSheets("Statement Balance Availability") },
-                    new SheetError() { Sheet = "Statement Lines", Message = mngmntExcel.cleanSheets("Statement Lines") },
-                    new SheetError() { Sheet = "Statement Line Avilability", Message = mngmntExcel.cleanSheets("Statement Line Availability") },
-                    new SheetError() { Sheet = "Statement Statement Line Charges", Message = mngmntExcel.cleanSheets("Statement Line Charges") }
+                    new SheetError_Model() { Sheet = "Statement Headers", Message = mngmntExcel.cleanSheets("Statement Headers") },
+                    new SheetError_Model() { Sheet = "Statement Balances", Message = mngmntExcel.cleanSheets("Statement Balances") },
+                    new SheetError_Model() { Sheet = "Statement Balance Availability", Message = mngmntExcel.cleanSheets("Statement Balance Availability") },
+                    new SheetError_Model() { Sheet = "Statement Lines", Message = mngmntExcel.cleanSheets("Statement Lines") },
+                    new SheetError_Model() { Sheet = "Statement Line Avilability", Message = mngmntExcel.cleanSheets("Statement Line Availability") },
+                    new SheetError_Model() { Sheet = "Statement Statement Line Charges", Message = mngmntExcel.cleanSheets("Statement Line Charges") }
                 };
 
                 var error = errorList.Find(x => !x.Message.Contains("ELIMINADO"));

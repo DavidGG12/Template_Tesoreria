@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Template_Tesoreria.Models
 {
-    public class BancoPrefijoModel
+    public class BankPrefix_Model
     {
         public string NombreBanco { get; set; }
         public string Prefijo { get; set; }

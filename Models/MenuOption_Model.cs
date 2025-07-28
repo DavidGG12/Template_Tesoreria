@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Template_Tesoreria.Models
 {
-    public class MenuOptionModel
+    public class MenuOption_Model
     {
         public string ID { get; set; }
         public string Option { get; set; }
