@@ -25,7 +25,7 @@ namespace Template_Tesoreria.Helpers.Files
         private int _rowBalances;
         private FileInfo _file;
         private Log _log;
-        private List<PrefixBank_Model> _preBank;
+        private List<BankPrefix_Model> _preBank;
         public ManagementExcel(string pathExcel, string bank) 
         {
             this._rowHeader = 5;
@@ -34,15 +34,15 @@ namespace Template_Tesoreria.Helpers.Files
             this._path = pathExcel;
             this._file = new FileInfo(this._path);
             this._log = new Log();
-            this._preBank = new List<PrefixBank_Model>()
+            this._preBank = new List<BankPrefix_Model>()
             {
-                new PrefixBank_Model(){ NombreBanco = "Inbursa",       Prefijo = "INB"  },
-                new PrefixBank_Model(){ NombreBanco = "HSBC",          Prefijo = "HSBC" },
-                new PrefixBank_Model(){ NombreBanco = "Bancomer",      Prefijo = "BBVA" },
-                new PrefixBank_Model(){ NombreBanco = "Scotiabank",    Prefijo = "SCOT" },
-                new PrefixBank_Model(){ NombreBanco = "Citibanamex",   Prefijo = "CITI" },
-                new PrefixBank_Model(){ NombreBanco = "Santander",     Prefijo = "SANT" },
-                new PrefixBank_Model(){ NombreBanco = "Banorte",       Prefijo = "BAN"  }
+                new BankPrefix_Model(){ NombreBanco = "Inbursa",       Prefijo = "INB"  },
+                new BankPrefix_Model(){ NombreBanco = "HSBC",          Prefijo = "HSBC" },
+                new BankPrefix_Model(){ NombreBanco = "Bancomer",      Prefijo = "BBVA" },
+                new BankPrefix_Model(){ NombreBanco = "Scotiabank",    Prefijo = "SCOT" },
+                new BankPrefix_Model(){ NombreBanco = "Citibanamex",   Prefijo = "CITI" },
+                new BankPrefix_Model(){ NombreBanco = "Santander",     Prefijo = "SANT" },
+                new BankPrefix_Model(){ NombreBanco = "Banorte",       Prefijo = "BAN"  }
             };
             ExcelPackage.License.SetNonCommercialOrganization("Grupo Sanborns");
         }
@@ -77,9 +77,10 @@ namespace Template_Tesoreria.Helpers.Files
                     var sheet = package.Workbook.Worksheets["Statement Lines"];
                     var sheetHeader = package.Workbook.Worksheets["Statement Headers"];
                     var sheetBalances = package.Workbook.Worksheets["Statement Balances"];
-                    var dateDoc = data.Find(x => x.Fecha != null && x.Fecha.Any(f => f != null)).Fecha;
 
-                    string[] formats = { "MM/dd/yyyy", "dd/MM/yyyy", "yyyy-MM-dd" };
+                    var dateDoc = data.Find(x => x.Value_Date != null && x.Value_Date.Any(f => f != null)).Value_Date;
+
+                    string[] formats = { "dd/MM/yyyy", "MM/dd/yyyy", "yyyy-MM-dd", "yyyy/MM/dd", "yyyyMMdd", "ddMMyyyy" };
                     DateTime dateParse;
 
                     bool tryParse = DateTime.TryParseExact(
@@ -98,8 +99,28 @@ namespace Template_Tesoreria.Helpers.Files
 
                     foreach (var rows in data)
                     {
-                        var accounts = rows.Cuenta.Replace("-PESOS", "") ?? "";
+                        var accounts = rows.Bank_Account_Number;
                         accounts = accounts.Substring(accounts.Length - 6);
+
+                        var bookingDate = DateTime.Now;
+                        var valueDate = DateTime.Now;
+
+                       tryParse = DateTime.TryParseExact(
+                            rows.Booking_Date,
+                            formats,
+                            System.Globalization.CultureInfo.InvariantCulture,
+                            System.Globalization.DateTimeStyles.None,
+                            out bookingDate
+                        );
+
+                        tryParse = DateTime.TryParseExact(
+                            rows.Value_Date,
+                            formats,
+                            System.Globalization.CultureInfo.InvariantCulture,
+                            System.Globalization.DateTimeStyles.None,
+                            out valueDate
+                        );
+
 
                         var stmntNumber = string.Concat(
                             this._preBank.Find(x => x.NombreBanco.Contains(bank)).Prefijo, "-",
@@ -107,73 +128,60 @@ namespace Template_Tesoreria.Helpers.Files
                             formDate.Replace("/", "")
                         );
 
-                        if (sheet.Cells[$"B{i - 1}"].Text == rows.Cuenta.Replace("-PESOS", "")) j++;
+                        if (sheet.Cells[$"B{i - 1}"].Text == rows.Bank_Account_Number) j++;
                         else
                         {
                             sheetHeader.Cells[$"A{_rowHeader}"].Value = stmntNumber;
-                            sheetHeader.Cells[$"B{_rowHeader}"].Value = rows.Cuenta.Replace("-PESOS", "") ?? "";
+                            sheetHeader.Cells[$"B{_rowHeader}"].Value = rows.Bank_Account_Number;
                             sheetHeader.Cells[$"C{_rowHeader}"].Value = "N";
-                            sheetHeader.Cells[$"D{_rowHeader}"].Value = formDate;
-                            sheetHeader.Cells[$"E{_rowHeader}"].Value = rows.Moneda;
-                            sheetHeader.Cells[$"F{_rowHeader}"].Value = formDate;
-                            sheetHeader.Cells[$"G{_rowHeader}"].Value = formDate;
+                            sheetHeader.Cells[$"D{_rowHeader}"].Value = bookingDate != null ? bookingDate.ToString("MM/dd/yyyy") : formDate;
+                            sheetHeader.Cells[$"E{_rowHeader}"].Value = rows.Bank_Account_Currency;
+                            sheetHeader.Cells[$"F{_rowHeader}"].Value = bookingDate != null ? bookingDate.ToString("MM/dd/yyyy") : formDate;
+                            sheetHeader.Cells[$"G{_rowHeader}"].Value = bookingDate != null ? bookingDate.ToString("MM/dd/yyyy") : formDate;
 
                             sheetBalances.Cells[$"A{_rowBalances}:A{_rowBalances + 1}"].Value   = stmntNumber;
-                            sheetBalances.Cells[$"B{_rowBalances}:B{_rowBalances + 1}"].Value   = rows.Cuenta.Replace("-PESOS", "") ?? "";
+                            sheetBalances.Cells[$"B{_rowBalances}:B{_rowBalances + 1}"].Value   = rows.Bank_Account_Number;
                             sheetBalances.Cells[$"C{_rowBalances}"].Value                       = "OPBD";
                             sheetBalances.Cells[$"C{_rowBalances + 1}"].Value                   = "CLBD";
-                            sheetBalances.Cells[$"D{_rowBalances}"].Value                       = rows.Saldo_Inicial;
-                            sheetBalances.Cells[$"D{_rowBalances + 1}"].Value                   = rows.Saldo_Final;
-                            sheetBalances.Cells[$"E{_rowBalances}:E{_rowBalances + 1}"].Value   = rows.Moneda;
+                            sheetBalances.Cells[$"D{_rowBalances}"].Value                       = rows.Open_Balance;
+                            sheetBalances.Cells[$"D{_rowBalances + 1}"].Value                   = rows.Close_Balance;
+                            sheetBalances.Cells[$"E{_rowBalances}:E{_rowBalances + 1}"].Value   = rows.Bank_Account_Currency;
                             sheetBalances.Cells[$"F{_rowBalances}:F{_rowBalances + 1}"].Value   = "CRDT";
-                            sheetBalances.Cells[$"G{_rowBalances}:G{_rowBalances + 1}"].Value   = formDate;
+                            sheetBalances.Cells[$"G{_rowBalances}:G{_rowBalances + 1}"].Value   = bookingDate != null ? bookingDate.ToString("MM/dd/yyyy") : formDate;
 
                             this._rowBalances = this._rowBalances + 2;
                             this._rowHeader++;
                             j = 1;
                         }
 
-                        if (!string.Equals(rows.Referencia, "SIN MOVIMIENTOS", StringComparison.CurrentCultureIgnoreCase))
+                        if (!string.Equals(rows.Credit, "SIN MOVIMIENTOS", StringComparison.CurrentCultureIgnoreCase) || !string.Equals(rows.Debit, "SIN MOVIMIENTOS", StringComparison.CurrentCultureIgnoreCase))
                         {
                             sheet.Cells[$"A{i}"].Value  = stmntNumber;
-                            sheet.Cells[$"B{i}"].Value  = rows.Cuenta.Replace("-PESOS", "") ?? "";
+                            sheet.Cells[$"B{i}"].Value  = rows.Bank_Account_Number;
                             sheet.Cells[$"C{i}"].Value  = j;
-                            sheet.Cells[$"D{i}"].Value  = rows.Concepto ?? "";
+                            sheet.Cells[$"D{i}"].Value  = rows.Transaction_Code ?? "";
                             sheet.Cells[$"E{i}"].Value  = "MSC";
-                            sheet.Cells[$"F{i}"].Value  = rows.Cargo != "0.0" ? rows.Cargo : rows.Abono;
-                            sheet.Cells[$"G{i}"].Value  = rows.Moneda;
-                            sheet.Cells[$"H{i}"].Value  = formDate;
-                            sheet.Cells[$"J{i}"].Value  = rows.Cargo != "0.0" ? "DBIT" : "CRDT";
+                            sheet.Cells[$"F{i}"].Value  = rows.Debit != "0.0" ? rows.Debit : rows.Credit;
+                            sheet.Cells[$"G{i}"].Value  = rows.Bank_Account_Currency;
+                            sheet.Cells[$"H{i}"].Value  = bookingDate != null ? bookingDate.ToString("MM/dd/yyyy") : formDate;
+                            sheet.Cells[$"I{i}"].Value  = valueDate != null ? valueDate.ToString("MM/dd/yyyy") : formDate;
+                            sheet.Cells[$"J{i}"].Value  = rows.Debit != "0.0" ? "DBIT" : "CRDT";
+                            sheet.Cells[$"L{i}"].Value  = rows.Check_Number ?? "";
+                            sheet.Cells[$"R{i}"].Value  = rows.Addenda_Text ?? "";
+                            sheet.Cells[$"S{i}"].Value  = rows.Account_Servicer_Reference ?? "";
+                            sheet.Cells[$"T{i}"].Value  = rows.Customer_Reference ?? "";
+                            sheet.Cells[$"U{i}"].Value  = rows.Clearing_System_Reference ?? "";
+                            sheet.Cells[$"V{i}"].Value  = rows.Contract_Identifier ?? "";
+                            sheet.Cells[$"W{i}"].Value  = rows.Instruction_Identifier ?? "";
+                            sheet.Cells[$"X{i}"].Value  = rows.End_To_End_Identifier ?? "";
+                            sheet.Cells[$"Y{i}"].Value  = rows.Servicer_Status ?? "";
+                            sheet.Cells[$"Z{i}"].Value  = rows.Commision_Waiver_Indicator_Flag ?? "";
+                            sheet.Cells[$"AA{i}"].Value  = rows.Reversal_Indicator_Flag ?? "";
+                            sheet.Cells[$"BM{i}"].Value  = rows.Structured_Payment_Reference ?? "";
+                            sheet.Cells[$"BN{i}"].Value  = rows.Reconciliation_Reference ?? "";
+                            sheet.Cells[$"BO{i}"].Value  = rows.Message_Identifier ?? "";
+                            sheet.Cells[$"BP{i}"].Value  = rows.Payment_Information_Identifier ?? "";
 
-                            if (string.IsNullOrEmpty(rows.Informacion_Env))
-                            {
-                                sheet.Cells[$"L{i}"].Value = rows.Referencia ?? "";
-                                sheet.Cells[$"S{i}"].Value  = rows.RFC_Ordenante ?? "";
-                            }
-                            else
-                            {
-                                var addText = "";       //Columna R dentro del template: "Addenda Text"
-                                var accServRef = "";    //Columna S dentro del template: "Account Servicer Reference"
-
-                                foreach(var letter in rows.Informacion_Env)
-                                {
-                                    if (string.Equals(letter, ' '))
-                                        break;
-                                    addText += letter;
-                                }
-
-                                accServRef = rows.Informacion_Env.Replace(addText, "").Trim();
-
-                                sheet.Cells[$"R{i}"].Value = addText;
-                                sheet.Cells[$"S{i}"].Value = accServRef;
-                            }
-
-                            sheet.Cells[$"T{i}"].Value  = rows.Ordenante ?? "";
-                            sheet.Cells[$"W{i}"].Value  = rows.Movimiento ?? "";
-                            sheet.Cells[$"X{i}"].Value  = rows.Referencia_Leyenda ?? "";
-                            sheet.Cells[$"BN{i}"].Value = rows.Referencia_Ext ?? "";
-                            sheet.Cells[$"BP{i}"].Value = rows.Referencia_Numerica ?? "";
-                            sheet.Cells[$"BO{i}"].Value = rows.Referencia_Leyenda ?? "";
                             i++;
                         }
 
@@ -193,43 +201,43 @@ namespace Template_Tesoreria.Helpers.Files
             }
         }
 
-        private void fillHeader(TblTesoreria_Model data)
-        {
-            try
-            {
-                this._log.writeLog($"COMIENZO DE LA INSERCIÓN DEL HEADER DE LA CUENTA {data.Cuenta}");
-                var sheetsList = new List<string>()
-                {
-                    { "Statement Headers" }
-                };
+        //private void fillHeader(TblTesoreria_Model data)
+        //{
+        //    try
+        //    {
+        //        this._log.writeLog($"COMIENZO DE LA INSERCIÓN DEL HEADER DE LA CUENTA {data.Cuenta}");
+        //        var sheetsList = new List<string>()
+        //        {
+        //            { "Statement Headers" }
+        //        };
 
-                using (var package = new ExcelPackage(this._file))
-                {
-                    foreach(var nmSheet in sheetsList)
-                    {
-                        var sheet = package.Workbook.Worksheets[nmSheet];
-                        this._log.writeLog($"SE TRABAJARÁ CON LA PESTAÑA {nmSheet}");
+        //        using (var package = new ExcelPackage(this._file))
+        //        {
+        //            foreach(var nmSheet in sheetsList)
+        //            {
+        //                var sheet = package.Workbook.Worksheets[nmSheet];
+        //                this._log.writeLog($"SE TRABAJARÁ CON LA PESTAÑA {nmSheet}");
 
-                        var accounts = data.Cuenta.Replace("-PESOS", "") ?? "";
-                        accounts = accounts.Substring(accounts.Length - 6);
+        //                var accounts = data.Cuenta.Replace("-PESOS", "") ?? "";
+        //                accounts = accounts.Substring(accounts.Length - 6);
 
-                        var stmntNumber = string.Concat(
-                            this._preBank.Find(x => x.NombreBanco.Contains(bank)).Prefijo, "-",
-                            int.Parse(accounts), "-",
-                            data.Fecha.Replace("/", "")
-                        );
+        //                var stmntNumber = string.Concat(
+        //                    this._preBank.Find(x => x.NombreBanco.Contains(bank)).Prefijo, "-",
+        //                    int.Parse(accounts), "-",
+        //                    data.Fecha.Replace("/", "")
+        //                );
 
                         
-                    }
-                    package.Save();
-                }
-            }
-            catch(Exception ex)
-            {
-                this._log.writeLog($"Hubo un ligero error al querer llenar el Header.\n\tError: {ex.Message}");
-                throw ex;
-            }
-        }
+        //            }
+        //            package.Save();
+        //        }
+        //    }
+        //    catch(Exception ex)
+        //    {
+        //        this._log.writeLog($"Hubo un ligero error al querer llenar el Header.\n\tError: {ex.Message}");
+        //        throw ex;
+        //    }
+        //}
 
         public void closeDocument()
         {

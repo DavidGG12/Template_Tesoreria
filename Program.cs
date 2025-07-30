@@ -100,8 +100,16 @@ namespace Template_Tesoreria
             var cnn = new ConnectionDb();
             var cts = new CancellationTokenSource();
             var log = new Log();
-            var menu = new MenuOption_Model();
-            var options = menu.getMenu();
+            var options = new List<MenuOption_Model>()
+            {
+                new MenuOption_Model() { ID = "1", Option = "1. - INBURSA", Value = "Inbursa" },
+                new MenuOption_Model() { ID = "2", Option = "2. - HSBC", Value = "HSBC" },
+                new MenuOption_Model() { ID = "3", Option = "3. - BANCOMER", Value = "Bancomer" },
+                new MenuOption_Model() { ID = "4", Option = "4. - SCOTIABANK", Value = "Scotiabank" },
+                new MenuOption_Model() { ID = "5", Option = "5. - CITIBANAMEX", Value = "Citibanamex" },
+                new MenuOption_Model() { ID = "6", Option = "6. - SANTANDER", Value = "Santander" },
+                new MenuOption_Model() { ID = "7", Option = "7. - BANORTE", Value = "Banorte" }
+            };
             string opc = "", opc2 = "", nombreBanco = "", rutaCarpeta = "", urlArchivoDescaga = "", pathDestino = "";
             var id = 1;
 
@@ -246,8 +254,20 @@ namespace Template_Tesoreria
                 {
                     case "Inbursa":
                         //valueFile.FileName = $"INBM{DateTime.Now.ToString("ddMMyy")}.xlsx";
-                        valueFile.FileName = $"INBD230625.xlsx";
+                        valueFile.FileName = $"INBM280725.xlsx";
                         valueFile.SPName = $"pa_Tesoreria_CargaExcel_Inbursa";
+                        break;
+
+                    case "HSBC":
+                        //valueFile.FileName = $"HSBC{DateTime.Now.ToString("ddMMyy")}.xlsx";
+                        valueFile.FileName = $"HSBC280725.xlsx";
+                        valueFile.SPName = $"pa_Tesoreria_CargaExcel_HSBC";
+                        break;
+
+                    case "Bancomer":
+                        //valueFile.FileName = $"BBVA{DateTime.Now.ToString("ddMMyy")}.xlsx";
+                        valueFile.FileName = $"BBVA140725.xlsx";
+                        valueFile.SPName = $"pa_Tesoreria_CargaExcel_BBVA";
                         break;
 
                     case "Citibanamex":
@@ -256,10 +276,16 @@ namespace Template_Tesoreria
                         valueFile.SPName = $"pa_Tesoreria_CargaExcel_Citi";
                         break;
 
-                    case "Bancomer":
-                        //valueFile.FileName = $"BBVA{DateTime.Now.ToString("ddMMyy")}.xlsx";
-                        valueFile.FileName = $"BBVA140725.xlsx";
-                        valueFile.SPName = $"pa_Tesoreria_CargaExcel_BBVA";
+                    case "Santander":
+                        //valueFile.FileName = $"SANT{DateTime.Now.ToString("ddMMyy")}.xlsx";
+                        valueFile.FileName = $"SANT100725.xlsx";
+                        valueFile.SPName = $"pa_Tesoreria_CargaExcel_Santander";
+                        break;
+
+                    case "Banorte":
+                        //valueFile.FileName = $"BANO{DateTime.Now.ToString("ddMMyy")}.xlsx";
+                        valueFile.FileName = $"BANO100725.xlsx";
+                        valueFile.SPName = $"pa_Tesoreria_CargaExcel_Banorte";
                         break;
                 }
 
