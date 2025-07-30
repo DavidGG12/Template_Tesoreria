@@ -80,7 +80,7 @@ namespace Template_Tesoreria.Helpers.Files
 
                     var dateDoc = data.Find(x => x.Value_Date != null && x.Value_Date.Any(f => f != null)).Value_Date;
 
-                    string[] formats = { "MM/dd/yyyy", "dd/MM/yyyy", "yyyy-MM-dd" };
+                    string[] formats = { "dd/MM/yyyy", "MM/dd/yyyy", "yyyy-MM-dd", "yyyy/MM/dd", "yyyyMMdd", "ddMMyyyy" };
                     DateTime dateParse;
 
                     bool tryParse = DateTime.TryParseExact(

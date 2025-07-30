@@ -254,8 +254,20 @@ namespace Template_Tesoreria
                 {
                     case "Inbursa":
                         //valueFile.FileName = $"INBM{DateTime.Now.ToString("ddMMyy")}.xlsx";
-                        valueFile.FileName = $"INBM230625.xlsx";
+                        valueFile.FileName = $"INBM280725.xlsx";
                         valueFile.SPName = $"pa_Tesoreria_CargaExcel_Inbursa";
+                        break;
+
+                    case "HSBC":
+                        //valueFile.FileName = $"HSBC{DateTime.Now.ToString("ddMMyy")}.xlsx";
+                        valueFile.FileName = $"HSBC280725.xlsx";
+                        valueFile.SPName = $"pa_Tesoreria_CargaExcel_HSBC";
+                        break;
+
+                    case "Bancomer":
+                        //valueFile.FileName = $"BBVA{DateTime.Now.ToString("ddMMyy")}.xlsx";
+                        valueFile.FileName = $"BBVA140725.xlsx";
+                        valueFile.SPName = $"pa_Tesoreria_CargaExcel_BBVA";
                         break;
 
                     case "Citibanamex":
@@ -264,10 +276,16 @@ namespace Template_Tesoreria
                         valueFile.SPName = $"pa_Tesoreria_CargaExcel_Citi";
                         break;
 
-                    case "Bancomer":
-                        //valueFile.FileName = $"BBVA{DateTime.Now.ToString("ddMMyy")}.xlsx";
-                        valueFile.FileName = $"BBVA140725.xlsx";
-                        valueFile.SPName = $"pa_Tesoreria_CargaExcel_BBVA";
+                    case "Santander":
+                        //valueFile.FileName = $"SANT{DateTime.Now.ToString("ddMMyy")}.xlsx";
+                        valueFile.FileName = $"SANT100725.xlsx";
+                        valueFile.SPName = $"pa_Tesoreria_CargaExcel_Santander";
+                        break;
+
+                    case "Banorte":
+                        //valueFile.FileName = $"BANO{DateTime.Now.ToString("ddMMyy")}.xlsx";
+                        valueFile.FileName = $"BANO100725.xlsx";
+                        valueFile.SPName = $"pa_Tesoreria_CargaExcel_Banorte";
                         break;
                 }
 
