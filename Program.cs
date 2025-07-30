@@ -270,6 +270,12 @@ namespace Template_Tesoreria
                         valueFile.SPName = $"pa_Tesoreria_CargaExcel_BBVA";
                         break;
 
+                    case "Scotiabank":
+                        //valueFile.FileName = $"SCOT{DateTime.Now.ToString("ddMMyy")}.xlsx";
+                        valueFile.FileName = $"SCOT100625.xlsx";
+                        valueFile.SPName = $"pa_Tesoreria_CargaExcel_Scotiabank";
+                        break;
+
                     case "Citibanamex":
                         //valueFile.FileName = $"CITI{DateTime.Now.ToString("ddMMyy")}.xlsx";
                         valueFile.FileName = $"CITI140725.xlsx";
