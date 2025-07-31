@@ -2,6 +2,7 @@
 using Spire.Xls;
 using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Linq;
 using System.Security.Policy;
 using System.Text;
@@ -53,7 +54,57 @@ namespace Template_Tesoreria.Helpers.GUI
             return null;
         }
 
-        public string viewMenu(string title, List<MenuOption_Model> menu)
+        //public string[] getParagraph(string text)
+        //{
+        //    try
+        //    {
+        //        /* 
+        //         * Restamos 10 porque son 4 de padding al encabezado en general, 2 de los bordes que se dibujan del menú
+        //         * y vamos a hacer 4 puntos de padding de derecha a izquierda. 
+        //         */
+        //        var width = Console.WindowWidth - 10; 
+        //        string[] paragraph;
+        //        int[] potApart; 
+        //        var numDiv = (int)Math.Round((double)text.Length / width); //Para saber en cuántas cadenas se va a dividir el texto
+
+        //        foreach(var)
+
+        //        foreach(var num in Enumerable.Range(0, numDiv))
+        //        {
+        //            var sentence = "";
+                    
+        //        }
+
+        //        return paragraph;
+        //    }
+        //    catch(Exception ex)
+        //    {
+        //        viewErrorMessage(ex.Message);
+        //        return null;
+        //    }
+        //}
+
+        private void setHeader(string title, List<string> description)
+        {
+            Console.ForegroundColor = ConsoleColor.Cyan;
+            var width = Console.WindowWidth - 6;
+
+
+            Console.WriteLine($"{centerMessage($"╔{new string('═', width)}╗")}");
+            Console.WriteLine($"{centerMessage($"║{new string(' ', width)}║")}");
+            Console.WriteLine($"{centerMessage($"║{new string(' ', (width - title.Length) / 2)}{title.ToUpper()}{new string(' ', (width - title.Length) / 2)}║")}");
+            Console.WriteLine($"{centerMessage($"║{new string(' ', width)}║")}");
+
+            foreach (var lines in description)
+                Console.WriteLine($"{centerMessage($"║{new string(' ', (width - lines.Length) / 2)}{lines}{new string(' ', (width - lines.Length) / 2)}║")}");
+
+            Console.WriteLine($"{centerMessage($"║{new string(' ', width)}║")}");
+            Console.WriteLine($"{centerMessage($"╚{new string('═', width)}╝")}\n");
+
+            Console.ResetColor();
+        }
+
+        public string viewMenu(string title, string description, List<MenuOption_Model> menu)
         {
             ConsoleKey key;
             var opt = "";
@@ -62,21 +113,11 @@ namespace Template_Tesoreria.Helpers.GUI
             do
             {
                 Console.Clear();
-
                 Console.Title = title;
-                Console.ForegroundColor = ConsoleColor.Cyan;
 
-                Console.WriteLine($"{centerMessage("╔════════════════════════════════════════════════════╗")}");
-                Console.WriteLine($"{centerMessage("║                                                    ║")}");
-                Console.WriteLine($"{centerMessage("║                 TEMPLATE  TESORERIA                ║")}");
-                Console.WriteLine($"{centerMessage("║                                                    ║")}");
-                Console.WriteLine($"{centerMessage("║  Por favor selecciona el banco de la siguiente     ║")}");
-                Console.WriteLine($"{centerMessage("║  lista para continuar:                             ║")}");
-                Console.WriteLine($"{centerMessage("╚════════════════════════════════════════════════════╝")}\n");
+                List<string> paragraph = new List<string> { "Por favor selecciona el banco de la siguiente ", "lista para continuar: " };
 
-                Console.ResetColor();
-
-                Console.WriteLine("Selecciona la compañía que deseas generar:\n");
+                setHeader(title, paragraph);
 
                 foreach (var option in menu)
                 {
@@ -86,7 +127,7 @@ namespace Template_Tesoreria.Helpers.GUI
                         Console.ForegroundColor = ConsoleColor.Black;
                         opt = option.Option;
                     }
-                    Console.WriteLine(option.Option);
+                    Console.WriteLine($"{new string(' ', 4)}{option.Option}");
                     Console.ResetColor();
                 }
 
@@ -127,7 +168,9 @@ namespace Template_Tesoreria.Helpers.GUI
 
         public void viewErrorMessage(string message)
         {
-
+            Console.ForegroundColor = ConsoleColor.Red;
+            Console.Write($"\n{message}\n\n");
+            Console.ResetColor();
         }
     }
 }

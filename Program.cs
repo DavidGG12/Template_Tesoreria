@@ -123,7 +123,7 @@ namespace Template_Tesoreria
 
 
                 #region MENU
-                nombreBanco = gui.viewMenu("Extracto Bancario", options);
+                nombreBanco = gui.viewMenu("Extracto bancario ", "", options);
                 #endregion
 
                 #region Proceso
