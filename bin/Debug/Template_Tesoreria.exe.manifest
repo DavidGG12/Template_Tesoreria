@@ -222,14 +222,14 @@
     </dependentAssembly>
   </dependency>
   <dependency>
-    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="Template_Tesoreria.exe" size="40456">
+    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="Template_Tesoreria.exe" size="40968">
       <assemblyIdentity name="Template_Tesoreria" version="1.0.0.0" language="neutral" processorArchitecture="msil" />
       <hash>
         <dsig:Transforms>
           <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
         </dsig:Transforms>
         <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" />
-        <dsig:DigestValue>y0GbJE59oXyyDlSacSiQRPSQecxB2g1htCFt3ceVS/g=</dsig:DigestValue>
+        <dsig:DigestValue>Pio6etMbb2+/lBLOq2tzgMxEUkPkVwUZ8O8Vme+X2Es=</dsig:DigestValue>
       </hash>
     </dependentAssembly>
   </dependency>

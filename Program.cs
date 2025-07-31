@@ -16,6 +16,7 @@ using Template_Tesoreria.Helpers.ProcessExe;
 using System.Diagnostics;
 using System.Threading;
 using System.Net.Sockets;
+using Template_Tesoreria.Helpers.GUI;
 
 namespace Template_Tesoreria
 {
@@ -97,6 +98,7 @@ namespace Template_Tesoreria
         static void Main(string[] args)
         {
             var dtService = new DataService();
+            var gui = new GUI_Main();
             var cnn = new ConnectionDb();
             var cts = new CancellationTokenSource();
             var log = new Log();
@@ -119,71 +121,14 @@ namespace Template_Tesoreria
             {
                 log.writeLog("COMENZANDO PROCESO");
 
-                
+
                 #region MENU
-                do
-                {
-                    Console.Clear();
-                    log.writeLog("IMPRESIÓN DEL MENÚ");
-
-                    Console.Title = "Template Tesoreria";
-                    Console.ForegroundColor = ConsoleColor.Cyan;
-
-                    Console.WriteLine("╔════════════════════════════════════════════════════╗");
-                    Console.WriteLine("║                 TEMPLATE  TESORERIA                ║");
-                    Console.WriteLine("║                                                    ║");
-                    Console.WriteLine("║  Por favor selecciona el banco de la siguiente     ║");
-                    Console.WriteLine("║  lista para continuar:                             ║");
-                    Console.WriteLine("╚════════════════════════════════════════════════════╝\n");
-
-                    Console.ResetColor();
-
-                    Console.WriteLine("Selecciona la compañía que deseas generar:\n");
-
-                    foreach (var option in options)
-                    {
-                        if(id.ToString() == option.ID)
-                        {
-                            Console.BackgroundColor = ConsoleColor.Gray;
-                            Console.ForegroundColor = ConsoleColor.Black;
-                            opc = option.Option;
-                        }
-                        Console.WriteLine(option.Option);
-                        Console.ResetColor();
-                    }
-
-                    //wrtFooter("[UpArrow]/[DownArrow] Navegar  |  [Enter] Seleccionar");
-
-                    key = Console.ReadKey(true).Key;
-
-                    var chsOpt = options.Find(x => x.Option.Contains(opc));
-
-                    if(key == ConsoleKey.UpArrow || key == ConsoleKey.W)
-                        id = (id == 1) ? 1 : int.Parse(chsOpt.ID) - 1;
-                    else if(key == ConsoleKey.DownArrow || key == ConsoleKey.S)
-                        id = (id == options.Count) ? options.Count : int.Parse(chsOpt.ID) + 1; 
-
-                    if (key == ConsoleKey.Enter)
-                    {
-                        nombreBanco = chsOpt.Value;
-                        Console.Write($"\n¿Está seguro de querer trabajar con {nombreBanco}? [S/N]: ");
-                        opc2 = Console.ReadLine().Trim();
-                        if (opc2.Equals("s", StringComparison.OrdinalIgnoreCase))
-                        {
-                            log.writeLog($"SE CONFIRMA EL USO DEL BANCO {nombreBanco}");
-                            Console.Clear();
-                            break;
-                        }
-                        else
-                            key = ConsoleKey.UpArrow;
-                        Console.Clear();
-                    }
-
-                } while (key != ConsoleKey.Enter);
+                nombreBanco = gui.viewMenu("Extracto Bancario", options);
                 #endregion
 
                 #region Proceso
-                Console.Write("\nComenzando proceso.\n\n");
+                //Console.Write("\nComenzando proceso.\n\n");
+                gui.viewMessage("****COMENZANDO PROCESO****");
 
                 #region Descarga Template
                 WebClient client1 = new WebClient();
