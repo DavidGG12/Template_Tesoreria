@@ -22,36 +22,6 @@ namespace Template_Tesoreria
 {
     internal class Program
     {
-        static void Spinner(string message, CancellationToken token)
-        {
-            char[] secuence = { '|', '/', '-', '\\' };
-            int pos = 0;
-
-            Console.ForegroundColor = ConsoleColor.Green;
-
-            while (!token.IsCancellationRequested)
-            {
-                Console.Write($"\r{message} {secuence[pos]}");
-                pos = (pos + 1) % secuence.Length;
-                Thread.Sleep(100);
-            }
-
-            Console.ResetColor();
-
-            Console.Write($"\r{new string(' ', Console.WindowWidth)}");
-            Console.Write("\rTerminado\n");
-        }
-
-        static void wrtFooter(string txt)
-        {
-            int rowFooter = Console.WindowHeight - 1;
-            Console.SetCursorPosition(0, rowFooter);
-            Console.BackgroundColor = ConsoleColor.Gray;
-            Console.ForegroundColor= ConsoleColor.Black;
-            Console.WriteLine(txt.PadRight(Console.WindowWidth));
-            Console.ResetColor();
-        }
-
         public static string menuFiles(string ip)
         {
             var path = @"\\10.128.10.19\FormatoBancos";
@@ -95,6 +65,62 @@ namespace Template_Tesoreria
             return files[selection];
         }
 
+        public static ManagementExcel downloadTemplate(string nmBank, Log log)
+        {
+            try
+            {
+                WebClient client1 = new WebClient();
+                var urlFile = "";
+                var pathDirectory = "";
+                var pathDestiny = "";
+
+                string htmlCode = client1.DownloadString("https://docs.oracle.com/en/cloud/saas/financials/25b/oefbf/cashmanagementbankstatementdataimport-3168.html#cashmanagementbankstatementdataimport-3168");
+                string[] lines = htmlCode.Split('\n');
+
+                HTML.HtmlDocument htmlDocument = new HTML.HtmlDocument();
+                htmlDocument.LoadHtml(lines[58].ToString().Trim());
+
+                var linkNodes = htmlDocument.DocumentNode.SelectNodes("//a[@href]");
+
+                if (linkNodes != null)
+                    foreach (var linkNode in linkNodes)
+                        urlFile = linkNode.GetAttributeValue("href", string.Empty);
+
+                log.writeLog($"SE OBTUVO LA INFORMACIÓN PARA PODER DESCARGAR CORRECTAMENTE EL TEMPLATE");
+
+                pathDirectory = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile) + @"\\Documents\\Templates";
+
+                //Si no existe la Carpeta la creamos
+                if (!Directory.Exists(pathDirectory)) Directory.CreateDirectory(pathDirectory);
+
+
+                //Definimos la ruta donde guardaremos el archivo
+                //http://www.oracle.com/webfolder/technetwork/docs/fbdi-25b/fbdi/xlsm/CashManagementBankStatementImportTemplate.xlsm                
+                pathDestiny = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile) + @"\\Documents\\Templates\\CashManagementBankStatementImportTemplate_" + nmBank + ".xlsm";
+                var mngmntExcel = new ManagementExcel(pathDestiny, nmBank);
+
+                mngmntExcel.closeDocument();
+
+                log.writeLog($"EL TEMPLATE SE INSERTARÁ EN LA SIGUIENTE RUTA: {pathDestiny}");
+
+                WebClient myWebClient = new WebClient();
+                myWebClient.DownloadFile(urlFile, pathDestiny);
+
+                Console.Write("\nTemplate Descargado.\n\n");
+                Console.Write("\nSe insertan los datos.\n\n");
+
+                log.writeLog($"SE DESCARGA EL TEMPLATE");
+                log.writeLog($"EMPIEZA LA INSERCIÓN DE LOS DATOS EN EL TEMPLATE");
+
+                return mngmntExcel;
+            }
+            catch(Exception ex)
+            {
+                log.writeLog($"(ERROR): AL DESCARGAR EL TEMPLATE SE GENERÓ UN ERROR: {ex.Message}");
+                return null;
+            }
+        }
+
         static void Main(string[] args)
         {
             var dtService = new DataService();
@@ -112,6 +138,7 @@ namespace Template_Tesoreria
                 new MenuOption_Model() { ID = "6", Option = "6. - SANTANDER", Value = "Santander" },
                 new MenuOption_Model() { ID = "7", Option = "7. - BANORTE", Value = "Banorte" }
             };
+            var nmBank = "";
             string opc = "", opc2 = "", nombreBanco = "", rutaCarpeta = "", urlArchivoDescaga = "", pathDestino = "";
             var id = 1;
 
@@ -123,7 +150,7 @@ namespace Template_Tesoreria
 
 
                 #region MENU
-                nombreBanco = gui.viewMenu("Extracto bancario ", "", options);
+                nmBank = gui.viewMenu("Extracto bancario ", "", options);
                 #endregion
 
                 #region Proceso
@@ -131,45 +158,14 @@ namespace Template_Tesoreria
                 gui.viewMessage("****COMENZANDO PROCESO****");
 
                 #region Descarga Template
-                WebClient client1 = new WebClient();
-                string htmlCode = client1.DownloadString("https://docs.oracle.com/en/cloud/saas/financials/25b/oefbf/cashmanagementbankstatementdataimport-3168.html#cashmanagementbankstatementdataimport-3168");
-                string[] lines = htmlCode.Split('\n');
-
-                HTML.HtmlDocument htmlDocument = new HTML.HtmlDocument();
-                htmlDocument.LoadHtml(lines[58].ToString().Trim());
-
-                var linkNodes = htmlDocument.DocumentNode.SelectNodes("//a[@href]");
-
-                if (linkNodes != null)
-                    foreach (var linkNode in linkNodes)
-                        urlArchivoDescaga = linkNode.GetAttributeValue("href", string.Empty);
-
-                log.writeLog($"SE OBTUVO LA INFORMACIÓN PARA PODER DESCARGAR CORRECTAMENTE EL TEMPLATE");
-
-                rutaCarpeta = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile) + @"\\Documents\\Templates";
-
-                //Si no existe la Carpeta la creamos
-                if (!Directory.Exists(rutaCarpeta)) Directory.CreateDirectory(rutaCarpeta);
-
-
-                //Definimos la ruta donde guardaremos el archivo
-                //http://www.oracle.com/webfolder/technetwork/docs/fbdi-25b/fbdi/xlsm/CashManagementBankStatementImportTemplate.xlsm                
-                pathDestino = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile) + @"\\Documents\\Templates\\CashManagementBankStatementImportTemplate_" + nombreBanco + ".xlsm";
-                var mngmntExcel = new ManagementExcel(pathDestino, nombreBanco);
-
-                mngmntExcel.closeDocument();
-
-                log.writeLog($"EL TEMPLATE SE INSERTARÁ EN LA SIGUIENTE RUTA: {pathDestino}");
-                
-                WebClient myWebClient = new WebClient();
-                myWebClient.DownloadFile(urlArchivoDescaga, pathDestino);
-
-                Console.Write("\nTemplate Descargado.\n\n");
-                Console.Write("\nSe insertan los datos.\n\n");
-
-                log.writeLog($"SE DESCARGA EL TEMPLATE");
-                log.writeLog($"EMPIEZA LA INSERCIÓN DE LOS DATOS EN EL TEMPLATE");
+                var mngmntExcel = downloadTemplate(nmBank, log);
                 #endregion
+
+                if(mngmntExcel == null)
+                {
+                    gui.viewErrorMessage("(ERROR) Algo ocurrió al querer descargar el template.");
+                    return;
+                }
 
                 #region Obtención de IP
                 //Obtenemos la ip del usuario
@@ -258,7 +254,7 @@ namespace Template_Tesoreria
                     }
                 );
 
-                Spinner("Procesando...", cts.Token);
+                gui.Spinner("Procesando...", cts.Token);
 
 
                 //Limpiamos el template para trabajar con él

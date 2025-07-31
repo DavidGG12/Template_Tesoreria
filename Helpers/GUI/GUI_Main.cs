@@ -104,6 +104,16 @@ namespace Template_Tesoreria.Helpers.GUI
             Console.ResetColor();
         }
 
+        private void setFooter(string txt)
+        {
+            int rowFooter = Console.WindowHeight - 1;
+            Console.SetCursorPosition(0, rowFooter);
+            Console.BackgroundColor = ConsoleColor.Gray;
+            Console.ForegroundColor = ConsoleColor.Black;
+            Console.WriteLine(txt.PadRight(Console.WindowWidth));
+            Console.ResetColor();
+        }
+
         public string viewMenu(string title, string description, List<MenuOption_Model> menu)
         {
             ConsoleKey key;
