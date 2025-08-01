@@ -17,54 +17,12 @@ using System.Diagnostics;
 using System.Threading;
 using System.Net.Sockets;
 using Template_Tesoreria.Helpers.GUI;
+using Template_Tesoreria.Helpers.Network;
 
 namespace Template_Tesoreria
 {
     internal class Program
     {
-        public static string menuFiles(string ip)
-        {
-            var path = @"\\10.128.10.19\FormatoBancos";
-            var credentials = new NetworkCredential("svrsafin", "Lp5vr5a71n", "sanborns");
-            ConsoleKey key;
-            
-            string[] files;
-
-            using (var mngFile = new ManagementFilesSD(path, credentials))
-            {
-                files = Directory.GetFiles(path);
-            }
-
-            var selection = 0;
-
-            do
-            {
-                Console.Clear();
-
-                for(int i = 0; i < files.Length; i++)
-                {
-                    if(i == selection)
-                    {
-                        Console.BackgroundColor = ConsoleColor.Gray;
-                        Console.ForegroundColor = ConsoleColor.Black;
-                    }
-
-                    Console.WriteLine(files[i]);
-                    Console.ResetColor();
-                }
-
-                key = Console.ReadKey(true).Key;
-
-                if (key == ConsoleKey.UpArrow)
-                    selection = (selection == 0) ? files.Length - 1 : selection - 1;
-                else if (key == ConsoleKey.DownArrow)
-                    selection = (selection == files.Length - 1) ? 0 : selection + 1;
-            }
-            while (key != ConsoleKey.Enter);
-
-            return files[selection];
-        }
-
         public static string getIP(Log log)
         {
             try
@@ -165,6 +123,9 @@ namespace Template_Tesoreria
                     log.writeLog("COMENZANDO PROCESO");
 
                     nmBank = gui.viewMenu("Extracto bancario ", "", options);
+
+                    var shrdDirectory = new SharedDirectory("10.128.10.19");
+                    var nmFile = gui.viewMenu(" ", "", shrdDirectory.getFiles());
 
                     gui.viewMainMessage("********COMENZANDO PROCESO********");
 
