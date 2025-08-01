@@ -65,7 +65,27 @@ namespace Template_Tesoreria
             return files[selection];
         }
 
-        public static ManagementExcel downloadTemplate(string nmBank, Log log)
+        public static string getIP(Log log)
+        {
+            try
+            {
+                log.writeLog("SE OBTIENE LA IP DEL USUARIO.");
+                foreach (var ipv4 in Dns.GetHostEntry(Dns.GetHostName()).AddressList)
+                    if (ipv4.AddressFamily == AddressFamily.InterNetwork)
+                    {
+                        log.writeLog("OBTENCIÓN DE IP CORRECTA");
+                        return ipv4.ToString();
+                    }
+                return null;
+            }
+            catch(Exception ex)
+            {
+                log.writeLog($"(ERROR) HUBO UN ERROR AL QUERER OBTENER LA IP, NOS ARROJA: {ex.Message}");
+                return null;
+            }
+        }
+
+        public static string downloadTemplate(string nmBank, Log log)
         {
             try
             {
@@ -97,22 +117,15 @@ namespace Template_Tesoreria
                 //Definimos la ruta donde guardaremos el archivo
                 //http://www.oracle.com/webfolder/technetwork/docs/fbdi-25b/fbdi/xlsm/CashManagementBankStatementImportTemplate.xlsm                
                 pathDestiny = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile) + @"\\Documents\\Templates\\CashManagementBankStatementImportTemplate_" + nmBank + ".xlsm";
-                var mngmntExcel = new ManagementExcel(pathDestiny, nmBank);
-
-                mngmntExcel.closeDocument();
-
                 log.writeLog($"EL TEMPLATE SE INSERTARÁ EN LA SIGUIENTE RUTA: {pathDestiny}");
 
                 WebClient myWebClient = new WebClient();
                 myWebClient.DownloadFile(urlFile, pathDestiny);
 
-                Console.Write("\nTemplate Descargado.\n\n");
-                Console.Write("\nSe insertan los datos.\n\n");
-
                 log.writeLog($"SE DESCARGA EL TEMPLATE");
                 log.writeLog($"EMPIEZA LA INSERCIÓN DE LOS DATOS EN EL TEMPLATE");
 
-                return mngmntExcel;
+                return "TEMPLATE DESCARGADO";
             }
             catch(Exception ex)
             {
@@ -138,199 +151,177 @@ namespace Template_Tesoreria
                 new MenuOption_Model() { ID = "6", Option = "6. - SANTANDER", Value = "Santander" },
                 new MenuOption_Model() { ID = "7", Option = "7. - BANORTE", Value = "Banorte" }
             };
+            var ip = "";
             var nmBank = "";
-            string opc = "", opc2 = "", nombreBanco = "", rutaCarpeta = "", urlArchivoDescaga = "", pathDestino = "";
+            var pathDestiny = "";
             var id = 1;
 
             ConsoleKey key;
 
-            try
+            while(true)
             {
-                log.writeLog("COMENZANDO PROCESO");
-
-
-                #region MENU
-                nmBank = gui.viewMenu("Extracto bancario ", "", options);
-                #endregion
-
-                #region Proceso
-                //Console.Write("\nComenzando proceso.\n\n");
-                gui.viewMessage("****COMENZANDO PROCESO****");
-
-                #region Descarga Template
-                var mngmntExcel = downloadTemplate(nmBank, log);
-                #endregion
-
-                if(mngmntExcel == null)
+                try
                 {
-                    gui.viewErrorMessage("(ERROR) Algo ocurrió al querer descargar el template.");
-                    return;
-                }
+                    log.writeLog("COMENZANDO PROCESO");
 
-                #region Obtención de IP
-                //Obtenemos la ip del usuario
-                Console.Write("\nSe obtiene la IP del usuario.\n\n");
-                var ip = "";
+                    nmBank = gui.viewMenu("Extracto bancario ", "", options);
 
-                foreach(var ipv4 in Dns.GetHostEntry(Dns.GetHostName()).AddressList)
-                {
-                    if(ipv4.AddressFamily == AddressFamily.InterNetwork)
+                    gui.viewMainMessage("********COMENZANDO PROCESO********");
+
+                    gui.viewInfoMessage("*Descargando el template desde el sitio de Oracle*");
+
+                    var rsltDownload = "";
+                    Task.Run(() =>
                     {
-                        ip = ipv4.ToString();
-                        break;
-                    }
-                }
-
-                Console.Write($"\nSe trabajará con la IP: {ip}\n\n");
-                #endregion
-
-
-                //var file = menuFiles(ip);
-                //var file = menuFiles("10.128.10.19");
-                //var file = "INBURSA EJEMPLO EXTRACTO BANCARIO 100725 M.N.xlsx";
-
-                var valueFile = new ValueFile_Model();
-
-                switch (nombreBanco)
-                {
-                    case "Inbursa":
-                        //valueFile.FileName = $"INBM{DateTime.Now.ToString("ddMMyy")}.xlsx";
-                        valueFile.FileName = $"INBM280725.xlsx";
-                        valueFile.SPName = $"pa_Tesoreria_CargaExcel_Inbursa";
-                        break;
-
-                    case "HSBC":
-                        //valueFile.FileName = $"HSBC{DateTime.Now.ToString("ddMMyy")}.xlsx";
-                        valueFile.FileName = $"HSBC280725.xlsx";
-                        valueFile.SPName = $"pa_Tesoreria_CargaExcel_HSBC";
-                        break;
-
-                    case "Bancomer":
-                        //valueFile.FileName = $"BBVA{DateTime.Now.ToString("ddMMyy")}.xlsx";
-                        valueFile.FileName = $"BBVA140725.xlsx";
-                        valueFile.SPName = $"pa_Tesoreria_CargaExcel_BBVA";
-                        break;
-
-                    case "Scotiabank":
-                        //valueFile.FileName = $"SCOT{DateTime.Now.ToString("ddMMyy")}.xlsx";
-                        valueFile.FileName = $"SCOT100625.xlsx";
-                        valueFile.SPName = $"pa_Tesoreria_CargaExcel_Scotiabank";
-                        break;
-
-                    case "Citibanamex":
-                        //valueFile.FileName = $"CITI{DateTime.Now.ToString("ddMMyy")}.xlsx";
-                        valueFile.FileName = $"CITI140725.xlsx";
-                        valueFile.SPName = $"pa_Tesoreria_CargaExcel_Citi";
-                        break;
-
-                    case "Santander":
-                        //valueFile.FileName = $"SANT{DateTime.Now.ToString("ddMMyy")}.xlsx";
-                        valueFile.FileName = $"SANT100725.xlsx";
-                        valueFile.SPName = $"pa_Tesoreria_CargaExcel_Santander";
-                        break;
-
-                    case "Banorte":
-                        //valueFile.FileName = $"BANO{DateTime.Now.ToString("ddMMyy")}.xlsx";
-                        valueFile.FileName = $"BANO100725.xlsx";
-                        valueFile.SPName = $"pa_Tesoreria_CargaExcel_Banorte";
-                        break;
-                }
-
-                #region Inserción de Datos en Template
-                //Empezamos con la recolección de datos y el llenado de la información
-                var data = new List<TblTesoreria_Model>();
-                var parameters = new Dictionary<string, object>()
-                {
-                    { "@Ip", "10.128.10.19" },
-                    { "@Excelname", valueFile.FileName }
-                };
-
-                Console.Write($"\nObteniendo los datos que se insertaran en el template.\n\n");
-
-                Task.Run(() =>
-                    {
-                        data = dtService.GetDataList<TblTesoreria_Model>(cnn.DbTesoreria1019(), valueFile.SPName, parameters);
+                        rsltDownload = downloadTemplate(nmBank, log);
                         cts.Cancel();
+                    });
+                    gui.Spinner("Descargando...", cts.Token);
+                    cts = new CancellationTokenSource();
+
+                    if(!string.Equals(rsltDownload, "TEMPLATE DESCARGADO", StringComparison.CurrentCultureIgnoreCase))
+                    {
+                        gui.viewErrorMessage("(ERROR) Algo ocurrió al querer descargar el template.");
+                        break;
                     }
-                );
 
-                gui.Spinner("Procesando...", cts.Token);
+                    gui.viewInfoMessage("*Obteniendo IP de la PC con la que se va a trabajar*");
+                    Task.Run(() =>
+                    {
+                        ip = getIP(log);
+                        cts.Cancel();
+                    });
+                    gui.Spinner("Obteniendo IP...", cts.Token);
+                    cts = new CancellationTokenSource();
 
 
-                //Limpiamos el template para trabajar con él
-                log.writeLog($"LIMPIAMOS EL TEMPLATE PARA PODER INSERTAR LOS DATOS");
-                var errorList = new List<SheetError_Model>()
-                {
-                    new SheetError_Model() { Sheet = "Statement Headers", Message = mngmntExcel.cleanSheets("Statement Headers") },
-                    new SheetError_Model() { Sheet = "Statement Balances", Message = mngmntExcel.cleanSheets("Statement Balances") },
-                    new SheetError_Model() { Sheet = "Statement Balance Availability", Message = mngmntExcel.cleanSheets("Statement Balance Availability") },
-                    new SheetError_Model() { Sheet = "Statement Lines", Message = mngmntExcel.cleanSheets("Statement Lines") },
-                    new SheetError_Model() { Sheet = "Statement Line Avilability", Message = mngmntExcel.cleanSheets("Statement Line Availability") },
-                    new SheetError_Model() { Sheet = "Statement Statement Line Charges", Message = mngmntExcel.cleanSheets("Statement Line Charges") }
-                };
+                    var valueFile = new ValueFile_Model();
+                    switch (nmBank)
+                    {
+                        case "Inbursa":
+                            //valueFile.FileName = $"INBM{DateTime.Now.ToString("ddMMyy")}.xlsx";
+                            valueFile.FileName = $"INBM280725.xlsx";
+                            valueFile.SPName = $"pa_Tesoreria_CargaExcel_Inbursa";
+                            break;
 
-                var error = errorList.Find(x => !x.Message.Contains("ELIMINADO"));
-                if(error != null)
-                {
-                    Console.WriteLine($"Hubo un ligero error al querer limpiar los datos de la hoja {error.Sheet}.\nError: {error.Message}");
+                        case "HSBC":
+                            //valueFile.FileName = $"HSBC{DateTime.Now.ToString("ddMMyy")}.xlsx";
+                            valueFile.FileName = $"HSBC280725.xlsx";
+                            valueFile.SPName = $"pa_Tesoreria_CargaExcel_HSBC";
+                            break;
+
+                        case "Bancomer":
+                            //valueFile.FileName = $"BBVA{DateTime.Now.ToString("ddMMyy")}.xlsx";
+                            valueFile.FileName = $"BBVA140725.xlsx";
+                            valueFile.SPName = $"pa_Tesoreria_CargaExcel_BBVA";
+                            break;
+
+                        case "Scotiabank":
+                            //valueFile.FileName = $"SCOT{DateTime.Now.ToString("ddMMyy")}.xlsx";
+                            valueFile.FileName = $"SCOT100625.xlsx";
+                            valueFile.SPName = $"pa_Tesoreria_CargaExcel_Scotiabank";
+                            break;
+
+                        case "Citibanamex":
+                            //valueFile.FileName = $"CITI{DateTime.Now.ToString("ddMMyy")}.xlsx";
+                            valueFile.FileName = $"CITI140725.xlsx";
+                            valueFile.SPName = $"pa_Tesoreria_CargaExcel_Citi";
+                            break;
+
+                        case "Santander":
+                            //valueFile.FileName = $"SANT{DateTime.Now.ToString("ddMMyy")}.xlsx";
+                            valueFile.FileName = $"SANT100725.xlsx";
+                            valueFile.SPName = $"pa_Tesoreria_CargaExcel_Santander";
+                            break;
+
+                        case "Banorte":
+                            //valueFile.FileName = $"BANO{DateTime.Now.ToString("ddMMyy")}.xlsx";
+                            valueFile.FileName = $"BANO100725.xlsx";
+                            valueFile.SPName = $"pa_Tesoreria_CargaExcel_Banorte";
+                            break;
+                    }
+
+
+                    //Empezamos con la recolección de datos y el llenado de la información
+                    var data = new List<TblTesoreria_Model>();
+                    var parameters = new Dictionary<string, object>()
+                    {
+                        { "@Ip", "10.128.10.19" },
+                        { "@Excelname", valueFile.FileName }
+                    };
+
+                    gui.viewInfoMessage("*Extrayendo información para el llenado de template*");
+                    Task.Run(() =>
+                        {
+                            data = dtService.GetDataList<TblTesoreria_Model>(cnn.DbTesoreria1019(), valueFile.SPName, parameters);
+                            cts.Cancel();
+                        }
+                    );
+                    gui.Spinner("Obteniendo...", cts.Token);
+                    cts = new CancellationTokenSource();
+
+
+                    gui.viewInfoMessage("*Limpiando template para su llenado*");
+                    log.writeLog($"LIMPIAMOS EL TEMPLATE PARA PODER INSERTAR LOS DATOS");
+                    pathDestiny = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile) + @"\\Documents\\Templates\\CashManagementBankStatementImportTemplate_" + nmBank + ".xlsm";
+                    var mngmntExcel = new ManagementExcel(pathDestiny, nmBank);
+                    var errorList = new List<SheetError_Model>()
+                    {
+                        new SheetError_Model() { Sheet = "Statement Headers", Message = mngmntExcel.cleanSheets("Statement Headers") },
+                        new SheetError_Model() { Sheet = "Statement Balances", Message = mngmntExcel.cleanSheets("Statement Balances") },
+                        new SheetError_Model() { Sheet = "Statement Balance Availability", Message = mngmntExcel.cleanSheets("Statement Balance Availability") },
+                        new SheetError_Model() { Sheet = "Statement Lines", Message = mngmntExcel.cleanSheets("Statement Lines") },
+                        new SheetError_Model() { Sheet = "Statement Line Avilability", Message = mngmntExcel.cleanSheets("Statement Line Availability") },
+                        new SheetError_Model() { Sheet = "Statement Statement Line Charges", Message = mngmntExcel.cleanSheets("Statement Line Charges") }
+                    };
+
+                    var error = errorList.Find(x => !x.Message.Contains("ELIMINADO"));
+                    if(error != null)
+                    {
+                        gui.viewErrorMessage($"(ERROR) Hubo un ligero error al querer limpiar los datos de la hoja {error.Sheet}. Nos arroja: {error.Message}");
+                        log.writeLog($"**********************************************************************");
+                        break;
+                    }
+
+                    log.writeLog($"TERMINO DE LIMPIEZA, SE PROSIGUE CON LA INSERCIÓN DE DATOS");
+
+                    var fillData = "";
+                    gui.viewInfoMessage($"*Llenando template con los datos recuperados. Siendo un total de {data.Count} registros*");
+                    Task.Run(() =>
+                    {
+                        fillData = mngmntExcel.getTemplate(data);
+                        cts.Cancel();
+                    });
+                    gui.Spinner("Llenando...", cts.Token);
+                    cts = new CancellationTokenSource();
+
+                    if (!string.Equals(fillData, "CORRECTO", StringComparison.CurrentCultureIgnoreCase))
+                    {
+                        gui.viewErrorMessage("(ERROR) Hubo un ligero error al querer llenar el template.");
+                        break;
+                    }
+
+                    Console.Write("\n¿Desea llenar otro template? [S/N]:");
+                    var again = Console.ReadLine().Trim();
+                    
+                    Process.Start(pathDestiny);
+
+                    if (string.Equals(again, "n", StringComparison.OrdinalIgnoreCase))
+                        break;
+
+                    log.writeLog($"ABRIENDO ARCHIVO\n\t\t**PROCESO TERMINADO**");
                     log.writeLog($"**********************************************************************");
-                    return;
                 }
-
-                log.writeLog($"TERMINO DE LIMPIEZA, SE PROSIGUE CON LA INSERCIÓN DE DATOS");
-
-                //Insertamos los datos que se encuentran en la base de datos
-                var fillData = mngmntExcel.getTemplate(data);
-
-                Console.Write("Template de Oracle llenado con éxito.\n\n");
-                #endregion
-
-                Console.Write("\nPresiona cualquier tecla para salir...");
-                Console.ReadKey();
-
-                Process.Start(pathDestino);
-                log.writeLog($"ABRIENDO ARCHIVO\n\t\t**PROCESO TERMINADO**");
-                log.writeLog($"**********************************************************************");
-
-
-                //Proceso para Leer Formato de Banco
-                //UploadFile("");
-                #endregion
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine(ex.Message);
-                log.writeLog($"ALGO OCURRIÓ DURANTE EL PROCESO PRINCIPAL {ex.Message}");
-                log.writeLog($"**********************************************************************");
-            }
-        }
-
-        public static void UploadFile(string rutaFormato)
-        {
-            try
-            {
-                FtpWebRequest request = (FtpWebRequest)WebRequest.Create(System.Configuration.ConfigurationManager.AppSettings.Get("FtpRuta"));
-                request.Method = WebRequestMethods.Ftp.UploadFile;
-                request.Credentials = new NetworkCredential(System.Configuration.ConfigurationManager.AppSettings.Get("FtpUser"), System.Configuration.ConfigurationManager.AppSettings.Get("FtpPass"));
-
-                byte[] fileContents = File.ReadAllBytes(rutaFormato);
-                request.ContentLength = fileContents.Length;
-
-                using (Stream requestStream = request.GetRequestStream())
+                catch (Exception ex)
                 {
-                    requestStream.Write(fileContents, 0, fileContents.Length);
+                    gui.viewErrorMessage($"(ERROR) Algo ocurrió durante el proceso de ejecución.");
+                    log.writeLog($"ALGO OCURRIÓ DURANTE EL PROCESO PRINCIPAL {ex.Message}");
+                    log.writeLog($"**********************************************************************");
+                    break;
                 }
 
-                using (FtpWebResponse response = (FtpWebResponse)request.GetResponse())
-                {
-                    Console.WriteLine($"Upload File Complete, status {response.StatusDescription}");
-                }
+                gui.viewMainMessage("********FIN PROCESO********");
             }
-            catch (Exception ex)
-            {
-                Console.WriteLine(ex.Message);
-            }
-
         }
     }
 }

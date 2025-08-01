@@ -35,7 +35,7 @@ namespace Template_Tesoreria.Helpers.GUI
             Console.ResetColor();
 
             Console.Write($"\r{new string(' ', Console.WindowWidth)}");
-            Console.Write("\rTerminado\n");
+            Console.Write($"\r{centerMessage("Terminado")}\n");
         }
 
         public string centerMessage(string message)
@@ -169,9 +169,16 @@ namespace Template_Tesoreria.Helpers.GUI
             return null;
         }
 
-        public void viewMessage(string message)
+        public void viewMainMessage(string message)
         {
             Console.ForegroundColor = ConsoleColor.Green;
+            Console.Write($"\n{centerMessage(message)}\n\n");
+            Console.ResetColor();
+        }
+
+        public void viewInfoMessage(string message)
+        {
+            Console.ForegroundColor = ConsoleColor.Cyan;
             Console.Write($"\n{centerMessage(message)}\n\n");
             Console.ResetColor();
         }
