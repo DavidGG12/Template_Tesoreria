@@ -1,18 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
-
 using HTML = HtmlAgilityPack;
-using Microsoft.Office.Interop.Excel;
-using System.Data;
 using System.IO;
 using System.Net;
 using Template_Tesoreria.Helpers.DataAccess;
 using Template_Tesoreria.Models;
 using Template_Tesoreria.Helpers.Files;
-using Template_Tesoreria.Helpers.ProcessExe;
 using System.Diagnostics;
 using System.Threading;
 using System.Net.Sockets;
