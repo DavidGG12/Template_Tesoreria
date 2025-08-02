@@ -6,18 +6,23 @@ using System.Runtime.InteropServices;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using Template_Tesoreria.Helpers.Files;
 using Template_Tesoreria.Models;
 
 namespace Template_Tesoreria.Helpers.Network
 {
     public class SharedDirectory
     {
+        private Log _log;
+
         private string _ip;
         private string _svrUser;
         private string _svrPassword;
 
         public SharedDirectory(string ip)
         {
+            this._log = new Log();
+
             this._ip = ip;
             this._svrUser = Environment.GetEnvironmentVariable("USER_REMOTE");
             this._svrPassword = Environment.GetEnvironmentVariable("PWD_REMOTE");
@@ -53,8 +58,11 @@ namespace Template_Tesoreria.Helpers.Network
 
             try
             {
+
                 var networkPath = $@"\\{this._ip}\FormatosBancos";
                 var erExcel = @".xlsx|.xls";
+                
+                this._log.writeLog("EMPEZAMOS LA CONEXIÓN CON LA CARPETA COMPARTIDA.");
                 
                 NETRESOURCE nr = new NETRESOURCE
                 {
@@ -66,6 +74,8 @@ namespace Template_Tesoreria.Helpers.Network
 
                 if(result == 0)
                 {
+                    this._log.writeLog("CONEXIÓN EXITOSA");
+
                     var id = 1;
                     var files = Directory.GetFiles(networkPath, "*.xls*").Where(f =>
                     {
@@ -78,6 +88,8 @@ namespace Template_Tesoreria.Helpers.Network
                                (atributos & (FileAttributes.Hidden | FileAttributes.System)) == 0;
                     });
 
+                    this._log.writeLog($"ARCHIVOS ENCONTRADOS: {files.Count()}");
+                    
                     foreach(var file in files)
                     {
                         var lstIndex = file.LastIndexOf(@"\");
@@ -88,16 +100,20 @@ namespace Template_Tesoreria.Helpers.Network
                         id++;
                     }
 
+                    this._log.writeLog($"SE REGRESA EL LISTADO DE ARCHIVOS");
+                    
                     WNetCancelConnection2(networkPath, 0, true);
                     return listFiles;
                 }
                 else
                 {
+                    this._log.writeLog($"FALLO AL ESTABLECER CON LA CONEXIÓN DE LA CARPETA COMPARTIDA. CÓDIGO DE ERROR: {result}");
                     return null;
                 }
             }
             catch(Exception ex)
             {
+                this._log.writeLog($"FALLO AL ESTABLECER CON LA CONEXIÓN DE LA CARPETA COMPARTIDA. EXEPCIÓN: {ex.Message}");
                 return null;
             }
         }

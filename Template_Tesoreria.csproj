@@ -166,12 +166,10 @@
     <Compile Include="Helpers\DataAccess\DataService.cs" />
     <Compile Include="Helpers\Db\DbFactory.cs" />
     <Compile Include="Helpers\Db\Interface\IDatabaseManager.cs" />
-    <Compile Include="Helpers\Files\ManagementFilesSD.cs" />
     <Compile Include="Helpers\Files\Log.cs" />
     <Compile Include="Helpers\Files\ManagementExcel.cs" />
     <Compile Include="Helpers\GUI\GUI_Main.cs" />
-    <Compile Include="Helpers\Network\SharedDirectory.cs" />
-    <Compile Include="Helpers\ProcessExe\ProcessPython.cs" />
+    <Compile Include="Helpers\Files\SharedDirectory.cs" />
     <Compile Include="Models\BankPrefix_Model.cs" />
     <Compile Include="Models\MenuOption_Model.cs" />
     <Compile Include="Models\SheetError_Model.cs" />

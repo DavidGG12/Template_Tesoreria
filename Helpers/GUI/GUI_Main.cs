@@ -54,35 +54,62 @@ namespace Template_Tesoreria.Helpers.GUI
             return null;
         }
 
-        //public string[] getParagraph(string text)
-        //{
-        //    try
-        //    {
-        //        /* 
-        //         * Restamos 10 porque son 4 de padding al encabezado en general, 2 de los bordes que se dibujan del menú
-        //         * y vamos a hacer 4 puntos de padding de derecha a izquierda. 
-        //         */
-        //        var width = Console.WindowWidth - 10; 
-        //        string[] paragraph;
-        //        int[] potApart; 
-        //        var numDiv = (int)Math.Round((double)text.Length / width); //Para saber en cuántas cadenas se va a dividir el texto
+        public List<string> getParagraph(string text)
+        {
+            var paragraph = new List<string>();
 
-        //        foreach(var)
+            try
+            {
+                /* 
+                * Restamos 10 porque son 4 de padding al encabezado en general, 2 de los bordes que se dibujan del menú
+                * y vamos a hacer 4 puntos de padding de derecha a izquierda. 
+                */
+                var width = Console.WindowWidth - 10; //La usaremos como constante
+                var varWidth = width;
+                var numDiv = (int)Math.Round((double)text.Length / width); //Para saber en cuántas cadenas se va a dividir el texto
 
-        //        foreach(var num in Enumerable.Range(0, numDiv))
-        //        {
-        //            var sentence = "";
-                    
-        //        }
+                foreach (var num in Enumerable.Range(0, numDiv + 1))
+                {
+                    var sentence = "";
 
-        //        return paragraph;
-        //    }
-        //    catch(Exception ex)
-        //    {
-        //        viewErrorMessage(ex.Message);
-        //        return null;
-        //    }
-        //}
+                    if (text.Length < width)
+                        text = $"{text}{new string(' ', (width + 1) - text.Length)}";
+
+                    if (text[varWidth] != (char)32)
+                    {
+                        sentence = text.Substring(0, varWidth);
+                        var consultTxt = sentence.Reverse().ToArray();
+
+                        foreach (var character in consultTxt)
+                        {
+                            if (character == (char)32)
+                                break;
+
+                            varWidth--;
+                        }
+                        sentence = text.Substring(0, varWidth);
+                    }
+                    else
+                    {
+                        sentence = text.Substring(0, varWidth);
+                        var length = sentence.Length;
+                        varWidth = varWidth - sentence.Length;
+                    }
+
+                    text = text.Replace(sentence, "");
+                    paragraph.Add(sentence.Trim());
+
+                    if (string.IsNullOrWhiteSpace(text))
+                        break;
+                }
+                return paragraph;
+            }
+            catch (Exception ex)
+            {
+                Console.Write(ex.Message);
+                return null;
+            }
+        }
 
         private void setHeader(string title, List<string> description)
         {
@@ -96,7 +123,7 @@ namespace Template_Tesoreria.Helpers.GUI
             Console.WriteLine($"{centerMessage($"║{new string(' ', width)}║")}");
 
             foreach (var lines in description)
-                Console.WriteLine($"{centerMessage($"║{new string(' ', (width - lines.Length) / 2)}{lines}{new string(' ', (width - lines.Length) / 2)}║")}");
+                Console.WriteLine($"{centerMessage($"║{new string(' ', (width - lines.Length) / 2)}{lines}{new string(' ', (width - lines.Length) / 2)} ║")}");
 
             Console.WriteLine($"{centerMessage($"║{new string(' ', width)}║")}");
             Console.WriteLine($"{centerMessage($"╚{new string('═', width)}╝")}\n");
@@ -124,8 +151,9 @@ namespace Template_Tesoreria.Helpers.GUI
             {
                 Console.Clear();
                 Console.Title = title;
+                Console.ResetColor();
 
-                List<string> paragraph = new List<string> { "Por favor selecciona el banco de la siguiente ", "lista para continuar: " };
+                var paragraph = getParagraph(description);
 
                 setHeader(title, paragraph);
 
