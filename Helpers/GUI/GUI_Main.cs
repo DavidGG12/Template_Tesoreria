@@ -192,9 +192,7 @@ namespace Template_Tesoreria.Helpers.GUI
                     }
                 }
             }
-            while (key != ConsoleKey.Enter);
-
-            return null;
+            while (true);
         }
 
         public void viewMainMessage(string message)
