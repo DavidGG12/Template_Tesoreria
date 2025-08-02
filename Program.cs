@@ -87,6 +87,35 @@ namespace Template_Tesoreria
             }
         }
 
+        public static string errorInSomeProcess(string mssgFirstTry, string mssgMoreTries, int tryings)
+        {
+            do
+            {
+                var messageTry = tryings == 1 ? $"\n{mssgFirstTry}" : $"\n{mssgMoreTries}";
+
+                Console.Write($"{messageTry}");
+                var tryAgain = Console.ReadLine().Trim();
+
+                if (tryings >= 2 && string.Equals(tryAgain, "s", StringComparison.CurrentCultureIgnoreCase))
+                    return "PRINCIPIO";
+                else if (tryings >= 2 && string.Equals(tryAgain, "n", StringComparison.CurrentCultureIgnoreCase))
+                {
+                    Console.Write($"¿Deseas volver a intentarlo? [S/N]: ");
+                    tryAgain = Console.ReadLine().Trim();
+
+                    if (string.Equals(tryAgain, "n", StringComparison.CurrentCultureIgnoreCase))
+                        return "NO";
+
+                    return "ESCOGER";
+                }
+
+                if (tryings == 1 && string.Equals(tryAgain, "s", StringComparison.CurrentCultureIgnoreCase))
+                    return "ESCOGER";
+                else if (tryings == 1 && string.Equals(tryAgain, "n", StringComparison.CurrentCultureIgnoreCase))
+                    return "NO";
+            } while (true);
+        }
+
         static void Main(string[] args)
         {
             var dtService = new DataService();
@@ -109,6 +138,7 @@ namespace Template_Tesoreria
             var pathDestiny = "";
             var id = 1;
             var tryings = 1;
+            var exception = "";
 
             ConsoleKey key;
 
@@ -123,12 +153,12 @@ namespace Template_Tesoreria
 
                     log.writeLog("COMENZANDO PROCESO");
 
-                ESCOGER_ARCHIVO:
                     nmBank = gui.viewMenu("Extracto bancario ", "Por favor selecciona el banco de la siguiente lista para continuar:", options);
 
                     ip = getIP(log);
 
                     //var shrdDirectory = new SharedDirectory(ip);
+                ESCOGER_ARCHIVO:
                     var nmFile = gui.viewMenu("Extracto bancario ", "Por favor, selecciona el archivo con el que desea llenar el template:", filesMenu);
 
                     gui.viewMainMessage("********COMENZANDO PROCESO********");
@@ -169,6 +199,24 @@ namespace Template_Tesoreria
                     gui.Spinner("Obteniendo...", cts.Token);
                     cts = new CancellationTokenSource();
 
+
+                    if (data == null || data.Count == 0)
+                    {
+                        exception = errorInSomeProcess($"No se encontró ningún dato en el archivo {nmFile}. ¿Quieres escoger de nuevo el archivo? [S/N]: ", $"No se volvió a encontrar ningún dato en el archivo {nmFile}. ¿Quieres ir al menú principal? [S/N]: ", tryings);
+                        tryings++;
+
+                        switch(exception)
+                        {
+                            case "PRINCIPIO":
+                                goto COMIENZO_PROCESO;
+
+                            case "ESCOGER":
+                                goto ESCOGER_ARCHIVO;
+
+                            case "NO":
+                                return;
+                        }
+                    }
 
                     gui.viewInfoMessage("*Limpiando template para su llenado*");
                     log.writeLog($"LIMPIAMOS EL TEMPLATE PARA PODER INSERTAR LOS DATOS");
