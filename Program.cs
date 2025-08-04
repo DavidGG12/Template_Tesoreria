@@ -168,7 +168,7 @@ namespace Template_Tesoreria
 
                     //var shrdDirectory = new SharedDirectory(ip);
                 ESCOGER_ARCHIVO:
-                    var nmFile = gui.viewMenu("Extracto bancario ", "Por favor, selecciona el archivo con el que desea llenar el template:", filesMenu);
+                    var nmFile = gui.viewMenu("Extracto bancario ", $"Por favor, selecciona el archivo con el que desea llenar el template. Se escogió el banco {nmBank.ToUpper()}:", filesMenu);
 
                     gui.viewMainMessage("********COMENZANDO PROCESO********");
 
