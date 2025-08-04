@@ -62,7 +62,7 @@ namespace Template_Tesoreria.Helpers.Network
                 var networkPath = $@"\\{this._ip}\FormatosBancos";
                 var erExcel = @".xlsx|.xls";
                 
-                this._log.writeLog("EMPEZAMOS LA CONEXIÓN CON LA CARPETA COMPARTIDA.");
+                this._log.writeLog("(INFO) EMPEZAMOS LA CONEXIÓN CON LA CARPETA COMPARTIDA.");
                 
                 NETRESOURCE nr = new NETRESOURCE
                 {
@@ -74,7 +74,7 @@ namespace Template_Tesoreria.Helpers.Network
 
                 if(result == 0)
                 {
-                    this._log.writeLog("CONEXIÓN EXITOSA");
+                    this._log.writeLog("(SUCCESS) CONEXIÓN EXITOSA");
 
                     var id = 1;
                     var files = Directory.GetFiles(networkPath, "*.xls*").Where(f =>
@@ -88,7 +88,7 @@ namespace Template_Tesoreria.Helpers.Network
                                (atributos & (FileAttributes.Hidden | FileAttributes.System)) == 0;
                     });
 
-                    this._log.writeLog($"ARCHIVOS ENCONTRADOS: {files.Count()}");
+                    this._log.writeLog($"(INFO) ARCHIVOS ENCONTRADOS: {files.Count()}");
                     
                     foreach(var file in files)
                     {
@@ -100,20 +100,20 @@ namespace Template_Tesoreria.Helpers.Network
                         id++;
                     }
 
-                    this._log.writeLog($"SE REGRESA EL LISTADO DE ARCHIVOS");
+                    this._log.writeLog($"(SUCCESS) SE REGRESA EL LISTADO DE ARCHIVOS");
                     
                     WNetCancelConnection2(networkPath, 0, true);
                     return listFiles;
                 }
                 else
                 {
-                    this._log.writeLog($"FALLO AL ESTABLECER CON LA CONEXIÓN DE LA CARPETA COMPARTIDA. CÓDIGO DE ERROR: {result}");
+                    this._log.writeLog($"(ERROR) FALLO AL ESTABLECER CON LA CONEXIÓN DE LA CARPETA COMPARTIDA. CÓDIGO DE ERROR: {result}");
                     return null;
                 }
             }
             catch(Exception ex)
             {
-                this._log.writeLog($"FALLO AL ESTABLECER CON LA CONEXIÓN DE LA CARPETA COMPARTIDA. EXEPCIÓN: {ex.Message}");
+                this._log.writeLog($"(ERROR) FALLO AL ESTABLECER CON LA CONEXIÓN DE LA CARPETA COMPARTIDA. EXEPCIÓN: {ex.Message}");
                 return null;
             }
         }
