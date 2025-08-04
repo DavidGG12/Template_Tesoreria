@@ -6,6 +6,7 @@ using System.Runtime.InteropServices;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using Template_Tesoreria.Helpers.DataAccess;
 using Template_Tesoreria.Helpers.Files;
 using Template_Tesoreria.Models;
 
@@ -14,6 +15,7 @@ namespace Template_Tesoreria.Helpers.Network
     public class SharedDirectory
     {
         private Log _log;
+        private Crypto _crypto;
 
         private string _ip;
         private string _svrUser;
@@ -23,9 +25,11 @@ namespace Template_Tesoreria.Helpers.Network
         {
             this._log = new Log();
 
+            this._crypto = new Crypto();
+
             this._ip = ip;
-            this._svrUser = Environment.GetEnvironmentVariable("USER_REMOTE");
-            this._svrPassword = Environment.GetEnvironmentVariable("PWD_REMOTE");
+            this._svrUser = this._crypto.Decrypt(System.Configuration.ConfigurationManager.AppSettings["SvrUser"]);
+            this._svrPassword = this._crypto.Decrypt(System.Configuration.ConfigurationManager.AppSettings["SvrPwd"]);
         }
 
         public void setIP(string ip)
