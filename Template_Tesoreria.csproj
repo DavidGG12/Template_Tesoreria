@@ -163,6 +163,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Helpers\DataAccess\ConnectionDb.cs" />
+    <Compile Include="Helpers\DataAccess\Crypto.cs" />
     <Compile Include="Helpers\DataAccess\DataService.cs" />
     <Compile Include="Helpers\Db\DbFactory.cs" />
     <Compile Include="Helpers\Db\Interface\IDatabaseManager.cs" />
