@@ -60,18 +60,18 @@ namespace Template_Tesoreria.Helpers.DataAccess
 
         public List<T> GetDataList<T>(string conString, string storedName, Dictionary<string, object> parameters) where T : new()
         {
-            log.writeLog($"SE HARÁ LA CONEXIÓN CON LA BASE DE DATOS\n\t\tSE EJECUTARÁ EL STORED PROCEDURE: {storedName}");
+            log.writeLog($"(INFO) SE HARÁ LA CONEXIÓN CON LA BASE DE DATOS\n\t\tSE EJECUTARÁ EL STORED PROCEDURE: {storedName}");
 
             var dbFactory = DatabaseManagerFactory.CreateDatabaseManager(conString);
             var result = dbFactory.ExecuteStoredProcedure(storedName, parameters);
 
             if (result.Rows.Count > 0)
             {
-                log.writeLog($"DEVOLVIENDO DATOS OBTENIDOS DEL STORED PROCEDURE");
+                log.writeLog($"(SUCCESS) DEVOLVIENDO DATOS OBTENIDOS DEL STORED PROCEDURE");
                 return MapDataList<T>(result);
             }
 
-            log.writeLog($"NO SE OBTUVIERON DATOS DEL STORED PROCEDURE");
+            log.writeLog($"(WARNING) NO SE OBTUVIERON DATOS DEL STORED PROCEDURE");
             return default;
         }
     }

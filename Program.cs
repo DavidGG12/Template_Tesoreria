@@ -22,11 +22,11 @@ namespace Template_Tesoreria
         {
             try
             {
-                log.writeLog("SE OBTIENE LA IP DEL USUARIO.");
+                log.writeLog("(INFO) SE OBTIENE LA IP DEL USUARIO.");
                 foreach (var ipv4 in Dns.GetHostEntry(Dns.GetHostName()).AddressList)
                     if (ipv4.AddressFamily == AddressFamily.InterNetwork)
                     {
-                        log.writeLog("OBTENCIÓN DE IP CORRECTA");
+                        log.writeLog("(INFO) OBTENCIÓN DE IP CORRECTA");
                         return ipv4.ToString();
                     }
                 return null;
@@ -47,6 +47,8 @@ namespace Template_Tesoreria
                 var pathDirectory = "";
                 var pathDestiny = "";
 
+                log.writeLog($"(INFO) COMENZANDO CON LA DESCARGA DEL TEMPLATE");
+
                 string htmlCode = client1.DownloadString("https://docs.oracle.com/en/cloud/saas/financials/25b/oefbf/cashmanagementbankstatementdataimport-3168.html#cashmanagementbankstatementdataimport-3168");
                 string[] lines = htmlCode.Split('\n');
 
@@ -66,18 +68,15 @@ namespace Template_Tesoreria
                 //Si no existe la Carpeta la creamos
                 if (!Directory.Exists(pathDirectory)) Directory.CreateDirectory(pathDirectory);
 
-
                 //Definimos la ruta donde guardaremos el archivo
                 //http://www.oracle.com/webfolder/technetwork/docs/fbdi-25b/fbdi/xlsm/CashManagementBankStatementImportTemplate.xlsm                
                 pathDestiny = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile) + @"\\Documents\\Templates\\CashManagementBankStatementImportTemplate_" + nmBank + ".xlsm";
-                log.writeLog($"EL TEMPLATE SE INSERTARÁ EN LA SIGUIENTE RUTA: {pathDestiny}");
+                log.writeLog($"(INFO) EL TEMPLATE SE INSERTARÁ EN LA SIGUIENTE RUTA: {pathDestiny}");
 
                 WebClient myWebClient = new WebClient();
                 myWebClient.DownloadFile(urlFile, pathDestiny);
 
-                log.writeLog($"SE DESCARGA EL TEMPLATE");
-                log.writeLog($"EMPIEZA LA INSERCIÓN DE LOS DATOS EN EL TEMPLATE");
-
+                log.writeLog($"(SUCCESS) SE DESCARGA EL TEMPLATE");
                 return "TEMPLATE DESCARGADO";
             }
             catch(Exception ex)
@@ -87,25 +86,35 @@ namespace Template_Tesoreria
             }
         }
 
-        public static string errorInSomeProcess(string mssgFirstTry, string mssgMoreTries, int tryings)
+        public static string errorInSomeProcess(string mssgFirstTry, string mssgMoreTries, int tryings, Log log)
         {
             do
             {
+                log.writeLog("(INFO) HUBO ERROR EN ALGÚN PROCESO, SE LE PREGUNTARÁ AL USUARIO SI DESEA CONTINUAR");
+                log.writeLog($"(INFO) EL USUARIO LLEVA {tryings}");
+
                 var messageTry = tryings == 1 ? $"\n{mssgFirstTry}" : $"\n{mssgMoreTries}";
 
                 Console.Write($"{messageTry}");
                 var tryAgain = Console.ReadLine().Trim();
 
                 if (tryings >= 2 && string.Equals(tryAgain, "s", StringComparison.CurrentCultureIgnoreCase))
+                {
+                    log.writeLog("(INFO) SE REDIRECCIONARÁ AL MENÚ PRINCIPAL");
                     return "PRINCIPIO";
+                }
                 else if (tryings >= 2 && string.Equals(tryAgain, "n", StringComparison.CurrentCultureIgnoreCase))
                 {
                     Console.Write($"¿Deseas volver a intentarlo? [S/N]: ");
                     tryAgain = Console.ReadLine().Trim();
 
                     if (string.Equals(tryAgain, "n", StringComparison.CurrentCultureIgnoreCase))
+                    {
+                        log.writeLog("(INFO) EL USUARIO DECIDIÓ TERMINAR CON EL PROCESO");
                         return "NO";
+                    }
 
+                    log.writeLog("(INFO) SE REDIRECCIONARÁ A LA SELECCIÓN DE ARCHIVO");
                     return "ESCOGER";
                 }
 
@@ -151,7 +160,7 @@ namespace Template_Tesoreria
                     var shrdDirectory = new SharedDirectory("10.128.10.19");
                     var filesMenu = shrdDirectory.getFiles();
 
-                    log.writeLog("COMENZANDO PROCESO");
+                    log.writeLog("**COMENZANDO PROCESO**");
 
                     nmBank = gui.viewMenu("Extracto bancario ", "Por favor selecciona el banco de la siguiente lista para continuar:", options);
 
@@ -176,8 +185,21 @@ namespace Template_Tesoreria
 
                     if(!string.Equals(rsltDownload, "TEMPLATE DESCARGADO", StringComparison.CurrentCultureIgnoreCase))
                     {
-                        gui.viewErrorMessage("(ERROR) Algo ocurrió al querer descargar el template.");
-                        break;
+                        exception = errorInSomeProcess($"No se pudo descargar el template. ¿Quiere intentarlo de nuevo? [S/N]: ", $"No se pudo volver a descargar el template. ¿Quieres intentarlo de nuevo? [S/N]: ", tryings, log);
+
+                        switch (exception)
+                        {
+                            case "PRINCIPIO":
+                                goto COMIENZO_PROCESO;
+
+                            case "ESCOGER":
+                                goto COMIENZO_PROCESO;
+
+                            case "NO":
+                                log.writeLog("**PROCESO TERMINADO**");
+                                log.writeLog($"**********************************************************************");
+                                return;
+                        }
                     }
 
                     //Empezamos con la recolección de datos y el llenado de la información
@@ -202,7 +224,7 @@ namespace Template_Tesoreria
 
                     if (data == null || data.Count == 0)
                     {
-                        exception = errorInSomeProcess($"No se encontró ningún dato en el archivo {nmFile}. ¿Quieres escoger de nuevo el archivo? [S/N]: ", $"No se volvió a encontrar ningún dato en el archivo {nmFile}. ¿Quieres ir al menú principal? [S/N]: ", tryings);
+                        exception = errorInSomeProcess($"No se encontró ningún dato en el archivo {nmFile}. ¿Quieres escoger de nuevo el archivo? [S/N]: ", $"No se volvió a encontrar ningún dato en el archivo {nmFile}. ¿Quieres ir al menú principal? [S/N]: ", tryings, log);
                         tryings++;
 
                         switch(exception)
@@ -214,12 +236,16 @@ namespace Template_Tesoreria
                                 goto ESCOGER_ARCHIVO;
 
                             case "NO":
+                                log.writeLog("**PROCESO TERMINADO**");
+                                log.writeLog($"**********************************************************************");
                                 return;
                         }
                     }
 
+                    tryings = 1;
+
                     gui.viewInfoMessage("*Limpiando template para su llenado*");
-                    log.writeLog($"LIMPIAMOS EL TEMPLATE PARA PODER INSERTAR LOS DATOS");
+                    log.writeLog($"(INFO) LIMPIAMOS EL TEMPLATE PARA PODER INSERTAR LOS DATOS");
                     pathDestiny = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile) + @"\\Documents\\Templates\\CashManagementBankStatementImportTemplate_" + nmBank + ".xlsm";
                     var mngmntExcel = new ManagementExcel(pathDestiny, nmBank);
                     var errorList = new List<SheetError_Model>()
@@ -240,7 +266,7 @@ namespace Template_Tesoreria
                         break;
                     }
 
-                    log.writeLog($"TERMINO DE LIMPIEZA, SE PROSIGUE CON LA INSERCIÓN DE DATOS");
+                    log.writeLog($"(SUCCESS) TERMINO DE LIMPIEZA, SE PROSIGUE CON LA INSERCIÓN DE DATOS");
 
                     var fillData = "";
 
@@ -267,13 +293,13 @@ namespace Template_Tesoreria
                     if (string.Equals(again, "n", StringComparison.OrdinalIgnoreCase))
                         break;
 
-                    log.writeLog($"ABRIENDO ARCHIVO\n\t\t**PROCESO TERMINADO**");
+                    log.writeLog($"(INFO) ABRIENDO ARCHIVO\n\t\t**PROCESO TERMINADO**");
                     log.writeLog($"**********************************************************************");
                 }
                 catch (Exception ex)
                 {
                     gui.viewErrorMessage($"(ERROR) Algo ocurrió durante el proceso de ejecución.");
-                    log.writeLog($"ALGO OCURRIÓ DURANTE EL PROCESO PRINCIPAL {ex.Message}");
+                    log.writeLog($"(ERROR) ALGO OCURRIÓ DURANTE EL PROCESO PRINCIPAL {ex.Message}");
                     log.writeLog($"**********************************************************************");
                     break;
                 }

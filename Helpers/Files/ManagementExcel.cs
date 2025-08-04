@@ -49,7 +49,7 @@ namespace Template_Tesoreria.Helpers.Files
 
         public string cleanSheets(string sheet)
         {
-            this._log.writeLog($"LIMPIEZA DE LA HOJA {sheet}");
+            this._log.writeLog($"(INFO) LIMPIEZA DE LA HOJA {sheet}");
             try
             {
                 using(var package = new ExcelPackage(this._file))
@@ -57,13 +57,13 @@ namespace Template_Tesoreria.Helpers.Files
                     var sheetToClean = package.Workbook.Worksheets[sheet];
                     sheetToClean.DeleteRow(5, 15);
                     package.Save();
-                    this._log.writeLog($"LIMPIEZA TERMINADA, TODO CORRECTO");
+                    this._log.writeLog($"(SUCCESS) LIMPIEZA TERMINADA, TODO CORRECTO");
                     return "ELIMINADO";
                 }
             }
             catch (Exception ex)
             {
-                this._log.writeLog($"HUBO UN LIGERO ERROR AL QUERER LIMPIAR LA HOJA {sheet}\n\t\tERROR: {ex.Message}");
+                this._log.writeLog($"(ERROR) HUBO UN LIGERO ERROR AL QUERER LIMPIAR LA HOJA {sheet}\n\t\tERROR: {ex.Message}");
                 return ex.Message;
             }
         }
@@ -95,7 +95,7 @@ namespace Template_Tesoreria.Helpers.Files
                     var i = 5;
                     var j = 1;
                     
-                    this._log.writeLog($"COMIENZO CON CICLO PARA LA INSERCIÓN DE DATOS.\n\t\tSE INSERTARAN {data.Count} REGISTROS");
+                    this._log.writeLog($"(INFO) COMIENZO CON CICLO PARA LA INSERCIÓN DE DATOS.\n\t\tSE INSERTARAN {data.Count} REGISTROS");
 
                     foreach (var rows in data)
                     {
@@ -190,13 +190,13 @@ namespace Template_Tesoreria.Helpers.Files
                     sheet.Row(1).CustomHeight = false;
                     //sheet.Cells[sheet.Dimension.Address].AutoFitColumns;
                     package.Save();
-                    this._log.writeLog($"SE INSERTARON LOS REGISTROS CORRECTAMENTE");
+                    this._log.writeLog($"(SUCCESS) SE INSERTARON LOS REGISTROS CORRECTAMENTE");
                     return "CORRECTO";
                 }
             }
             catch(Exception ex)
             {
-                this._log.writeLog($"HUBO UN LIGERO ERROR AL INSERTAR LOS DATOS\n\t\tERROR: {ex.Message}");
+                this._log.writeLog($"(ERROR) HUBO UN LIGERO ERROR AL INSERTAR LOS DATOS\n\t\tERROR: {ex.Message}");
                 return $"Hubo un pequeño error: {ex.Message}";
             }
         }
