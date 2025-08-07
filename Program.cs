@@ -160,8 +160,8 @@ namespace Template_Tesoreria
                     Console.Clear();
 
                     ip = getIP(log);
-                    var shrdDirectory = new SharedDirectory(ip);
-                    //var shrdDirectory = new SharedDirectory("10.128.10.19");
+                    //var shrdDirectory = new SharedDirectory(ip);
+                    var shrdDirectory = new SharedDirectory("10.128.10.19");
                     var filesMenu = shrdDirectory.getFiles();
 
                     log.writeLog("**COMENZANDO PROCESO**");
@@ -177,6 +177,19 @@ namespace Template_Tesoreria
                     }
 
                 ESCOGER_ARCHIVO:
+                    if(filesMenu == null || filesMenu.Count <= 0)
+                    {
+                        ConsoleKey keyClose;
+                        
+                        gui.viewErrorMessage($"No se encontró ningún archivo excel dentro de la carpeta.");
+                        gui.viewErrorMessage($@"Intente subir un archivo dentro de su carpeta \\{ip}\FormatosBancos e intente de nuevo.");
+                        log.writeLog($"(WARNING) NO SE ENCONTRÓ NINGÚN ARCHIVO EXCEL DENTRO DE LA CARPETA COMPARTIDA.");
+                        gui.viewInfoMessage("Presiona cualquier tecla para cerrar el aplicativo...");
+
+                        keyClose = Console.ReadKey(true).Key;
+                        return;
+                    }
+
                     var nmFile = gui.viewMenu("Extracto bancario ", $"Por favor, selecciona el archivo con el que desea llenar el template. Se escogió el banco {nmBank.ToUpper()}:", filesMenu);
 
                     if(string.Equals(nmFile, "Regresar", StringComparison.CurrentCultureIgnoreCase))
@@ -222,7 +235,7 @@ namespace Template_Tesoreria
                     var spName = $"pa_Tesoreria_CargaExcel_{nmBank}";
                     var parameters = new Dictionary<string, object>()
                     {
-                        { "@Ip", ip },
+                        { "@Ip", "10.128.10.19" },
                         { "@Excelname", nmFile }
                     };
 

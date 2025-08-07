@@ -24,12 +24,23 @@ namespace Template_Tesoreria.Helpers.Network
         public SharedDirectory(string ip)
         {
             this._log = new Log();
-
             this._crypto = new Crypto();
 
             this._ip = ip;
-            this._svrUser = this._crypto.Decrypt(System.Configuration.ConfigurationManager.AppSettings["SvrUser"]);
-            this._svrPassword = this._crypto.Decrypt(System.Configuration.ConfigurationManager.AppSettings["SvrPwd"]);
+
+            try
+            {
+                this._log.writeLog("(INFO) OBTENIENDO EL SERVIDOR Y CONTRASEÑA PARA PODER EXTRAER LOS ARCHIVOS");
+                this._svrUser = this._crypto.Decrypt(System.Configuration.ConfigurationManager.AppSettings["SvrUser"]);
+                this._svrPassword = this._crypto.Decrypt(System.Configuration.ConfigurationManager.AppSettings["SvrPwd"]);
+                this._log.writeLog("(SUCCESS) OBTENCIÓN DE CREDENCIALES CORRECTA");
+            }
+            catch(Exception ex)
+            {
+                this._svrUser = null;
+                this._svrPassword = null;
+                this._log.writeLog($"(ERROR) HUBO UN PEQUEÑO ERROR AL QUERER OBTENER LAS CREDENCIALES DE LA CARPETA COMPARTIDA. NOS ARROJA: {ex.Message}");
+            }
         }
 
         public void setIP(string ip)
@@ -62,12 +73,14 @@ namespace Template_Tesoreria.Helpers.Network
 
             try
             {
-
                 var networkPath = $@"\\{this._ip}\FormatosBancos";
                 var erExcel = @".xlsx|.xls";
                 
                 this._log.writeLog("(INFO) EMPEZAMOS LA CONEXIÓN CON LA CARPETA COMPARTIDA.");
-                
+
+                if (string.IsNullOrEmpty(this._svrUser) || string.IsNullOrEmpty(this._svrPassword))
+                    return null;
+
                 NETRESOURCE nr = new NETRESOURCE
                 {
                     dwType = 1, // Disk
