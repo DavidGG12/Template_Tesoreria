@@ -105,7 +105,9 @@ namespace Template_Tesoreria.Helpers.Network
                     }
 
                     this._log.writeLog($"(SUCCESS) SE REGRESA EL LISTADO DE ARCHIVOS");
-                    
+
+                    listFiles.Add(new MenuOption_Model() { ID = id.ToString(), Option = "<-- REGRESAR A LA ELECCIÓN DE BANCO", Value = "Regresar" });
+
                     WNetCancelConnection2(networkPath, 0, true);
                     return listFiles;
                 }

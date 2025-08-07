@@ -140,7 +140,8 @@ namespace Template_Tesoreria
                 new MenuOption_Model() { ID = "4", Option = "4. - SCOTIABANK", Value = "Scotiabank" },
                 new MenuOption_Model() { ID = "5", Option = "5. - CITIBANAMEX", Value = "Citibanamex" },
                 new MenuOption_Model() { ID = "6", Option = "6. - SANTANDER", Value = "Santander" },
-                new MenuOption_Model() { ID = "7", Option = "7. - BANORTE", Value = "Banorte" }
+                new MenuOption_Model() { ID = "7", Option = "7. - BANORTE", Value = "Banorte" },
+                new MenuOption_Model() { ID = "8", Option = "     SALIR", Value = "Salir" },
             };
             var ip = "";
             var nmBank = "";
@@ -159,16 +160,30 @@ namespace Template_Tesoreria
                     Console.Clear();
 
                     ip = getIP(log);
-                    //var shrdDirectory = new SharedDirectory(ip);
-                    var shrdDirectory = new SharedDirectory("10.128.10.19");
+                    var shrdDirectory = new SharedDirectory(ip);
+                    //var shrdDirectory = new SharedDirectory("10.128.10.19");
                     var filesMenu = shrdDirectory.getFiles();
 
                     log.writeLog("**COMENZANDO PROCESO**");
 
                     nmBank = gui.viewMenu("Extracto bancario ", "Por favor selecciona el banco de la siguiente lista para continuar:", options);
 
+                    if(string.Equals(nmBank, "Salir", StringComparison.CurrentCultureIgnoreCase))
+                    {
+                        log.writeLog("(INFO) SE DESEÓ SALIR DEL APLICATIVO");
+                        log.writeLog("**PROCESO TERMINADO**");
+                        log.writeLog($"**********************************************************************");
+                        return;
+                    }
+
                 ESCOGER_ARCHIVO:
                     var nmFile = gui.viewMenu("Extracto bancario ", $"Por favor, selecciona el archivo con el que desea llenar el template. Se escogió el banco {nmBank.ToUpper()}:", filesMenu);
+
+                    if(string.Equals(nmFile, "Regresar", StringComparison.CurrentCultureIgnoreCase))
+                    {
+                        log.writeLog("(INFO) SE DESEÓ REGRESAR AL MENÚ PRINCIPAL PARA ESCOGER OTRO BANCO");
+                        goto COMIENZO_PROCESO;
+                    }
 
                     gui.viewMainMessage("********COMENZANDO PROCESO********");
 
@@ -207,7 +222,7 @@ namespace Template_Tesoreria
                     var spName = $"pa_Tesoreria_CargaExcel_{nmBank}";
                     var parameters = new Dictionary<string, object>()
                     {
-                        { "@Ip", "10.128.10.19" },
+                        { "@Ip", ip },
                         { "@Excelname", nmFile }
                     };
 
