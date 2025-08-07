@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
 using System.Linq;
+using System.Security.Cryptography.Pkcs;
 using System.Text;
 using System.Threading.Tasks;
 using Template_Tesoreria.Helpers.Db.Interface;
@@ -45,6 +46,8 @@ namespace Template_Tesoreria.Helpers.Db
                                     cmd.Parameters.AddWithValue(param.Key, param.Value);
                             }
                         }
+
+                        cmd.CommandTimeout = 280;
 
                         con.Open();
 

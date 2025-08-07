@@ -1,4 +1,5 @@
 ﻿//using Microsoft.Office.Interop.ExcKel;
+using Microsoft.SqlServer.Server;
 using OfficeOpenXml;
 using System;
 using System.Collections.Generic;
@@ -79,19 +80,8 @@ namespace Template_Tesoreria.Helpers.Files
                     var sheetBalances = package.Workbook.Worksheets["Statement Balances"];
 
                     var dateDoc = data.Find(x => x.Value_Date != null && x.Value_Date.Any(f => f != null)).Value_Date;
+                    var stmntNumber = "";
 
-                    string[] formats = { "dd/MM/yyyy", "MM/dd/yyyy", "yyyy-MM-dd", "yyyy/MM/dd", "yyyyMMdd", "ddMMyyyy" };
-                    DateTime dateParse;
-
-                    bool tryParse = DateTime.TryParseExact(
-                        dateDoc,
-                        formats,
-                        System.Globalization.CultureInfo.InvariantCulture,
-                        System.Globalization.DateTimeStyles.None,
-                        out dateParse
-                    );
-
-                    var formDate = dateParse.ToString("MM/dd/yyyy");
                     var i = 5;
                     var j = 1;
                     
@@ -102,42 +92,31 @@ namespace Template_Tesoreria.Helpers.Files
                         var accounts = rows.Bank_Account_Number;
                         accounts = accounts.Substring(accounts.Length - 6);
 
-                        var bookingDate = DateTime.Now;
-                        var valueDate = DateTime.Now;
-
-                       tryParse = DateTime.TryParseExact(
-                            rows.Booking_Date,
-                            formats,
-                            System.Globalization.CultureInfo.InvariantCulture,
-                            System.Globalization.DateTimeStyles.None,
-                            out bookingDate
-                        );
-
-                        tryParse = DateTime.TryParseExact(
-                            rows.Value_Date,
-                            formats,
-                            System.Globalization.CultureInfo.InvariantCulture,
-                            System.Globalization.DateTimeStyles.None,
-                            out valueDate
-                        );
-
-
-                        var stmntNumber = string.Concat(
-                            this._preBank.Find(x => x.NombreBanco.Contains(bank)).Prefijo, "-",
-                            int.Parse(accounts), "-",
-                            formDate.Replace("/", "")
-                        );
 
                         if (sheet.Cells[$"B{i - 1}"].Text == rows.Bank_Account_Number) j++;
                         else
                         {
+                            DateTime maxData = data
+                                .Where(a => a.Bank_Account_Number == rows.Bank_Account_Number)
+                                .Max(x => DateTime.Parse(x.Booking_Date));
+
+                            DateTime minData = data
+                                .Where(a => a.Bank_Account_Number == rows.Bank_Account_Number)
+                                .Min(x => DateTime.Parse(x.Booking_Date));
+
+                            stmntNumber = string.Concat(
+                                this._preBank.Find(x => x.NombreBanco.Contains(bank)).Prefijo, "-",
+                                int.Parse(accounts), "-",
+                                minData.ToString("MMddyyyy")
+                            );
+
                             sheetHeader.Cells[$"A{_rowHeader}"].Value = stmntNumber;
                             sheetHeader.Cells[$"B{_rowHeader}"].Value = rows.Bank_Account_Number;
                             sheetHeader.Cells[$"C{_rowHeader}"].Value = "N";
-                            sheetHeader.Cells[$"D{_rowHeader}"].Value = bookingDate != null ? bookingDate.ToString("MM/dd/yyyy") : formDate;
+                            sheetHeader.Cells[$"D{_rowHeader}"].Value = minData.ToString("MM/dd/yyyy");
                             sheetHeader.Cells[$"E{_rowHeader}"].Value = rows.Bank_Account_Currency;
-                            sheetHeader.Cells[$"F{_rowHeader}"].Value = bookingDate != null ? bookingDate.ToString("MM/dd/yyyy") : formDate;
-                            sheetHeader.Cells[$"G{_rowHeader}"].Value = bookingDate != null ? bookingDate.ToString("MM/dd/yyyy") : formDate;
+                            sheetHeader.Cells[$"F{_rowHeader}"].Value = minData.ToString("MM/dd/yyyy");
+                            sheetHeader.Cells[$"G{_rowHeader}"].Value = maxData.ToString("MM/dd/yyyy");
 
                             sheetBalances.Cells[$"A{_rowBalances}:A{_rowBalances + 1}"].Value   = stmntNumber;
                             sheetBalances.Cells[$"B{_rowBalances}:B{_rowBalances + 1}"].Value   = rows.Bank_Account_Number;
@@ -147,7 +126,8 @@ namespace Template_Tesoreria.Helpers.Files
                             sheetBalances.Cells[$"D{_rowBalances + 1}"].Value                   = rows.Close_Balance;
                             sheetBalances.Cells[$"E{_rowBalances}:E{_rowBalances + 1}"].Value   = rows.Bank_Account_Currency;
                             sheetBalances.Cells[$"F{_rowBalances}:F{_rowBalances + 1}"].Value   = "CRDT";
-                            sheetBalances.Cells[$"G{_rowBalances}:G{_rowBalances + 1}"].Value   = bookingDate != null ? bookingDate.ToString("MM/dd/yyyy") : formDate;
+                            sheetBalances.Cells[$"G{_rowBalances}"].Value                       = minData.ToString("MM/dd/yyyy");
+                            sheetBalances.Cells[$"G{_rowBalances + 1}"].Value                   = maxData.ToString("MM/dd/yyyy");
 
                             this._rowBalances = this._rowBalances + 2;
                             this._rowHeader++;
@@ -156,6 +136,9 @@ namespace Template_Tesoreria.Helpers.Files
 
                         if (!string.Equals(rows.Credit, "SIN MOVIMIENTOS", StringComparison.CurrentCultureIgnoreCase) || !string.Equals(rows.Debit, "SIN MOVIMIENTOS", StringComparison.CurrentCultureIgnoreCase))
                         {
+                            DateTime bookingDate = DateTime.Parse(rows.Booking_Date);
+                            DateTime valueDate = DateTime.Parse(rows.Value_Date);
+
                             sheet.Cells[$"A{i}"].Value  = stmntNumber;
                             sheet.Cells[$"B{i}"].Value  = rows.Bank_Account_Number;
                             sheet.Cells[$"C{i}"].Value  = j;
@@ -163,8 +146,8 @@ namespace Template_Tesoreria.Helpers.Files
                             sheet.Cells[$"E{i}"].Value  = "MSC";
                             sheet.Cells[$"F{i}"].Value  = rows.Debit != "0.0" ? rows.Debit : rows.Credit;
                             sheet.Cells[$"G{i}"].Value  = rows.Bank_Account_Currency;
-                            sheet.Cells[$"H{i}"].Value  = bookingDate != null ? bookingDate.ToString("MM/dd/yyyy") : formDate;
-                            sheet.Cells[$"I{i}"].Value  = valueDate != null ? valueDate.ToString("MM/dd/yyyy") : formDate;
+                            sheet.Cells[$"H{i}"].Value  = bookingDate.ToString("MM/dd/yyyy");
+                            sheet.Cells[$"I{i}"].Value  = valueDate.ToString("MM/dd/yyyy");
                             sheet.Cells[$"J{i}"].Value  = rows.Debit != "0.0" ? "DBIT" : "CRDT";
                             sheet.Cells[$"L{i}"].Value  = rows.Check_Number ?? "";
                             sheet.Cells[$"R{i}"].Value  = rows.Addenda_Text ?? "";

@@ -26,7 +26,7 @@ namespace Template_Tesoreria
                 foreach (var ipv4 in Dns.GetHostEntry(Dns.GetHostName()).AddressList)
                     if (ipv4.AddressFamily == AddressFamily.InterNetwork)
                     {
-                        log.writeLog("(INFO) OBTENCIÓN DE IP CORRECTA");
+                        log.writeLog("(SUCCESS) OBTENCIÓN DE IP CORRECTA");
                         return ipv4.ToString();
                     }
                 return null;
@@ -61,16 +61,16 @@ namespace Template_Tesoreria
                     foreach (var linkNode in linkNodes)
                         urlFile = linkNode.GetAttributeValue("href", string.Empty);
 
-                log.writeLog($"SE OBTUVO LA INFORMACIÓN PARA PODER DESCARGAR CORRECTAMENTE EL TEMPLATE");
+                log.writeLog($"(INFO) SE OBTUVO LA INFORMACIÓN PARA PODER DESCARGAR CORRECTAMENTE EL TEMPLATE");
 
-                pathDirectory = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile) + @"\\Documents\\Templates";
+                pathDirectory = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile) + @"\\Downloads\\Templates";
 
                 //Si no existe la Carpeta la creamos
                 if (!Directory.Exists(pathDirectory)) Directory.CreateDirectory(pathDirectory);
 
                 //Definimos la ruta donde guardaremos el archivo
                 //http://www.oracle.com/webfolder/technetwork/docs/fbdi-25b/fbdi/xlsm/CashManagementBankStatementImportTemplate.xlsm                
-                pathDestiny = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile) + @"\\Documents\\Templates\\CashManagementBankStatementImportTemplate_" + nmBank + ".xlsm";
+                pathDestiny = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile) + @"\\Downloads\\Templates\\CashManagementBankStatementImportTemplate_" + nmBank + ".xlsm";
                 log.writeLog($"(INFO) EL TEMPLATE SE INSERTARÁ EN LA SIGUIENTE RUTA: {pathDestiny}");
 
                 WebClient myWebClient = new WebClient();
@@ -157,6 +157,9 @@ namespace Template_Tesoreria
                 {
                 COMIENZO_PROCESO:
                     Console.Clear();
+
+                    ip = getIP(log);
+                    //var shrdDirectory = new SharedDirectory(ip);
                     var shrdDirectory = new SharedDirectory("10.128.10.19");
                     var filesMenu = shrdDirectory.getFiles();
 
@@ -164,9 +167,6 @@ namespace Template_Tesoreria
 
                     nmBank = gui.viewMenu("Extracto bancario ", "Por favor selecciona el banco de la siguiente lista para continuar:", options);
 
-                    ip = getIP(log);
-
-                    //var shrdDirectory = new SharedDirectory(ip);
                 ESCOGER_ARCHIVO:
                     var nmFile = gui.viewMenu("Extracto bancario ", $"Por favor, selecciona el archivo con el que desea llenar el template. Se escogió el banco {nmBank.ToUpper()}:", filesMenu);
 
@@ -221,6 +221,8 @@ namespace Template_Tesoreria
                     gui.Spinner("Obteniendo...", cts.Token);
                     cts = new CancellationTokenSource();
 
+                    var _parse = new TblTesoreria_Model();
+                    _parse.parseDate(data);
 
                     if (data == null || data.Count == 0)
                     {
@@ -246,7 +248,7 @@ namespace Template_Tesoreria
 
                     gui.viewInfoMessage("*Limpiando template para su llenado*");
                     log.writeLog($"(INFO) LIMPIAMOS EL TEMPLATE PARA PODER INSERTAR LOS DATOS");
-                    pathDestiny = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile) + @"\\Documents\\Templates\\CashManagementBankStatementImportTemplate_" + nmBank + ".xlsm";
+                    pathDestiny = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile) + @"\\Downloads\\Templates\\CashManagementBankStatementImportTemplate_" + nmBank + ".xlsm";
                     var mngmntExcel = new ManagementExcel(pathDestiny, nmBank);
                     var errorList = new List<SheetError_Model>()
                     {
