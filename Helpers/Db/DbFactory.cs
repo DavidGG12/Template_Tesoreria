@@ -47,7 +47,7 @@ namespace Template_Tesoreria.Helpers.Db
                             }
                         }
 
-                        cmd.CommandTimeout = 280;
+                        cmd.CommandTimeout = 560;
 
                         con.Open();
 

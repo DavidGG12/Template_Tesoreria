@@ -95,23 +95,12 @@ namespace Template_Tesoreria.Helpers.Files
                         accounts = accounts.Substring(accounts.Length - 6);
 
                         maxDate = data
-                            .Where(x => !string.IsNullOrEmpty(x.Booking_Date))
+                            .Where(x => !string.IsNullOrEmpty(x.Booking_Date) && (x.Bank_Account_Number == rows.Bank_Account_Number && !string.IsNullOrEmpty(x.Booking_Date)))
                             .Max(x => DateTime.Parse(x.Booking_Date));
 
                         minDate = data
-                            .Where(x => !string.IsNullOrEmpty(x.Booking_Date))
-                            .Max(x => DateTime.Parse(x.Booking_Date));
-
-                        if (rows.Booking_Date != null || rows.Value_Date != null)
-                        {
-                            maxDate = data
-                                .Where(a => a.Bank_Account_Number == rows.Bank_Account_Number)
-                                .Max(x => DateTime.Parse(x.Booking_Date));
-
-                            minDate = data
-                                .Where(a => a.Bank_Account_Number == rows.Bank_Account_Number)
-                                .Min(x => DateTime.Parse(x.Booking_Date));
-                        }
+                            .Where(x => !string.IsNullOrEmpty(x.Booking_Date) && (x.Bank_Account_Number == rows.Bank_Account_Number && !string.IsNullOrEmpty(x.Booking_Date)))
+                            .Min(x => DateTime.Parse(x.Booking_Date));
 
                         if (sheet.Cells[$"B{i - 1}"].Text == rows.Bank_Account_Number) j++;
                         else
@@ -183,7 +172,6 @@ namespace Template_Tesoreria.Helpers.Files
                     }
                     sheet.Cells[sheet.Dimension.Address].AutoFitColumns();
                     sheet.Row(1).CustomHeight = false;
-                    //sheet.Cells[sheet.Dimension.Address].AutoFitColumns;
                     package.Save();
                     this._log.writeLog($"(SUCCESS) SE INSERTARON LOS REGISTROS CORRECTAMENTE");
                     return "CORRECTO";
@@ -195,44 +183,6 @@ namespace Template_Tesoreria.Helpers.Files
                 return $"Hubo un pequeño error: {ex.Message}";
             }
         }
-
-        //private void fillHeader(TblTesoreria_Model data)
-        //{
-        //    try
-        //    {
-        //        this._log.writeLog($"COMIENZO DE LA INSERCIÓN DEL HEADER DE LA CUENTA {data.Cuenta}");
-        //        var sheetsList = new List<string>()
-        //        {
-        //            { "Statement Headers" }
-        //        };
-
-        //        using (var package = new ExcelPackage(this._file))
-        //        {
-        //            foreach(var nmSheet in sheetsList)
-        //            {
-        //                var sheet = package.Workbook.Worksheets[nmSheet];
-        //                this._log.writeLog($"SE TRABAJARÁ CON LA PESTAÑA {nmSheet}");
-
-        //                var accounts = data.Cuenta.Replace("-PESOS", "") ?? "";
-        //                accounts = accounts.Substring(accounts.Length - 6);
-
-        //                var stmntNumber = string.Concat(
-        //                    this._preBank.Find(x => x.NombreBanco.Contains(bank)).Prefijo, "-",
-        //                    int.Parse(accounts), "-",
-        //                    data.Fecha.Replace("/", "")
-        //                );
-
-                        
-        //            }
-        //            package.Save();
-        //        }
-        //    }
-        //    catch(Exception ex)
-        //    {
-        //        this._log.writeLog($"Hubo un ligero error al querer llenar el Header.\n\tError: {ex.Message}");
-        //        throw ex;
-        //    }
-        //}
 
         public void closeDocument()
         {
