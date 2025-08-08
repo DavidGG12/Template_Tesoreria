@@ -4,7 +4,7 @@ on: push
 
 jobs:
   publish:
-    runs-on: windows-latest
+    runs-on: windows-2022
     steps:
       - name: Checkout del repositorio
         uses: actions/checkout@v4
