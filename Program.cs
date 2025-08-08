@@ -12,7 +12,6 @@ using System.Threading;
 using System.Net.Sockets;
 using Template_Tesoreria.Helpers.GUI;
 using Template_Tesoreria.Helpers.Network;
-using System.ComponentModel.DataAnnotations;
 
 namespace Template_Tesoreria
 {
@@ -160,8 +159,8 @@ namespace Template_Tesoreria
                     Console.Clear();
 
                     ip = getIP(log);
-                    //var shrdDirectory = new SharedDirectory(ip);
-                    var shrdDirectory = new SharedDirectory("10.128.10.19");
+                    var shrdDirectory = new SharedDirectory(ip);
+                    //var shrdDirectory = new SharedDirectory("10.128.10.19");
                     var filesMenu = shrdDirectory.getFiles();
 
                     log.writeLog("**COMENZANDO PROCESO**");
@@ -235,7 +234,7 @@ namespace Template_Tesoreria
                     var spName = $"pa_Tesoreria_CargaExcel_{nmBank}";
                     var parameters = new Dictionary<string, object>()
                     {
-                        { "@Ip", "10.128.10.19" },
+                        { "@Ip", ip },
                         { "@Excelname", nmFile }
                     };
 
