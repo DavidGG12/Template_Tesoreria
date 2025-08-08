@@ -13,7 +13,7 @@ namespace Template_Tesoreria.Helpers.Files
         public Log() 
         {
             var execDate = DateTime.Now.ToString("yyyyMMdd");
-            var dirLog = $@"{Environment.GetFolderPath(Environment.SpecialFolder.UserProfile)}\\Downloads\\Logs";
+            var dirLog = $@"{Environment.GetFolderPath(Environment.SpecialFolder.UserProfile)}\\Downloads\\Templates\\Logs";
 
             if(!Directory.Exists(dirLog)) Directory.CreateDirectory(dirLog);
 

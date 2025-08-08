@@ -1,19 +1,11 @@
-﻿//using Microsoft.Office.Interop.ExcKel;
-using Microsoft.SqlServer.Server;
-using OfficeOpenXml;
+﻿using OfficeOpenXml;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
 using System.IO;
 using System.Linq;
-using System.Runtime.ExceptionServices;
 using System.Runtime.InteropServices;
-using System.Text;
-using System.Text.RegularExpressions;
-using System.Threading.Tasks;
 using Template_Tesoreria.Models;
 using Excel = Microsoft.Office.Interop.Excel;
-//using Spire.Xls;
 
 
 namespace Template_Tesoreria.Helpers.Files
@@ -95,12 +87,23 @@ namespace Template_Tesoreria.Helpers.Files
                         accounts = accounts.Substring(accounts.Length - 6);
 
                         maxDate = data
-                            .Where(x => !string.IsNullOrEmpty(x.Booking_Date) && (x.Bank_Account_Number == rows.Bank_Account_Number && !string.IsNullOrEmpty(x.Booking_Date)))
+                            .Where(x => !string.IsNullOrEmpty(x.Booking_Date))
                             .Max(x => DateTime.Parse(x.Booking_Date));
 
                         minDate = data
-                            .Where(x => !string.IsNullOrEmpty(x.Booking_Date) && (x.Bank_Account_Number == rows.Bank_Account_Number && !string.IsNullOrEmpty(x.Booking_Date)))
+                            .Where(x => !string.IsNullOrEmpty(x.Booking_Date))
                             .Min(x => DateTime.Parse(x.Booking_Date));
+
+                        if(rows.Booking_Date != null)
+                        {
+                            maxDate = data
+                                .Where(x => x.Bank_Account_Number == rows.Bank_Account_Number)
+                                .Max(x => DateTime.Parse(x.Booking_Date));
+
+                            minDate = data
+                                .Where(x => x.Bank_Account_Number == rows.Bank_Account_Number)
+                                .Min(x => DateTime.Parse(x.Booking_Date));
+                        }
 
                         if (sheet.Cells[$"B{i - 1}"].Text == rows.Bank_Account_Number) j++;
                         else
