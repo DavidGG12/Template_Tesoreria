@@ -46,9 +46,9 @@ namespace Template_Tesoreria.Models
                     };
                     DateTime dateParse;
 
-                    if (row.Booking_Date.Length < 8)
+                    if (row.Booking_Date != null && row.Booking_Date.Length < 8)
                         row.Booking_Date = $"{new string('0', 1)}{row.Booking_Date}";
-                    if(row.Value_Date.Length < 8)
+                    if(row.Value_Date != null && row.Value_Date.Length < 8)
                         row.Value_Date = $"{new string('0', 1)}{row.Value_Date}";
 
                     if (DateTime.TryParseExact(

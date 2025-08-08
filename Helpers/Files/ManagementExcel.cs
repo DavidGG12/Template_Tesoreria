@@ -79,7 +79,9 @@ namespace Template_Tesoreria.Helpers.Files
                     var sheetHeader = package.Workbook.Worksheets["Statement Headers"];
                     var sheetBalances = package.Workbook.Worksheets["Statement Balances"];
 
-                    var dateDoc = data.Find(x => x.Value_Date != null && x.Value_Date.Any(f => f != null)).Value_Date;
+                    DateTime maxDate;
+                    DateTime minDate;
+
                     var stmntNumber = "";
 
                     var i = 5;
@@ -92,31 +94,41 @@ namespace Template_Tesoreria.Helpers.Files
                         var accounts = rows.Bank_Account_Number;
                         accounts = accounts.Substring(accounts.Length - 6);
 
+                        maxDate = data
+                            .Where(x => !string.IsNullOrEmpty(x.Booking_Date))
+                            .Max(x => DateTime.Parse(x.Booking_Date));
+
+                        minDate = data
+                            .Where(x => !string.IsNullOrEmpty(x.Booking_Date))
+                            .Max(x => DateTime.Parse(x.Booking_Date));
+
+                        if (rows.Booking_Date != null || rows.Value_Date != null)
+                        {
+                            maxDate = data
+                                .Where(a => a.Bank_Account_Number == rows.Bank_Account_Number)
+                                .Max(x => DateTime.Parse(x.Booking_Date));
+
+                            minDate = data
+                                .Where(a => a.Bank_Account_Number == rows.Bank_Account_Number)
+                                .Min(x => DateTime.Parse(x.Booking_Date));
+                        }
 
                         if (sheet.Cells[$"B{i - 1}"].Text == rows.Bank_Account_Number) j++;
                         else
                         {
-                            DateTime maxData = data
-                                .Where(a => a.Bank_Account_Number == rows.Bank_Account_Number)
-                                .Max(x => DateTime.Parse(x.Booking_Date));
-
-                            DateTime minData = data
-                                .Where(a => a.Bank_Account_Number == rows.Bank_Account_Number)
-                                .Min(x => DateTime.Parse(x.Booking_Date));
-
                             stmntNumber = string.Concat(
                                 this._preBank.Find(x => x.NombreBanco.Contains(bank)).Prefijo, "-",
                                 int.Parse(accounts), "-",
-                                minData.ToString("MMddyyyy")
+                                minDate.ToString("MMddyyyy")
                             );
 
                             sheetHeader.Cells[$"A{_rowHeader}"].Value = stmntNumber;
                             sheetHeader.Cells[$"B{_rowHeader}"].Value = rows.Bank_Account_Number;
                             sheetHeader.Cells[$"C{_rowHeader}"].Value = "N";
-                            sheetHeader.Cells[$"D{_rowHeader}"].Value = minData.ToString("MM/dd/yyyy");
+                            sheetHeader.Cells[$"D{_rowHeader}"].Value = minDate.ToString("MM/dd/yyyy");
                             sheetHeader.Cells[$"E{_rowHeader}"].Value = rows.Bank_Account_Currency;
-                            sheetHeader.Cells[$"F{_rowHeader}"].Value = minData.ToString("MM/dd/yyyy");
-                            sheetHeader.Cells[$"G{_rowHeader}"].Value = maxData.ToString("MM/dd/yyyy");
+                            sheetHeader.Cells[$"F{_rowHeader}"].Value = minDate.ToString("MM/dd/yyyy");
+                            sheetHeader.Cells[$"G{_rowHeader}"].Value = maxDate.ToString("MM/dd/yyyy");
 
                             sheetBalances.Cells[$"A{_rowBalances}:A{_rowBalances + 1}"].Value   = stmntNumber;
                             sheetBalances.Cells[$"B{_rowBalances}:B{_rowBalances + 1}"].Value   = rows.Bank_Account_Number;
@@ -126,8 +138,8 @@ namespace Template_Tesoreria.Helpers.Files
                             sheetBalances.Cells[$"D{_rowBalances + 1}"].Value                   = rows.Close_Balance;
                             sheetBalances.Cells[$"E{_rowBalances}:E{_rowBalances + 1}"].Value   = rows.Bank_Account_Currency;
                             sheetBalances.Cells[$"F{_rowBalances}:F{_rowBalances + 1}"].Value   = "CRDT";
-                            sheetBalances.Cells[$"G{_rowBalances}"].Value                       = minData.ToString("MM/dd/yyyy");
-                            sheetBalances.Cells[$"G{_rowBalances + 1}"].Value                   = maxData.ToString("MM/dd/yyyy");
+                            sheetBalances.Cells[$"G{_rowBalances}"].Value                       = minDate.ToString("MM/dd/yyyy");
+                            sheetBalances.Cells[$"G{_rowBalances + 1}"].Value                   = maxDate.ToString("MM/dd/yyyy");
 
                             this._rowBalances = this._rowBalances + 2;
                             this._rowHeader++;
@@ -142,7 +154,7 @@ namespace Template_Tesoreria.Helpers.Files
                             sheet.Cells[$"A{i}"].Value  = stmntNumber;
                             sheet.Cells[$"B{i}"].Value  = rows.Bank_Account_Number;
                             sheet.Cells[$"C{i}"].Value  = j;
-                            sheet.Cells[$"D{i}"].Value  = rows.Transaction_Code ?? "";
+                            sheet.Cells[$"D{i}"].Value  = rows.Transaction_Code ?? "0";
                             sheet.Cells[$"E{i}"].Value  = "MSC";
                             sheet.Cells[$"F{i}"].Value  = rows.Debit != "0.0" ? rows.Debit : rows.Credit;
                             sheet.Cells[$"G{i}"].Value  = rows.Bank_Account_Currency;
