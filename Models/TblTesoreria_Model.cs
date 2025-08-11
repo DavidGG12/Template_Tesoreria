@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -8,6 +9,7 @@ namespace Template_Tesoreria.Models
 {
     public class TblTesoreria_Model
     {
+        [Key]
         public string Bank_Account_Number { get; set; }
         public string Transaction_Code { get; set; }
         public string Bank_Account_Currency { get; set; }

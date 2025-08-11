@@ -159,8 +159,8 @@ namespace Template_Tesoreria
                     Console.Clear();
 
                     ip = getIP(log);
-                    var shrdDirectory = new SharedDirectory(ip);
-                    //var shrdDirectory = new SharedDirectory("10.128.10.19");
+                    //var shrdDirectory = new SharedDirectory(ip);
+                    var shrdDirectory = new SharedDirectory("10.128.10.19");
                     var filesMenu = shrdDirectory.getFiles();
 
                     log.writeLog("**COMENZANDO PROCESO**");
@@ -234,7 +234,7 @@ namespace Template_Tesoreria
                     var spName = $"pa_Tesoreria_CargaExcel_{nmBank}";
                     var parameters = new Dictionary<string, object>()
                     {
-                        { "@Ip", ip },
+                        { "@Ip", "10.128.10.19" },
                         { "@Excelname", nmFile }
                     };
 

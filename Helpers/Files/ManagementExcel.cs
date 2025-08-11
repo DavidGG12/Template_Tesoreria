@@ -40,6 +40,12 @@ namespace Template_Tesoreria.Helpers.Files
             ExcelPackage.License.SetNonCommercialOrganization("Grupo Sanborns");
         }
 
+        public void setFilePath(string pathExcel)
+        {
+            this._path = pathExcel;
+            this._file = new FileInfo(this._path);
+        }
+
         public string cleanSheets(string sheet)
         {
             this._log.writeLog($"(INFO) LIMPIEZA DE LA HOJA {sheet}");
@@ -58,6 +64,64 @@ namespace Template_Tesoreria.Helpers.Files
             {
                 this._log.writeLog($"(ERROR) HUBO UN LIGERO ERROR AL QUERER LIMPIAR LA HOJA {sheet}\n\t\tERROR: {ex.Message}");
                 return ex.Message;
+            }
+        }
+
+        public bool fillHeaderSheet(List<TblTesoreria_Model> data)
+        {
+            try
+            {
+                this._log.writeLog("(INFO) COMENZANDO CON LA INSERCIÓN DE INFORMACIÓN DENTRO DE LA HOJA DEL HEADER, DENTRO DEL TEMPLATE");
+
+                using (var package = new ExcelPackage(this._file))
+                {
+                    var sheet = package.Workbook.Worksheets["Statement Headers"];
+
+                    var lstDistinct = data
+                        .Select(x => x.Bank_Account_Number)
+                        .Distinct();
+
+                    int i = 5;
+
+                    foreach(var accounts in lstDistinct)
+                    {
+                        var minDate = data
+                            .Where(x => x.Bank_Account_Number == accounts)
+                            .Min(x => DateTime.Parse(x.Booking_Date));
+
+                        var maxDate = data
+                            .Where(x => x.Bank_Account_Number == accounts)
+                            .Max(x => DateTime.Parse(x.Booking_Date));
+
+                        var stmntNumber = string.Concat(
+                                this._preBank.Where(x => x.NombreBanco == this.bank).Select(x => x.Prefijo), "-",
+                                int.Parse(accounts), "-",
+                                minDate.ToString("MMddyyyy")
+                            );
+
+                        sheet.Cells[$"A{i}"].Value = stmntNumber;
+                        sheet.Cells[$"B{i}"].Value = accounts;
+                        sheet.Cells[$"C{i}"].Value = "N";
+                        sheet.Cells[$"D{i}"].Value = minDate.ToString("MM/dd/yyyy");
+                        sheet.Cells[$"E{i}"].Value = data.Where(x => x.Bank_Account_Number == accounts).Select(x => x.Bank_Account_Currency).FirstOrDefault();
+                        sheet.Cells[$"F{i}"].Value = minDate.ToString("MM/dd/yyyy");
+                        sheet.Cells[$"G{i}"].Value = maxDate.ToString("MM/dd/yyyy");
+
+                        i++;
+                    }
+
+                    sheet.Cells[sheet.Dimension.Address].AutoFitColumns();
+                    sheet.Row(1).CustomHeight = false;
+                    package.Save();
+
+                    this._log.writeLog("(SUCCESS) SE LLENÓ LA HOJA DEL HEADER, CORRECTAMENTE");
+                    return true;
+                }
+            }
+            catch(Exception ex)
+            {
+                this._log.writeLog($"(ERROR) HUBO UN PEQUEÑO ERROR AL QUERER LLENAR EL HEADER DEL TEMPLATE. NOS ARROJÓ: {ex.Message}");
+                return false;
             }
         }
 
