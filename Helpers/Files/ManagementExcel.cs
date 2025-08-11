@@ -196,6 +196,19 @@ namespace Template_Tesoreria.Helpers.Files
             }
         }
 
+        //public bool fillLinesSheet(List<TblTesoreria_Model> data)
+        //{
+        //    try
+        //    {
+                
+        //    }
+        //    catch(Exception ex)
+        //    {
+        //        this._log.writeLog($"(ERROR) HUBO UN PEQUEÑO ERROR AL QUERER LLENAR LA HOJA DE LINES DEL TEMPLATE. NOS ARROJÓ: {ex.Message}");
+        //        return false;
+        //    }
+        //}
+
         public string getTemplate(List<TblTesoreria_Model> data)
         {
             try
