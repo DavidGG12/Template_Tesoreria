@@ -11,13 +11,9 @@ namespace Template_Tesoreria.Helpers.MangementLog
     {
         private Stopwatch _stopwatch;
 
-        public ExecutionTimer()
-        {
-            this._stopwatch = new Stopwatch();
-        }
-
         public void startExecution()
         {
+            this._stopwatch = new Stopwatch();
             this._stopwatch.Start();
         }
 

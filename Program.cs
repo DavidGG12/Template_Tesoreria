@@ -297,22 +297,35 @@ namespace Template_Tesoreria
 
                     log.writeLog($"(SUCCESS) TERMINO DE LIMPIEZA, SE PROSIGUE CON LA INSERCIÓN DE DATOS");
 
-                    var fillData = "";
+                    //var fillData = "";
+                    var fillHeader = false;
+                    var fillBalances = false;
+                    var fillLines = false;
 
                     gui.viewInfoMessage($"*Llenando template con los datos recuperados. Siendo un total de {data.Count} registros*");
                     Task.Run(() =>
                     {
-                        fillData = mngmntExcel.getTemplate(data);
+                        //fillData = mngmntExcel.getTemplate(data);
+                        fillHeader      = mngmntExcel.fillHeaderSheet(data);
+                        fillBalances    = mngmntExcel.fillBalanceSheet(data);
+                        fillLines       = mngmntExcel.fillLinesSheet(data);
+
                         cts.Cancel();
                     });
                     gui.Spinner("Llenando...", cts.Token);
                     cts = new CancellationTokenSource();
 
-                    if (!string.Equals(fillData, "CORRECTO", StringComparison.CurrentCultureIgnoreCase))
+                    if(!fillHeader || !fillBalances || !fillLines)
                     {
                         gui.viewErrorMessage("(ERROR) Hubo un ligero error al querer llenar el template.");
                         break;
                     }
+
+                    //if (!string.Equals(fillData, "CORRECTO", StringComparison.CurrentCultureIgnoreCase))
+                    //{
+                    //    gui.viewErrorMessage("(ERROR) Hubo un ligero error al querer llenar el template.");
+                    //    break;
+                    //}
 
                     Console.Write("\n¿Desea llenar otro template? [S/N]: ");
                     var again = Console.ReadLine().Trim();

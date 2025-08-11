@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
+using Template_Tesoreria.Helpers.MangementLog;
 using Template_Tesoreria.Models;
 using Excel = Microsoft.Office.Interop.Excel;
 
@@ -18,6 +19,7 @@ namespace Template_Tesoreria.Helpers.Files
         private int _rowBalances;
         private FileInfo _file;
         private Log _log;
+        private ExecutionTimer _et;
         private List<BankPrefix_Model> _preBank;
         public ManagementExcel(string pathExcel, string bank) 
         {
@@ -27,6 +29,7 @@ namespace Template_Tesoreria.Helpers.Files
             this._path = pathExcel;
             this._file = new FileInfo(this._path);
             this._log = new Log();
+            this._et = new ExecutionTimer();
             this._preBank = new List<BankPrefix_Model>()
             {
                 new BankPrefix_Model(){ NombreBanco = "Inbursa",       Prefijo = "INB"  },
@@ -48,6 +51,7 @@ namespace Template_Tesoreria.Helpers.Files
 
         public string cleanSheets(string sheet)
         {
+            this._et.startExecution();
             this._log.writeLog($"(INFO) LIMPIEZA DE LA HOJA {sheet}");
             try
             {
@@ -56,13 +60,13 @@ namespace Template_Tesoreria.Helpers.Files
                     var sheetToClean = package.Workbook.Worksheets[sheet];
                     sheetToClean.DeleteRow(5, 15);
                     package.Save();
-                    this._log.writeLog($"(SUCCESS) LIMPIEZA TERMINADA, TODO CORRECTO");
+                    this._log.writeLog($"(SUCCESS) LIMPIEZA TERMINADA, TODO CORRECTO. ||| TIEMPO DE EJECUCIÓN: {this._et.endExecution()}");
                     return "ELIMINADO";
                 }
             }
             catch (Exception ex)
             {
-                this._log.writeLog($"(ERROR) HUBO UN LIGERO ERROR AL QUERER LIMPIAR LA HOJA {sheet}\n\t\tERROR: {ex.Message}");
+                this._log.writeLog($"(ERROR) HUBO UN LIGERO ERROR AL QUERER LIMPIAR LA HOJA {sheet} ||| TIEMPO DE EJECUCIÓN: {this._et.endExecution()}\n\t\tERROR: {ex.Message}");
                 return ex.Message;
             }
         }
@@ -72,6 +76,7 @@ namespace Template_Tesoreria.Helpers.Files
             try
             {
                 this._log.writeLog("(INFO) COMENZANDO CON LA INSERCIÓN DE INFORMACIÓN DENTRO DE LA HOJA DEL HEADER, DENTRO DEL TEMPLATE");
+                this._et.startExecution();
 
                 using (var package = new ExcelPackage(this._file))
                 {
@@ -93,9 +98,11 @@ namespace Template_Tesoreria.Helpers.Files
                             .Where(x => x.Bank_Account_Number == accounts)
                             .Max(x => DateTime.Parse(x.Booking_Date));
 
+                        var hola = accounts.Substring(0, accounts.Length - 6);
+
                         var stmntNumber = string.Concat(
-                                this._preBank.Where(x => x.NombreBanco == this.bank).Select(x => x.Prefijo), "-",
-                                int.Parse(accounts), "-",
+                                this._preBank.Where(x => x.NombreBanco == this.bank).Select(x => x.Prefijo).FirstOrDefault(), "-",
+                                Int64.Parse(accounts.Substring(0, accounts.Length - 6)), "-",
                                 minDate.ToString("MMddyyyy")
                             );
 
@@ -114,13 +121,13 @@ namespace Template_Tesoreria.Helpers.Files
                     sheet.Row(1).CustomHeight = false;
                     package.Save();
 
-                    this._log.writeLog("(SUCCESS) SE LLENÓ LA HOJA DEL HEADER, CORRECTAMENTE");
+                    this._log.writeLog($"(SUCCESS) SE LLENÓ LA HOJA DEL HEADER, CORRECTAMENTE ||| TIEMPO DE EJECUCIÓN: {this._et.endExecution()}");
                     return true;
                 }
             }
             catch(Exception ex)
             {
-                this._log.writeLog($"(ERROR) HUBO UN PEQUEÑO ERROR AL QUERER LLENAR EL HEADER DEL TEMPLATE. NOS ARROJÓ: {ex.Message}");
+                this._log.writeLog($"(ERROR) HUBO UN PEQUEÑO ERROR AL QUERER LLENAR EL HEADER DEL TEMPLATE. ||| TIEMPO DE EJECUCIÓN: {this._et.endExecution()} NOS ARROJÓ: {ex.Message}");
                 return false;
             }
         }
@@ -130,6 +137,7 @@ namespace Template_Tesoreria.Helpers.Files
             try
             {
                 this._log.writeLog("(INFO) COMENZANDO CON LA INSERCIÓN DE INFORMACIÓN DENTRO DE LA HOJA DEL BALANCES, DENTRO DEL TEMPLATE");
+                this._et.startExecution();
 
                 using (var package = new ExcelPackage(this._file))
                 {
@@ -162,8 +170,8 @@ namespace Template_Tesoreria.Helpers.Files
                             .Max(x => DateTime.Parse(x.Booking_Date));
 
                         var stmntNumber = string.Concat(
-                                this._preBank.Where(x => x.NombreBanco == this.bank).Select(x => x.Prefijo), "-",
-                                int.Parse(accounts), "-",
+                                this._preBank.Where(x => x.NombreBanco == this.bank).Select(x => x.Prefijo).FirstOrDefault().FirstOrDefault(), "-",
+                                Int64.Parse(accounts.Substring(0, accounts.Length - 6)), "-",
                                 minDate.ToString("MMddyyyy")
                             );
 
@@ -185,29 +193,112 @@ namespace Template_Tesoreria.Helpers.Files
                     sheet.Row(1).CustomHeight = false;
                     package.Save();
 
-                    this._log.writeLog("(SUCCESS) SE LLENÓ LA HOJA DEL BALANCES, CORRECTAMENTE");
+                    this._log.writeLog($"(SUCCESS) SE LLENÓ LA HOJA DEL BALANCES, CORRECTAMENTE ||| TIEMPO DE EJECUCIÓN {this._et.endExecution()}");
                     return true;
                 }
             }
             catch(Exception ex)
             {
-                this._log.writeLog($"(ERROR) HUBO UN PEQUEÑO ERROR AL QUERER LLENAR EL BALANCES DEL TEMPLATE. NOS ARROJÓ: {ex.Message}");
+                this._log.writeLog($"(ERROR) HUBO UN PEQUEÑO ERROR AL QUERER LLENAR EL BALANCES DEL TEMPLATE. NOS ARROJÓ: {ex.Message} ||| TIEMPO DE EJECUCIÓN {this._et.endExecution()}");
                 return false;
             }
         }
 
-        //public bool fillLinesSheet(List<TblTesoreria_Model> data)
-        //{
-        //    try
-        //    {
-                
-        //    }
-        //    catch(Exception ex)
-        //    {
-        //        this._log.writeLog($"(ERROR) HUBO UN PEQUEÑO ERROR AL QUERER LLENAR LA HOJA DE LINES DEL TEMPLATE. NOS ARROJÓ: {ex.Message}");
-        //        return false;
-        //    }
-        //}
+        public bool fillLinesSheet(List<TblTesoreria_Model> data)
+        {
+            try
+            {
+                this._log.writeLog("(INFO) COMENZANDO CON LA INSERCIÓN DE INFORMACIÓN DENTRO DE LA HOJA DE LINES, DENTRO DEL TEMPLATE");
+                this._et.startExecution();
+
+                using (var package = new ExcelPackage(this._file))
+                {
+                    var sheet = package.Workbook.Worksheets["Statement Lines"];
+                    int i = 5;
+                    int j = 1;
+
+                    DateTime maxDate;
+                    DateTime minDate;
+
+                    foreach (var rows in data)
+                    {
+                        maxDate = data
+                            .Where(x => !string.IsNullOrEmpty(x.Booking_Date))
+                            .Max(x => DateTime.Parse(x.Booking_Date));
+
+                        minDate = data
+                            .Where(x => !string.IsNullOrEmpty(x.Booking_Date))
+                            .Min(x => DateTime.Parse(x.Booking_Date));
+
+                        if (rows.Booking_Date != null)
+                        {
+                            maxDate = data
+                                .Where(x => x.Bank_Account_Number == rows.Bank_Account_Number)
+                                .Max(x => DateTime.Parse(x.Booking_Date));
+
+                            minDate = data
+                                .Where(x => x.Bank_Account_Number == rows.Bank_Account_Number)
+                                .Min(x => DateTime.Parse(x.Booking_Date));
+                        }
+
+                        var stmntNumber = string.Concat(
+                                this._preBank.Where(x => x.NombreBanco == this.bank).Select(x => x.Prefijo).FirstOrDefault(), "-",
+                                Int64.Parse(rows.Bank_Account_Number.Substring(0, rows.Bank_Account_Number.Length - 6)), "-",
+                                minDate.ToString("MMddyyyy")
+                            );
+
+                        if (sheet.Cells[$"B{i - 1}"].Text != rows.Bank_Account_Number) j = 1;
+
+                        if (!string.Equals(rows.Credit, "SIN MOVIMIENTOS", StringComparison.CurrentCultureIgnoreCase) || !string.Equals(rows.Debit, "SIN MOVIMIENTOS", StringComparison.CurrentCultureIgnoreCase))
+                        {
+                            DateTime bookingDate = DateTime.Parse(rows.Booking_Date);
+                            DateTime valueDate = DateTime.Parse(rows.Value_Date);
+
+                            sheet.Cells[$"A{i}"].Value = stmntNumber;
+                            sheet.Cells[$"B{i}"].Value = rows.Bank_Account_Number;
+                            sheet.Cells[$"C{i}"].Value = j;
+                            sheet.Cells[$"D{i}"].Value = rows.Transaction_Code ?? "0";
+                            sheet.Cells[$"E{i}"].Value = "MSC";
+                            sheet.Cells[$"F{i}"].Value = rows.Debit != "0.0" ? rows.Debit : rows.Credit;
+                            sheet.Cells[$"G{i}"].Value = rows.Bank_Account_Currency;
+                            sheet.Cells[$"H{i}"].Value = bookingDate.ToString("MM/dd/yyyy");
+                            sheet.Cells[$"I{i}"].Value = valueDate.ToString("MM/dd/yyyy");
+                            sheet.Cells[$"J{i}"].Value = rows.Debit != "0.0" ? "DBIT" : "CRDT";
+                            sheet.Cells[$"L{i}"].Value = rows.Check_Number ?? "";
+                            sheet.Cells[$"R{i}"].Value = rows.Addenda_Text ?? "";
+                            sheet.Cells[$"S{i}"].Value = rows.Account_Servicer_Reference ?? "";
+                            sheet.Cells[$"T{i}"].Value = rows.Customer_Reference ?? "";
+                            sheet.Cells[$"U{i}"].Value = rows.Clearing_System_Reference ?? "";
+                            sheet.Cells[$"V{i}"].Value = rows.Contract_Identifier ?? "";
+                            sheet.Cells[$"W{i}"].Value = rows.Instruction_Identifier ?? "";
+                            sheet.Cells[$"X{i}"].Value = rows.End_To_End_Identifier ?? "";
+                            sheet.Cells[$"Y{i}"].Value = rows.Servicer_Status ?? "";
+                            sheet.Cells[$"Z{i}"].Value = rows.Commision_Waiver_Indicator_Flag ?? "";
+                            sheet.Cells[$"AA{i}"].Value = rows.Reversal_Indicator_Flag ?? "";
+                            sheet.Cells[$"BM{i}"].Value = rows.Structured_Payment_Reference ?? "";
+                            sheet.Cells[$"BN{i}"].Value = rows.Reconciliation_Reference ?? "";
+                            sheet.Cells[$"BO{i}"].Value = rows.Message_Identifier ?? "";
+                            sheet.Cells[$"BP{i}"].Value = rows.Payment_Information_Identifier ?? "";
+
+                            i++;
+                            j++;
+                        }
+                    }
+
+                    sheet.Cells[sheet.Dimension.Address].AutoFitColumns();
+                    sheet.Row(1).CustomHeight = false;
+                    package.Save();
+
+                    this._log.writeLog($"(SUCCESS) SE LLENÓ LA HOJA DE LINES, CORRECTAMENTE ||| TIEMPO DE EJECUCIÓN {this._et.endExecution()}");
+                    return true;
+                }
+            }
+            catch (Exception ex)
+            {
+                this._log.writeLog($"(ERROR) HUBO UN PEQUEÑO ERROR AL QUERER LLENAR LA HOJA DE LINES DEL TEMPLATE. NOS ARROJÓ: {ex.Message} ||| TIEMPO DE EJECUCIÓN: {this._et.endExecution()}");
+                return false;
+            }
+        }
 
         public string getTemplate(List<TblTesoreria_Model> data)
         {
