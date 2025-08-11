@@ -37,54 +37,6 @@ namespace Template_Tesoreria
             }
         }
 
-        public static string downloadTemplate(string nmBank, Log log)
-        {
-            try
-            {
-                WebClient client1 = new WebClient();
-                var urlFile = "";
-                var pathDirectory = "";
-                var pathDestiny = "";
-
-                log.writeLog($"(INFO) COMENZANDO CON LA DESCARGA DEL TEMPLATE");
-
-                string htmlCode = client1.DownloadString("https://docs.oracle.com/en/cloud/saas/financials/25b/oefbf/cashmanagementbankstatementdataimport-3168.html#cashmanagementbankstatementdataimport-3168");
-                string[] lines = htmlCode.Split('\n');
-
-                HTML.HtmlDocument htmlDocument = new HTML.HtmlDocument();
-                htmlDocument.LoadHtml(lines[58].ToString().Trim());
-
-                var linkNodes = htmlDocument.DocumentNode.SelectNodes("//a[@href]");
-
-                if (linkNodes != null)
-                    foreach (var linkNode in linkNodes)
-                        urlFile = linkNode.GetAttributeValue("href", string.Empty);
-
-                log.writeLog($"(INFO) SE OBTUVO LA INFORMACIÓN PARA PODER DESCARGAR CORRECTAMENTE EL TEMPLATE");
-
-                pathDirectory = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile) + @"\\Downloads\\Templates";
-
-                //Si no existe la Carpeta la creamos
-                if (!Directory.Exists(pathDirectory)) Directory.CreateDirectory(pathDirectory);
-
-                //Definimos la ruta donde guardaremos el archivo
-                //http://www.oracle.com/webfolder/technetwork/docs/fbdi-25b/fbdi/xlsm/CashManagementBankStatementImportTemplate.xlsm                
-                pathDestiny = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile) + @"\\Downloads\\Templates\\CashManagementBankStatementImportTemplate_" + nmBank + ".xlsm";
-                log.writeLog($"(INFO) EL TEMPLATE SE INSERTARÁ EN LA SIGUIENTE RUTA: {pathDestiny}");
-
-                WebClient myWebClient = new WebClient();
-                myWebClient.DownloadFile(urlFile, pathDestiny);
-
-                log.writeLog($"(SUCCESS) SE DESCARGA EL TEMPLATE");
-                return "TEMPLATE DESCARGADO";
-            }
-            catch(Exception ex)
-            {
-                log.writeLog($"(ERROR): AL DESCARGAR EL TEMPLATE SE GENERÓ UN ERROR: {ex.Message}");
-                return null;
-            }
-        }
-
         public static string errorInSomeProcess(string mssgFirstTry, string mssgMoreTries, int tryings, Log log)
         {
             do
@@ -201,16 +153,17 @@ namespace Template_Tesoreria
 
                     gui.viewInfoMessage("*Descargando el template desde el sitio de Oracle*");
 
-                    var rsltDownload = "";
+                    var rsltDownload = false;
+                    var dwnld = new PortalOracle(nmBank);
                     Task.Run(() =>
                     {
-                        rsltDownload = downloadTemplate(nmBank, log);
+                        rsltDownload = dwnld.downloadTemplate();
                         cts.Cancel();
                     });
                     gui.Spinner("Descargando...", cts.Token);
                     cts = new CancellationTokenSource();
 
-                    if(!string.Equals(rsltDownload, "TEMPLATE DESCARGADO", StringComparison.CurrentCultureIgnoreCase))
+                    if(!rsltDownload)
                     {
                         exception = errorInSomeProcess($"No se pudo descargar el template. ¿Quiere intentarlo de nuevo? [S/N]: ", $"No se pudo volver a descargar el template. ¿Quieres intentarlo de nuevo? [S/N]: ", tryings, log);
 

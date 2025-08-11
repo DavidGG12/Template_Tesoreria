@@ -21,10 +21,9 @@ namespace Template_Tesoreria.Helpers.Files
         private Log _log;
         private ExecutionTimer _et;
         private List<BankPrefix_Model> _preBank;
+
         public ManagementExcel(string pathExcel, string bank) 
         {
-            this._rowHeader = 5;
-            this._rowBalances = 5;
             this.bank = bank;
             this._path = pathExcel;
             this._file = new FileInfo(this._path);
@@ -102,7 +101,7 @@ namespace Template_Tesoreria.Helpers.Files
 
                         var stmntNumber = string.Concat(
                                 this._preBank.Where(x => x.NombreBanco == this.bank).Select(x => x.Prefijo).FirstOrDefault(), "-",
-                                Int64.Parse(accounts.Substring(0, accounts.Length - 6)), "-",
+                                Int64.Parse(accounts), "-",
                                 minDate.ToString("MMddyyyy")
                             );
 
@@ -117,7 +116,7 @@ namespace Template_Tesoreria.Helpers.Files
                         i++;
                     }
 
-                    sheet.Cells[sheet.Dimension.Address].AutoFitColumns();
+                    sheet.Cells[1, 1, i, 20].AutoFitColumns();
                     sheet.Row(1).CustomHeight = false;
                     package.Save();
 
@@ -170,8 +169,8 @@ namespace Template_Tesoreria.Helpers.Files
                             .Max(x => DateTime.Parse(x.Booking_Date));
 
                         var stmntNumber = string.Concat(
-                                this._preBank.Where(x => x.NombreBanco == this.bank).Select(x => x.Prefijo).FirstOrDefault().FirstOrDefault(), "-",
-                                Int64.Parse(accounts.Substring(0, accounts.Length - 6)), "-",
+                                this._preBank.Where(x => x.NombreBanco == this.bank).Select(x => x.Prefijo).FirstOrDefault(), "-",
+                                Int64.Parse(accounts), "-",
                                 minDate.ToString("MMddyyyy")
                             );
 
@@ -189,7 +188,7 @@ namespace Template_Tesoreria.Helpers.Files
                         i = i + 2;
                     }
 
-                    sheet.Cells[sheet.Dimension.Address].AutoFitColumns();
+                    sheet.Cells[1, 1, i, 20].AutoFitColumns();
                     sheet.Row(1).CustomHeight = false;
                     package.Save();
 
@@ -238,7 +237,7 @@ namespace Template_Tesoreria.Helpers.Files
                         var minDate = fechas.Min;
                         var stmntNumber = string.Concat(
                             this._preBank.Where(x => x.NombreBanco == this.bank).Select(x => x.Prefijo).FirstOrDefault(), "-",
-                            Int64.Parse(rows.Bank_Account_Number.Substring(0, rows.Bank_Account_Number.Length - 6)), "-",
+                            Int64.Parse(rows.Bank_Account_Number), "-",
                             minDate.ToString("MMddyyyy")
                         );
 
@@ -281,7 +280,6 @@ namespace Template_Tesoreria.Helpers.Files
                         }
                     }
 
-                    // Ajustar ancho solo de las columnas usadas
                     sheet.Cells[1, 1, i, 20].AutoFitColumns();
                     sheet.Row(1).CustomHeight = false;
                     package.Save();
