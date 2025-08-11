@@ -1,9 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Template_Tesoreria.Models
 {
@@ -34,12 +31,12 @@ namespace Template_Tesoreria.Models
         public string Payment_Information_Identifier { get; set; }
         public string Open_Balance { get; set; }
         public string Close_Balance { get; set; }
-        
+
         public bool parseDate(List<TblTesoreria_Model> data)
         {
             try
             {
-                foreach(var row in data)
+                foreach (var row in data)
                 {
                     string[] formats = {
                         "ddMMyyyy", "dMMyyyy", "yyyyMMdd", "yyyy-MM-dd",
@@ -50,7 +47,7 @@ namespace Template_Tesoreria.Models
 
                     if (row.Booking_Date != null && row.Booking_Date.Length < 8)
                         row.Booking_Date = $"{new string('0', 1)}{row.Booking_Date}";
-                    if(row.Value_Date != null && row.Value_Date.Length < 8)
+                    if (row.Value_Date != null && row.Value_Date.Length < 8)
                         row.Value_Date = $"{new string('0', 1)}{row.Value_Date}";
 
                     if (DateTime.TryParseExact(
@@ -78,7 +75,7 @@ namespace Template_Tesoreria.Models
 
                 return true;
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 return false;
             }
