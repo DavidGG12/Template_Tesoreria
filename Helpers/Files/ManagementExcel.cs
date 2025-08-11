@@ -125,6 +125,77 @@ namespace Template_Tesoreria.Helpers.Files
             }
         }
 
+        public bool fillBalanceSheet(List<TblTesoreria_Model> data)
+        {
+            try
+            {
+                this._log.writeLog("(INFO) COMENZANDO CON LA INSERCIÓN DE INFORMACIÓN DENTRO DE LA HOJA DEL BALANCES, DENTRO DEL TEMPLATE");
+
+                using (var package = new ExcelPackage(this._file))
+                {
+                    var sheet = package.Workbook.Worksheets["Statement Balances"];
+
+                    var lstDistinct = data
+                        .Select(x => x.Bank_Account_Number)
+                        .Distinct();
+
+                    int i = 5;
+
+                    foreach (var accounts in lstDistinct)
+                    {
+                        var lstAccount = data
+                            .Where(x => x.Bank_Account_Number == accounts)
+                            .Select(x => new
+                            {
+                                x.Open_Balance,
+                                x.Close_Balance,
+                                x.Bank_Account_Currency
+                            })
+                            .FirstOrDefault();
+
+                        var minDate = data
+                            .Where(x => x.Bank_Account_Number == accounts)
+                            .Min(x => DateTime.Parse(x.Booking_Date));
+
+                        var maxDate = data
+                            .Where(x => x.Bank_Account_Number == accounts)
+                            .Max(x => DateTime.Parse(x.Booking_Date));
+
+                        var stmntNumber = string.Concat(
+                                this._preBank.Where(x => x.NombreBanco == this.bank).Select(x => x.Prefijo), "-",
+                                int.Parse(accounts), "-",
+                                minDate.ToString("MMddyyyy")
+                            );
+
+                        sheet.Cells[$"A{i}:A{i + 1}"].Value = stmntNumber;
+                        sheet.Cells[$"B{i}:B{i + 1}"].Value = accounts;
+                        sheet.Cells[$"C{i}"].Value          = "OPBD";
+                        sheet.Cells[$"C{i + 1}"].Value      = "CLBD";
+                        sheet.Cells[$"D{i}"].Value          = lstAccount.Open_Balance;
+                        sheet.Cells[$"D{i + 1}"].Value      = lstAccount.Close_Balance;
+                        sheet.Cells[$"E{i}:E{i + 1}"].Value = lstAccount.Bank_Account_Currency;
+                        sheet.Cells[$"F{i}:F{i + 1}"].Value = "CRDT";
+                        sheet.Cells[$"G{i}"].Value          = minDate.ToString("MM/dd/yyyy");
+                        sheet.Cells[$"G{i + 1}"].Value      = maxDate.ToString("MM/dd/yyyy");
+
+                        i = i + 2;
+                    }
+
+                    sheet.Cells[sheet.Dimension.Address].AutoFitColumns();
+                    sheet.Row(1).CustomHeight = false;
+                    package.Save();
+
+                    this._log.writeLog("(SUCCESS) SE LLENÓ LA HOJA DEL BALANCES, CORRECTAMENTE");
+                    return true;
+                }
+            }
+            catch(Exception ex)
+            {
+                this._log.writeLog($"(ERROR) HUBO UN PEQUEÑO ERROR AL QUERER LLENAR EL BALANCES DEL TEMPLATE. NOS ARROJÓ: {ex.Message}");
+                return false;
+            }
+        }
+
         public string getTemplate(List<TblTesoreria_Model> data)
         {
             try
