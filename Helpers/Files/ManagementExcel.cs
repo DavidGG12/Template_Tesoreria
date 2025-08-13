@@ -14,9 +14,7 @@ namespace Template_Tesoreria.Helpers.Files
     public class ManagementExcel
     {
         private string _path;
-        private string bank;
-        private int _rowHeader;
-        private int _rowBalances;
+        private string _bank;
         private FileInfo _file;
         private Log _log;
         private ExecutionTimer _et;
@@ -24,7 +22,7 @@ namespace Template_Tesoreria.Helpers.Files
 
         public ManagementExcel(string pathExcel, string bank) 
         {
-            this.bank = bank;
+            this._bank = bank;
             this._path = pathExcel;
             this._file = new FileInfo(this._path);
             this._log = new Log();
@@ -100,18 +98,18 @@ namespace Template_Tesoreria.Helpers.Files
                         var hola = accounts.Substring(0, accounts.Length - 6);
 
                         var stmntNumber = string.Concat(
-                                this._preBank.Where(x => x.NombreBanco == this.bank).Select(x => x.Prefijo).FirstOrDefault(), "-",
+                                this._preBank.Where(x => x.NombreBanco == this._bank).Select(x => x.Prefijo).FirstOrDefault(), "-",
                                 Int64.Parse(accounts), "-",
                                 minDate.ToString("MMddyyyy")
                             );
 
-                        sheet.Cells[$"A{i}"].Value = stmntNumber;
-                        sheet.Cells[$"B{i}"].Value = accounts;
-                        sheet.Cells[$"C{i}"].Value = "N";
-                        sheet.Cells[$"D{i}"].Value = minDate.ToString("MM/dd/yyyy");
-                        sheet.Cells[$"E{i}"].Value = data.Where(x => x.Bank_Account_Number == accounts).Select(x => x.Bank_Account_Currency).FirstOrDefault();
-                        sheet.Cells[$"F{i}"].Value = minDate.ToString("MM/dd/yyyy");
-                        sheet.Cells[$"G{i}"].Value = maxDate.ToString("MM/dd/yyyy");
+                        sheet.Cells[i, 1].Value = stmntNumber;
+                        sheet.Cells[i, 2].Value = accounts;
+                        sheet.Cells[i, 3].Value = "N";
+                        sheet.Cells[i, 4].Value = minDate.ToString("MM/dd/yyyy");
+                        sheet.Cells[i, 5].Value = data.Where(x => x.Bank_Account_Number == accounts).Select(x => x.Bank_Account_Currency).FirstOrDefault();
+                        sheet.Cells[i, 6].Value = minDate.ToString("MM/dd/yyyy");
+                        sheet.Cells[i, 7].Value = maxDate.ToString("MM/dd/yyyy");
 
                         i++;
                     }
@@ -169,7 +167,7 @@ namespace Template_Tesoreria.Helpers.Files
                             .Max(x => DateTime.Parse(x.Booking_Date));
 
                         var stmntNumber = string.Concat(
-                                this._preBank.Where(x => x.NombreBanco == this.bank).Select(x => x.Prefijo).FirstOrDefault(), "-",
+                                this._preBank.Where(x => x.NombreBanco == this._bank).Select(x => x.Prefijo).FirstOrDefault(), "-",
                                 Int64.Parse(accounts), "-",
                                 minDate.ToString("MMddyyyy")
                             );
@@ -236,7 +234,7 @@ namespace Template_Tesoreria.Helpers.Files
 
                         var minDate = fechas.Min;
                         var stmntNumber = string.Concat(
-                            this._preBank.Where(x => x.NombreBanco == this.bank).Select(x => x.Prefijo).FirstOrDefault(), "-",
+                            this._preBank.Where(x => x.NombreBanco == this._bank).Select(x => x.Prefijo).FirstOrDefault(), "-",
                             Int64.Parse(rows.Bank_Account_Number), "-",
                             minDate.ToString("MMddyyyy")
                         );
@@ -292,229 +290,6 @@ namespace Template_Tesoreria.Helpers.Files
             {
                 this._log.writeLog($"(ERROR) HUBO UN ERROR AL LLENAR LA HOJA DE LINES: {ex.Message} ||| TIEMPO: {this._et.endExecution()}");
                 return false;
-            }
-        }
-
-
-        //public bool fillLinesSheet(List<TblTesoreria_Model> data)
-        //{
-        //    try
-        //    {
-        //        this._log.writeLog("(INFO) COMENZANDO CON LA INSERCIÓN DE INFORMACIÓN DENTRO DE LA HOJA DE LINES, DENTRO DEL TEMPLATE");
-        //        this._et.startExecution();
-
-        //        using (var package = new ExcelPackage(this._file))
-        //        {
-        //            var sheet = package.Workbook.Worksheets["Statement Lines"];
-        //            int i = 5;
-        //            int j = 1;
-
-        //            DateTime maxDate;
-        //            DateTime minDate;
-
-        //            foreach (var rows in data)
-        //            {
-        //                maxDate = data
-        //                    .Where(x => !string.IsNullOrEmpty(x.Booking_Date))
-        //                    .Max(x => DateTime.Parse(x.Booking_Date));
-
-        //                minDate = data
-        //                    .Where(x => !string.IsNullOrEmpty(x.Booking_Date))
-        //                    .Min(x => DateTime.Parse(x.Booking_Date));
-
-        //                if (rows.Booking_Date != null)
-        //                {
-        //                    maxDate = data
-        //                        .Where(x => x.Bank_Account_Number == rows.Bank_Account_Number)
-        //                        .Max(x => DateTime.Parse(x.Booking_Date));
-
-        //                    minDate = data
-        //                        .Where(x => x.Bank_Account_Number == rows.Bank_Account_Number)
-        //                        .Min(x => DateTime.Parse(x.Booking_Date));
-        //                }
-
-        //                var stmntNumber = string.Concat(
-        //                        this._preBank.Where(x => x.NombreBanco == this.bank).Select(x => x.Prefijo).FirstOrDefault(), "-",
-        //                        Int64.Parse(rows.Bank_Account_Number.Substring(0, rows.Bank_Account_Number.Length - 6)), "-",
-        //                        minDate.ToString("MMddyyyy")
-        //                    );
-
-        //                if (sheet.Cells[$"B{i - 1}"].Text != rows.Bank_Account_Number) j = 1;
-
-        //                if (!string.Equals(rows.Credit, "SIN MOVIMIENTOS", StringComparison.CurrentCultureIgnoreCase) || !string.Equals(rows.Debit, "SIN MOVIMIENTOS", StringComparison.CurrentCultureIgnoreCase))
-        //                {
-        //                    DateTime bookingDate = DateTime.Parse(rows.Booking_Date);
-        //                    DateTime valueDate = DateTime.Parse(rows.Value_Date);
-
-        //                    sheet.Cells[$"A{i}"].Value = stmntNumber;
-        //                    sheet.Cells[$"B{i}"].Value = rows.Bank_Account_Number;
-        //                    sheet.Cells[$"C{i}"].Value = j;
-        //                    sheet.Cells[$"D{i}"].Value = rows.Transaction_Code ?? "0";
-        //                    sheet.Cells[$"E{i}"].Value = "MSC";
-        //                    sheet.Cells[$"F{i}"].Value = rows.Debit != "0.0" ? rows.Debit : rows.Credit;
-        //                    sheet.Cells[$"G{i}"].Value = rows.Bank_Account_Currency;
-        //                    sheet.Cells[$"H{i}"].Value = bookingDate.ToString("MM/dd/yyyy");
-        //                    sheet.Cells[$"I{i}"].Value = valueDate.ToString("MM/dd/yyyy");
-        //                    sheet.Cells[$"J{i}"].Value = rows.Debit != "0.0" ? "DBIT" : "CRDT";
-        //                    sheet.Cells[$"L{i}"].Value = rows.Check_Number ?? "";
-        //                    sheet.Cells[$"R{i}"].Value = rows.Addenda_Text ?? "";
-        //                    sheet.Cells[$"S{i}"].Value = rows.Account_Servicer_Reference ?? "";
-        //                    sheet.Cells[$"T{i}"].Value = rows.Customer_Reference ?? "";
-        //                    sheet.Cells[$"U{i}"].Value = rows.Clearing_System_Reference ?? "";
-        //                    sheet.Cells[$"V{i}"].Value = rows.Contract_Identifier ?? "";
-        //                    sheet.Cells[$"W{i}"].Value = rows.Instruction_Identifier ?? "";
-        //                    sheet.Cells[$"X{i}"].Value = rows.End_To_End_Identifier ?? "";
-        //                    sheet.Cells[$"Y{i}"].Value = rows.Servicer_Status ?? "";
-        //                    sheet.Cells[$"Z{i}"].Value = rows.Commision_Waiver_Indicator_Flag ?? "";
-        //                    sheet.Cells[$"AA{i}"].Value = rows.Reversal_Indicator_Flag ?? "";
-        //                    sheet.Cells[$"BM{i}"].Value = rows.Structured_Payment_Reference ?? "";
-        //                    sheet.Cells[$"BN{i}"].Value = rows.Reconciliation_Reference ?? "";
-        //                    sheet.Cells[$"BO{i}"].Value = rows.Message_Identifier ?? "";
-        //                    sheet.Cells[$"BP{i}"].Value = rows.Payment_Information_Identifier ?? "";
-
-        //                    i++;
-        //                    j++;
-        //                }
-        //            }
-
-        //            sheet.Cells[sheet.Dimension.Address].AutoFitColumns();
-        //            sheet.Row(1).CustomHeight = false;
-        //            package.Save();
-
-        //            this._log.writeLog($"(SUCCESS) SE LLENÓ LA HOJA DE LINES, CORRECTAMENTE ||| TIEMPO DE EJECUCIÓN {this._et.endExecution()}");
-        //            return true;
-        //        }
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        this._log.writeLog($"(ERROR) HUBO UN PEQUEÑO ERROR AL QUERER LLENAR LA HOJA DE LINES DEL TEMPLATE. NOS ARROJÓ: {ex.Message} ||| TIEMPO DE EJECUCIÓN: {this._et.endExecution()}");
-        //        return false;
-        //    }
-        //}
-
-        public string getTemplate(List<TblTesoreria_Model> data)
-        {
-            try
-            {
-                using(var package = new ExcelPackage(this._file))
-                {
-                    var sheet = package.Workbook.Worksheets["Statement Lines"];
-                    var sheetHeader = package.Workbook.Worksheets["Statement Headers"];
-                    var sheetBalances = package.Workbook.Worksheets["Statement Balances"];
-
-                    DateTime maxDate;
-                    DateTime minDate;
-
-                    var stmntNumber = "";
-
-                    var i = 5;
-                    var j = 1;
-                    
-                    this._log.writeLog($"(INFO) COMIENZO CON CICLO PARA LA INSERCIÓN DE DATOS.\n\t\tSE INSERTARAN {data.Count} REGISTROS");
-
-                    foreach (var rows in data)
-                    {
-                        var accounts = rows.Bank_Account_Number;
-                        accounts = accounts.Substring(accounts.Length - 6);
-
-                        maxDate = data
-                            .Where(x => !string.IsNullOrEmpty(x.Booking_Date))
-                            .Max(x => DateTime.Parse(x.Booking_Date));
-
-                        minDate = data
-                            .Where(x => !string.IsNullOrEmpty(x.Booking_Date))
-                            .Min(x => DateTime.Parse(x.Booking_Date));
-
-                        if(rows.Booking_Date != null)
-                        {
-                            maxDate = data
-                                .Where(x => x.Bank_Account_Number == rows.Bank_Account_Number)
-                                .Max(x => DateTime.Parse(x.Booking_Date));
-
-                            minDate = data
-                                .Where(x => x.Bank_Account_Number == rows.Bank_Account_Number)
-                                .Min(x => DateTime.Parse(x.Booking_Date));
-                        }
-
-                        if (sheet.Cells[$"B{i - 1}"].Text == rows.Bank_Account_Number) j++;
-                        else
-                        {
-                            stmntNumber = string.Concat(
-                                this._preBank.Find(x => x.NombreBanco.Contains(bank)).Prefijo, "-",
-                                int.Parse(accounts), "-",
-                                minDate.ToString("MMddyyyy")
-                            );
-
-                            sheetHeader.Cells[$"A{_rowHeader}"].Value = stmntNumber;
-                            sheetHeader.Cells[$"B{_rowHeader}"].Value = rows.Bank_Account_Number;
-                            sheetHeader.Cells[$"C{_rowHeader}"].Value = "N";
-                            sheetHeader.Cells[$"D{_rowHeader}"].Value = minDate.ToString("MM/dd/yyyy");
-                            sheetHeader.Cells[$"E{_rowHeader}"].Value = rows.Bank_Account_Currency;
-                            sheetHeader.Cells[$"F{_rowHeader}"].Value = minDate.ToString("MM/dd/yyyy");
-                            sheetHeader.Cells[$"G{_rowHeader}"].Value = maxDate.ToString("MM/dd/yyyy");
-
-                            sheetBalances.Cells[$"A{_rowBalances}:A{_rowBalances + 1}"].Value   = stmntNumber;
-                            sheetBalances.Cells[$"B{_rowBalances}:B{_rowBalances + 1}"].Value   = rows.Bank_Account_Number;
-                            sheetBalances.Cells[$"C{_rowBalances}"].Value                       = "OPBD";
-                            sheetBalances.Cells[$"C{_rowBalances + 1}"].Value                   = "CLBD";
-                            sheetBalances.Cells[$"D{_rowBalances}"].Value                       = rows.Open_Balance;
-                            sheetBalances.Cells[$"D{_rowBalances + 1}"].Value                   = rows.Close_Balance;
-                            sheetBalances.Cells[$"E{_rowBalances}:E{_rowBalances + 1}"].Value   = rows.Bank_Account_Currency;
-                            sheetBalances.Cells[$"F{_rowBalances}:F{_rowBalances + 1}"].Value   = "CRDT";
-                            sheetBalances.Cells[$"G{_rowBalances}"].Value                       = minDate.ToString("MM/dd/yyyy");
-                            sheetBalances.Cells[$"G{_rowBalances + 1}"].Value                   = maxDate.ToString("MM/dd/yyyy");
-
-                            this._rowBalances = this._rowBalances + 2;
-                            this._rowHeader++;
-                            j = 1;
-                        }
-
-                        if (!string.Equals(rows.Credit, "SIN MOVIMIENTOS", StringComparison.CurrentCultureIgnoreCase) || !string.Equals(rows.Debit, "SIN MOVIMIENTOS", StringComparison.CurrentCultureIgnoreCase))
-                        {
-                            DateTime bookingDate = DateTime.Parse(rows.Booking_Date);
-                            DateTime valueDate = DateTime.Parse(rows.Value_Date);
-
-                            sheet.Cells[$"A{i}"].Value  = stmntNumber;
-                            sheet.Cells[$"B{i}"].Value  = rows.Bank_Account_Number;
-                            sheet.Cells[$"C{i}"].Value  = j;
-                            sheet.Cells[$"D{i}"].Value  = rows.Transaction_Code ?? "0";
-                            sheet.Cells[$"E{i}"].Value  = "MSC";
-                            sheet.Cells[$"F{i}"].Value  = rows.Debit != "0.0" ? rows.Debit : rows.Credit;
-                            sheet.Cells[$"G{i}"].Value  = rows.Bank_Account_Currency;
-                            sheet.Cells[$"H{i}"].Value  = bookingDate.ToString("MM/dd/yyyy");
-                            sheet.Cells[$"I{i}"].Value  = valueDate.ToString("MM/dd/yyyy");
-                            sheet.Cells[$"J{i}"].Value  = rows.Debit != "0.0" ? "DBIT" : "CRDT";
-                            sheet.Cells[$"L{i}"].Value  = rows.Check_Number ?? "";
-                            sheet.Cells[$"R{i}"].Value  = rows.Addenda_Text ?? "";
-                            sheet.Cells[$"S{i}"].Value  = rows.Account_Servicer_Reference ?? "";
-                            sheet.Cells[$"T{i}"].Value  = rows.Customer_Reference ?? "";
-                            sheet.Cells[$"U{i}"].Value  = rows.Clearing_System_Reference ?? "";
-                            sheet.Cells[$"V{i}"].Value  = rows.Contract_Identifier ?? "";
-                            sheet.Cells[$"W{i}"].Value  = rows.Instruction_Identifier ?? "";
-                            sheet.Cells[$"X{i}"].Value  = rows.End_To_End_Identifier ?? "";
-                            sheet.Cells[$"Y{i}"].Value  = rows.Servicer_Status ?? "";
-                            sheet.Cells[$"Z{i}"].Value  = rows.Commision_Waiver_Indicator_Flag ?? "";
-                            sheet.Cells[$"AA{i}"].Value  = rows.Reversal_Indicator_Flag ?? "";
-                            sheet.Cells[$"BM{i}"].Value  = rows.Structured_Payment_Reference ?? "";
-                            sheet.Cells[$"BN{i}"].Value  = rows.Reconciliation_Reference ?? "";
-                            sheet.Cells[$"BO{i}"].Value  = rows.Message_Identifier ?? "";
-                            sheet.Cells[$"BP{i}"].Value  = rows.Payment_Information_Identifier ?? "";
-
-                            i++;
-                        }
-
-                    }
-                    sheet.Cells[sheet.Dimension.Address].AutoFitColumns();
-                    sheet.Row(1).CustomHeight = false;
-                    package.Save();
-                    this._log.writeLog($"(SUCCESS) SE INSERTARON LOS REGISTROS CORRECTAMENTE");
-                    return "CORRECTO";
-                }
-            }
-            catch(Exception ex)
-            {
-                this._log.writeLog($"(ERROR) HUBO UN LIGERO ERROR AL INSERTAR LOS DATOS\n\t\tERROR: {ex.Message}");
-                return $"Hubo un pequeño error: {ex.Message}";
             }
         }
 

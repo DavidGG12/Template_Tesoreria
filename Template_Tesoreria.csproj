@@ -176,6 +176,7 @@
     <Compile Include="Helpers\DataAccess\DataService.cs" />
     <Compile Include="Helpers\Db\DbFactory.cs" />
     <Compile Include="Helpers\Db\Interface\IDatabaseManager.cs" />
+    <Compile Include="Helpers\Files\PortalOracle.cs" />
     <Compile Include="Helpers\MangementLog\Log.cs" />
     <Compile Include="Helpers\Files\ManagementExcel.cs" />
     <Compile Include="Helpers\GUI\GUI_Main.cs" />

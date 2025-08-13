@@ -12,6 +12,7 @@ using System.Threading;
 using System.Net.Sockets;
 using Template_Tesoreria.Helpers.GUI;
 using Template_Tesoreria.Helpers.Network;
+using System.Linq;
 
 namespace Template_Tesoreria
 {
@@ -151,37 +152,6 @@ namespace Template_Tesoreria
 
                     gui.viewMainMessage("********COMENZANDO PROCESO********");
 
-                    gui.viewInfoMessage("*Descargando el template desde el sitio de Oracle*");
-
-                    var rsltDownload = false;
-                    var dwnld = new PortalOracle(nmBank);
-                    Task.Run(() =>
-                    {
-                        rsltDownload = dwnld.downloadTemplate();
-                        cts.Cancel();
-                    });
-                    gui.Spinner("Descargando...", cts.Token);
-                    cts = new CancellationTokenSource();
-
-                    if(!rsltDownload)
-                    {
-                        exception = errorInSomeProcess($"No se pudo descargar el template. ¿Quiere intentarlo de nuevo? [S/N]: ", $"No se pudo volver a descargar el template. ¿Quieres intentarlo de nuevo? [S/N]: ", tryings, log);
-
-                        switch (exception)
-                        {
-                            case "PRINCIPIO":
-                                goto COMIENZO_PROCESO;
-
-                            case "ESCOGER":
-                                goto COMIENZO_PROCESO;
-
-                            case "NO":
-                                log.writeLog("**PROCESO TERMINADO**");
-                                log.writeLog($"**********************************************************************");
-                                return;
-                        }
-                    }
-
                     //Empezamos con la recolección de datos y el llenado de la información
                     var data = new List<TblTesoreria_Model>();
                     var spName = $"pa_Tesoreria_CargaExcel_{nmBank}";
@@ -226,6 +196,40 @@ namespace Template_Tesoreria
 
                     tryings = 1;
 
+                DESCARGA:
+                    gui.viewInfoMessage("*Descargando el template desde el sitio de Oracle*");
+
+                    var rsltDownload = false;
+                    var dwnld = new PortalOracle(nmBank);
+                    Task.Run(() =>
+                    {
+                        rsltDownload = dwnld.downloadTemplate();
+                        cts.Cancel();
+                    });
+                    gui.Spinner("Descargando...", cts.Token);
+                    cts = new CancellationTokenSource();
+
+                    if (!rsltDownload)
+                    {
+                        exception = errorInSomeProcess($"No se pudo descargar el template. ¿Quiere intentarlo de nuevo? [S/N]: ", $"No se pudo volver a descargar el template. ¿Quieres intentarlo de nuevo? [S/N]: ", tryings, log);
+
+                        switch (exception)
+                        {
+                            case "PRINCIPIO":
+                                Console.Clear();
+                                goto DESCARGA;
+
+                            case "ESCOGER":
+                                Console.Clear();
+                                goto DESCARGA;
+
+                            case "NO":
+                                log.writeLog("**PROCESO TERMINADO**");
+                                log.writeLog($"**********************************************************************");
+                                return;
+                        }
+                    }
+
                     gui.viewInfoMessage("*Limpiando template para su llenado*");
                     log.writeLog($"(INFO) LIMPIAMOS EL TEMPLATE PARA PODER INSERTAR LOS DATOS");
                     pathDestiny = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile) + @"\\Downloads\\Templates\\CashManagementBankStatementImportTemplate_" + nmBank + ".xlsm";
@@ -255,13 +259,22 @@ namespace Template_Tesoreria
                     var fillBalances = false;
                     var fillLines = false;
 
+                    //Vamos a separar los dólares en otra lista
+                    var lstUSD = data.ToList();
+                    data.RemoveAll(x => x.Bank_Account_Currency != null && x.Bank_Account_Currency.Trim().Equals("USD", StringComparison.OrdinalIgnoreCase));
+                    lstUSD.RemoveAll(x => x.Bank_Account_Currency != null && x.Bank_Account_Currency.Trim().Equals("MXN", StringComparison.OrdinalIgnoreCase));
+
                     gui.viewInfoMessage($"*Llenando template con los datos recuperados. Siendo un total de {data.Count} registros*");
                     Task.Run(() =>
                     {
-                        //fillData = mngmntExcel.getTemplate(data);
-                        fillHeader      = mngmntExcel.fillHeaderSheet(data);
-                        fillBalances    = mngmntExcel.fillBalanceSheet(data);
-                        fillLines       = mngmntExcel.fillLinesSheet(data);
+                        /*
+                         * Hay un escenario donde el extracto sólo tendrá USD, en ese caso
+                         * vamos a pasarle la lista de dólares en lugar de la principal,
+                         * esto para no hacer el proceso de nuevo.
+                         */
+                        fillHeader      = mngmntExcel.fillHeaderSheet(data ?? lstUSD);
+                        fillBalances    = mngmntExcel.fillBalanceSheet(data ?? lstUSD);
+                        fillLines       = mngmntExcel.fillLinesSheet(data ?? lstUSD);
 
                         cts.Cancel();
                     });
@@ -274,11 +287,15 @@ namespace Template_Tesoreria
                         break;
                     }
 
-                    //if (!string.Equals(fillData, "CORRECTO", StringComparison.CurrentCultureIgnoreCase))
-                    //{
-                    //    gui.viewErrorMessage("(ERROR) Hubo un ligero error al querer llenar el template.");
-                    //    break;
-                    //}
+                    log.writeLog($"(INFO) SE COMPROBARÁ SI HAY DÓLARES DENTRO DE NUESTRA INFORMACIÓN");
+                    
+                    if((lstUSD != null && data != null) || (lstUSD.Count > 0 && data.Count > 0))
+                    {
+                        log.writeLog($"(INFO) HAY INFORMACIÓN DE DÓLARES DENTRO DE NUESTRA INFORMACIÓN");
+                        log.writeLog($"(INFO) SE REINICIARÁ EL PROCESO PARA CARGAR LA INFORMACIÓN DE DÓLARES EN OTRO TEMPLATE");
+                        dwnld.setNmBank($"{nmBank}_USD");
+                        goto DESCARGA;
+                    }
 
                     Console.Write("\n¿Desea llenar otro template? [S/N]: ");
                     var again = Console.ReadLine().Trim();
