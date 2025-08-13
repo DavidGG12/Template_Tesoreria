@@ -1,24 +1,31 @@
-name: Mi workflow
+name: Build and Publish
 
 on: push
 
 jobs:
-  publish:
+  build:
     runs-on: windows-2022
+
     steps:
-      - name: Checkout del repositorio
+      - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Configurar .NET
-        uses: actions/setup-dotnet@v4
-        with:
-          dotnet-version: '9.0.302'
+      - name: Buscar ruta de MSBuild
+        id: msbuildpath
+        run: |
+          $msbuildPath = & "C:\Program Files (x86)\Microsoft Visual Studio\Installer\vswhere.exe" `
+            -latest `
+            -requires Microsoft.Component.MSBuild `
+            -find MSBuild\**\Bin\MSBuild.exe
+          echo "MSBUILD_PATH=$msbuildPath" >> $env:GITHUB_ENV
 
-      - name: Publicar proyecto
-        run: dotnet publish ./Template_Tesoreria.csproj -c Release -o ./Documents/PUBLICACIONES/Template_Tesoreria /p:SignManifests=false
+      - name: Publicar con MSBuild
+        run: |
+          & "${{ env.MSBUILD_PATH }}" Template_Tesoreria.csproj /p:Configuration=Release /p:PlatformTarget=x86 /p:PublishDir="./publicaciones" /p:SignManifests=false
 
-      - name: Generar número de versión
-        run: echo "VERSION=1.0.${{ github.run_number }}" >> $env:GITHUB_ENV
+      - name: Comprimir carpeta publicada
+        run: |
+          $outputZip = "./Template_Tesoreria_${{ github.run_number }}.zip"
+          Compress-Archive -Path "./publicaciones/*" -DestinationPath $outputZip -Force
+          echo "ZIP_PATH=$outputZip" >> $env:GITHUB_ENV
 
-      - name: Registrar versión en SQL Server
-        run: sqlcmd -S 10.128.10.19 -d dbTesoreria -U sa -P "SiFiAd1019" -Q "INSERT INTO [dbo].[Tbl_Tesoreria_VersionApp] (UrlDescarga, Version) VALUES ('\\\\10.115.0.14\\Finanzas\\Tesoreria\\Tesoreria-Template', '1.0.${{ github.run_number }}')"
