@@ -22,3 +22,10 @@ jobs:
       - name: Publicar con MSBuild
         run: |
           & "${{ env.MSBUILD_PATH }}" Template_Tesoreria.csproj /p:Configuration=Release /p:PlatformTarget=x86 /p:PublishDir="./publicaciones" /p:SignManifests=false
+
+      - name: Comprimir carpeta publicada
+        run: |
+          $outputZip = "./Template_Tesoreria_${{ github.run_number }}.zip"
+          Compress-Archive -Path "./publicaciones/*" -DestinationPath $outputZip -Force
+          echo "ZIP_PATH=$outputZip" >> $env:GITHUB_ENV
+
