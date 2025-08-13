@@ -15,10 +15,4 @@ jobs:
           dotnet-version: '9.0.302'
 
       - name: Compilar con MSBuild
-        run: >
-          & "C:\Program Files\Microsoft Visual Studio\2022\Community\MSBuild\Current\Bin\MSBuild.exe"
-          "Template_Tesoreria.csproj"
-          /p:Configuration=Release
-          /p:PlatformTarget=x86
-          /p:PublishDir="./publicaciones"
-          /p:SignManifests=false
+        run: msbuild Template_Tesoreria.csproj /p:Configuration=Release /p:PlatformTarget=x86 /p:PublishDir="./publicaciones" /p:SignManifests=false
