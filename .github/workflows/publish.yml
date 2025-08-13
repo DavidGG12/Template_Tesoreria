@@ -1,18 +1,24 @@
-name: Mi workflow
+name: Build and Publish
 
 on: push
 
 jobs:
-  publish:
+  build:
     runs-on: windows-2022
+
     steps:
-      - name: Checkout del repositorio
+      - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Configurar .NET
-        uses: actions/setup-dotnet@v4
-        with:
-          dotnet-version: '9.0.302'
+      - name: Buscar ruta de MSBuild
+        id: msbuildpath
+        run: |
+          $msbuildPath = & "C:\Program Files (x86)\Microsoft Visual Studio\Installer\vswhere.exe" `
+            -latest `
+            -requires Microsoft.Component.MSBuild `
+            -find MSBuild\**\Bin\MSBuild.exe
+          echo "MSBUILD_PATH=$msbuildPath" >> $env:GITHUB_ENV
 
-      - name: Compilar con MSBuild
-        run: msbuild Template_Tesoreria.csproj /p:Configuration=Release /p:PlatformTarget=x86 /p:PublishDir="./publicaciones" /p:SignManifests=false
+      - name: Publicar con MSBuild
+        run: |
+          & "${{ env.MSBUILD_PATH }}" Template_Tesoreria.csproj /p:Configuration=Release /p:PlatformTarget=x86 /p:PublishDir="./publicaciones" /p:SignManifests=false
