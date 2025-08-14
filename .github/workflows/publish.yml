@@ -25,7 +25,24 @@ jobs:
 
       - name: Comprimir carpeta publicada
         run: |
-          $outputZip = "./Template_Tesoreria_${{ github.run_number }}.zip"
+          $outputZip = "./publishFile.zip"
           Compress-Archive -Path "./publicaciones/*" -DestinationPath $outputZip -Force
           echo "ZIP_PATH=$outputZip" >> $env:GITHUB_ENV
+
+      - name: Enviar ZIP a la API
+        shell: pwsh
+        run: |
+          $zipPath = "${{ env.ZIP_PATH }}"
+          $version = "1.0.${{ github.run_number }}"
+          $apiUrl = "https://admin.sanborns.com.mx/VersionControl/post/inNewVersion"
+          $bearerToken = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJQcm95ZWN0byI6IkFQUCBFWFRSQUNUTyBURVNPUkVSSUEiLCJVc3VhcmlvIjoiU0FOQk9STlMiLCJEZXNjcsOtcGNpb24iOiJUT0tFTiBQQVJBIEVMIEZVTkNJT05BTUlFTlRPIERFTCBDT05UUk9MQURPUiBERSBWRVJTSU9ORVMiLCJqdGkiOiIxOTQ2MjA0MS03MDkxLTQ2MWQtOGE2Yi01M2ZmY2I4NTBmNDciLCJuYmYiOjE3NTUxMjMzNTksImV4cCI6MTc4NjY1OTM1OSwiaWF0IjoxNzU1MTIzMzU5fQ.QZ1zit87No0Wt53N63RDyjaO0l_KZf8dgyfwFzLBgZs" 
+
+          # Preparar contenido multipart/form-data
+          $form = @{
+              version = $version
+              file    = Get-Item $zipPath
+          }
+
+          # Hacer POST a la API con Bearer token
+          Invoke-RestMethod -Uri $apiUrl -Method Post -Headers @{ Authorization = "Bearer $bearerToken" } -Form $form
 
