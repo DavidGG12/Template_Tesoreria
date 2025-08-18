@@ -20,7 +20,7 @@ namespace Template_Tesoreria.Helpers.Files
         private ExecutionTimer _et;
         private List<BankPrefix_Model> _preBank;
 
-        public ManagementExcel(string pathExcel, string bank) 
+        public ManagementExcel(string pathExcel = null, string bank = "") 
         {
             this._bank = bank;
             this._path = pathExcel;

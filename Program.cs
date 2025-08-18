@@ -95,6 +95,7 @@ namespace Template_Tesoreria
                 new MenuOption_Model() { ID = "7", Option = "7. - BANORTE", Value = "Banorte" },
                 new MenuOption_Model() { ID = "8", Option = "     SALIR", Value = "Salir" },
             };
+            var genDoc = new List<string>();
             var ip = "";
             var nmBank = "";
             var pathDestiny = "";
@@ -196,11 +197,10 @@ namespace Template_Tesoreria
 
                     tryings = 1;
 
+                    var dwnld = new PortalOracle(nmBank);
                 DESCARGA:
                     gui.viewInfoMessage("*Descargando el template desde el sitio de Oracle*");
-
                     var rsltDownload = false;
-                    var dwnld = new PortalOracle(nmBank);
                     Task.Run(() =>
                     {
                         rsltDownload = dwnld.downloadTemplate();
@@ -233,7 +233,8 @@ namespace Template_Tesoreria
                     gui.viewInfoMessage("*Limpiando template para su llenado*");
                     log.writeLog($"(INFO) LIMPIAMOS EL TEMPLATE PARA PODER INSERTAR LOS DATOS");
                     pathDestiny = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile) + @"\\Downloads\\Templates\\CashManagementBankStatementImportTemplate_" + nmBank + ".xlsm";
-                    var mngmntExcel = new ManagementExcel(pathDestiny, nmBank);
+                    var mngmntExcel = new ManagementExcel(pathDestiny, nmBank.Replace("_USD", ""));
+
                     var errorList = new List<SheetError_Model>()
                     {
                         new SheetError_Model() { Sheet = "Statement Headers", Message = mngmntExcel.cleanSheets("Statement Headers") },
@@ -264,7 +265,7 @@ namespace Template_Tesoreria
                     data.RemoveAll(x => x.Bank_Account_Currency != null && x.Bank_Account_Currency.Trim().Equals("USD", StringComparison.OrdinalIgnoreCase));
                     lstUSD.RemoveAll(x => x.Bank_Account_Currency != null && x.Bank_Account_Currency.Trim().Equals("MXN", StringComparison.OrdinalIgnoreCase));
 
-                    gui.viewInfoMessage($"*Llenando template con los datos recuperados. Siendo un total de {data.Count} registros*");
+                    gui.viewInfoMessage($"*Llenando template con los datos recuperados. Siendo un total de {(data.Count <= 0 ? lstUSD.Count : data.Count)} registros*");
                     Task.Run(() =>
                     {
                         /*
@@ -272,9 +273,9 @@ namespace Template_Tesoreria
                          * vamos a pasarle la lista de dólares en lugar de la principal,
                          * esto para no hacer el proceso de nuevo.
                          */
-                        fillHeader      = mngmntExcel.fillHeaderSheet(data ?? lstUSD);
-                        fillBalances    = mngmntExcel.fillBalanceSheet(data ?? lstUSD);
-                        fillLines       = mngmntExcel.fillLinesSheet(data ?? lstUSD);
+                        fillHeader      = mngmntExcel.fillHeaderSheet(data.Count <= 0 ? lstUSD : data);
+                        fillBalances    = mngmntExcel.fillBalanceSheet(data.Count <= 0 ? lstUSD : data);
+                        fillLines       = mngmntExcel.fillLinesSheet(data.Count <= 0 ? lstUSD : data);
 
                         cts.Cancel();
                     });
@@ -287,26 +288,34 @@ namespace Template_Tesoreria
                         break;
                     }
 
+                    genDoc.Add(pathDestiny);
                     log.writeLog($"(INFO) SE COMPROBARÁ SI HAY DÓLARES DENTRO DE NUESTRA INFORMACIÓN");
                     
-                    if((lstUSD != null && data != null) || (lstUSD.Count > 0 && data.Count > 0))
+                    if(lstUSD.Count > 0 && data.Count > 0)
                     {
                         log.writeLog($"(INFO) HAY INFORMACIÓN DE DÓLARES DENTRO DE NUESTRA INFORMACIÓN");
                         log.writeLog($"(INFO) SE REINICIARÁ EL PROCESO PARA CARGAR LA INFORMACIÓN DE DÓLARES EN OTRO TEMPLATE");
-                        dwnld.setNmBank($"{nmBank}_USD");
+                        gui.viewInfoMessage($"Se descargará otro template porque se encontraron USD y MXN en el mismo archivo, así que los separaremos.");
+                        nmBank = $"{nmBank}_USD";
+                        dwnld.setNmBank($"{nmBank}");
+
+                        data.Clear();
+                        data = lstUSD.ToList();
                         goto DESCARGA;
                     }
 
                     Console.Write("\n¿Desea llenar otro template? [S/N]: ");
                     var again = Console.ReadLine().Trim();
                     
-                    Process.Start(pathDestiny);
 
                     if (string.Equals(again, "n", StringComparison.OrdinalIgnoreCase))
                         break;
 
                     log.writeLog($"(INFO) ABRIENDO ARCHIVO\n\t\t**PROCESO TERMINADO**");
                     log.writeLog($"**********************************************************************");
+
+                    foreach(var x in genDoc)
+                        Process.Start(x);
                 }
                 catch (Exception ex)
                 {
