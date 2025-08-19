@@ -307,15 +307,19 @@ namespace Template_Tesoreria
                     Console.Write("\n¿Desea llenar otro template? [S/N]: ");
                     var again = Console.ReadLine().Trim();
                     
+                    foreach(var x in genDoc)
+                        Process.Start(x);
 
                     if (string.Equals(again, "n", StringComparison.OrdinalIgnoreCase))
+                    {
+                        log.writeLog($"(INFO) ABRIENDO ARCHIVO\n\t\t**PROCESO TERMINADO**");
+                        log.writeLog($"**********************************************************************");
+
                         break;
+                    }
 
                     log.writeLog($"(INFO) ABRIENDO ARCHIVO\n\t\t**PROCESO TERMINADO**");
                     log.writeLog($"**********************************************************************");
-
-                    foreach(var x in genDoc)
-                        Process.Start(x);
                 }
                 catch (Exception ex)
                 {
