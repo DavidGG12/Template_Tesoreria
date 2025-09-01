@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
+using System.Windows.Media.Converters;
 using Template_Tesoreria.Helpers.MangementLog;
 using Template_Tesoreria.Models;
 using Excel = Microsoft.Office.Interop.Excel;
@@ -179,15 +180,13 @@ namespace Template_Tesoreria.Helpers.Files
                         sheet.Cells[$"D{i}"].Value          = lstAccount.Open_Balance;
                         sheet.Cells[$"D{i + 1}"].Value      = lstAccount.Close_Balance;
                         sheet.Cells[$"E{i}:E{i + 1}"].Value = lstAccount.Bank_Account_Currency;
-                        sheet.Cells[$"F{i}:F{i + 1}"].Value = "CRDT";
+                        sheet.Cells[$"F{i}"].Value          = double.Parse(lstAccount.Open_Balance) < 0.0 ? "DBIT" : "CRDT";
+                        sheet.Cells[$"F{i + 1}"].Value      = double.Parse(lstAccount.Close_Balance) < 0.0 ? "DBIT" : "CRDT";
                         sheet.Cells[$"G{i}"].Value          = minDate.ToString("MM/dd/yyyy");
                         sheet.Cells[$"G{i + 1}"].Value      = maxDate.ToString("MM/dd/yyyy");
 
                         i = i + 2;
                     }
-
-                    sheet.Cells[1, 1, i, 20].AutoFitColumns();
-                    sheet.Row(1).CustomHeight = false;
                     package.Save();
 
                     this._log.writeLog($"(SUCCESS) SE LLENÓ LA HOJA DEL BALANCES, CORRECTAMENTE ||| TIEMPO DE EJECUCIÓN {this._et.endExecution()}");
@@ -257,6 +256,7 @@ namespace Template_Tesoreria.Helpers.Files
                             sheet.Cells[i, 8].Value = bookingDate.ToString("MM/dd/yyyy");
                             sheet.Cells[i, 9].Value = valueDate.ToString("MM/dd/yyyy");
                             sheet.Cells[i, 10].Value = rows.Debit != "0.0" ? "DBIT" : "CRDT";
+                            sheet.Cells[i, 11].Value = rows.Transaction_Identifier ?? "";
                             sheet.Cells[i, 12].Value = rows.Check_Number ?? "";
                             sheet.Cells[i, 18].Value = rows.Addenda_Text ?? "";
                             sheet.Cells[i, 19].Value = rows.Account_Servicer_Reference ?? "";

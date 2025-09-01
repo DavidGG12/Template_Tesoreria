@@ -12,6 +12,7 @@ namespace Template_Tesoreria.Models
         public string Bank_Account_Currency { get; set; }
         public string Booking_Date { get; set; }
         public string Value_Date { get; set; }
+        public string Transaction_Identifier { get; set; }
         public string Credit { get; set; }
         public string Debit { get; set; }
         public string Check_Number { get; set; }

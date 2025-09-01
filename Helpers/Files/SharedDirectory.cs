@@ -74,7 +74,7 @@ namespace Template_Tesoreria.Helpers.Network
             try
             {
                 var networkPath = $@"\\{this._ip}\FormatosBancos";
-                var erExcel = @".xlsx|.xls";
+                var typeFiles = new[] { ".*xls*", "*.txt"};
                 
                 this._log.writeLog("(INFO) EMPEZAMOS LA CONEXIÓN CON LA CARPETA COMPARTIDA.");
 
@@ -94,7 +94,7 @@ namespace Template_Tesoreria.Helpers.Network
                     this._log.writeLog("(SUCCESS) CONEXIÓN EXITOSA");
 
                     var id = 1;
-                    var files = Directory.GetFiles(networkPath, "*.xls*").Where(f =>
+                    var files = new[] { "*.xls*", "*.txt" }.SelectMany(pattern => Directory.GetFiles(networkPath, pattern)).Where(f =>
                     {
                         var nombre = Path.GetFileName(f);
                         var atributos = File.GetAttributes(f);

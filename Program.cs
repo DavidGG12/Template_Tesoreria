@@ -113,8 +113,8 @@ namespace Template_Tesoreria
                     Console.Clear();
 
                     ip = getIP(log);
-                    //var shrdDirectory = new SharedDirectory(ip);
-                    var shrdDirectory = new SharedDirectory("10.128.10.19");
+                    var shrdDirectory = new SharedDirectory(ip);
+                    //var shrdDirectory = new SharedDirectory("10.128.10.19");
                     var filesMenu = shrdDirectory.getFiles();
 
                     log.writeLog("**COMENZANDO PROCESO**");
@@ -158,7 +158,7 @@ namespace Template_Tesoreria
                     var spName = $"pa_Tesoreria_CargaExcel_{nmBank}";
                     var parameters = new Dictionary<string, object>()
                     {
-                        { "@Ip", "10.128.10.19" },
+                        { "@Ip", ip },
                         { "@Excelname", nmFile }
                     };
 
@@ -249,6 +249,10 @@ namespace Template_Tesoreria
                     if(error != null)
                     {
                         gui.viewErrorMessage($"(ERROR) Hubo un ligero error al querer limpiar los datos de la hoja {error.Sheet}. Nos arroja: {error.Message}");
+                        gui.viewInfoMessage("Presiona cualquier tecla para cerrar el aplicativo...");
+                        ConsoleKey keyClose;
+
+                        keyClose = Console.ReadKey(true).Key;
                         log.writeLog($"**********************************************************************");
                         break;
                     }
@@ -285,6 +289,12 @@ namespace Template_Tesoreria
                     if(!fillHeader || !fillBalances || !fillLines)
                     {
                         gui.viewErrorMessage("(ERROR) Hubo un ligero error al querer llenar el template.");
+
+                        gui.viewInfoMessage("Presiona cualquier tecla para cerrar el aplicativo...");
+                        ConsoleKey keyClose;
+
+                        keyClose = Console.ReadKey(true).Key;
+
                         break;
                     }
 
@@ -325,6 +335,12 @@ namespace Template_Tesoreria
                 {
                     gui.viewErrorMessage($"(ERROR) Algo ocurrió durante el proceso de ejecución.");
                     log.writeLog($"(ERROR) ALGO OCURRIÓ DURANTE EL PROCESO PRINCIPAL {ex.Message}");
+
+                    gui.viewInfoMessage("Presiona cualquier tecla para cerrar el aplicativo...");
+                    ConsoleKey keyClose;
+
+                    keyClose = Console.ReadKey(true).Key;
+
                     log.writeLog($"**********************************************************************");
                     break;
                 }
