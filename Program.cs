@@ -13,6 +13,7 @@ using System.Net.Sockets;
 using Template_Tesoreria.Helpers.GUI;
 using Template_Tesoreria.Helpers.Network;
 using System.Linq;
+using System.Text.RegularExpressions;
 
 namespace Template_Tesoreria
 {
@@ -23,12 +24,17 @@ namespace Template_Tesoreria
             try
             {
                 log.writeLog("(INFO) SE OBTIENE LA IP DEL USUARIO.");
+                var re = @"\b192.168.[\d]+.[\d]+\b";
+
                 foreach (var ipv4 in Dns.GetHostEntry(Dns.GetHostName()).AddressList)
-                    if (ipv4.AddressFamily == AddressFamily.InterNetwork)
+                {
+                    var match = Regex.Match(ipv4.ToString(), re);
+                    if (ipv4.AddressFamily == AddressFamily.InterNetwork && !match.Success)
                     {
                         log.writeLog("(SUCCESS) OBTENCIÓN DE IP CORRECTA");
                         return ipv4.ToString();
                     }
+                }
                 return null;
             }
             catch(Exception ex)
@@ -113,8 +119,8 @@ namespace Template_Tesoreria
                     Console.Clear();
 
                     ip = getIP(log);
-                    var shrdDirectory = new SharedDirectory(ip);
-                    //var shrdDirectory = new SharedDirectory("10.128.10.19");
+                    //var shrdDirectory = new SharedDirectory(ip);
+                    var shrdDirectory = new SharedDirectory("10.128.10.19");
                     var filesMenu = shrdDirectory.getFiles();
 
                     log.writeLog("**COMENZANDO PROCESO**");
@@ -158,7 +164,7 @@ namespace Template_Tesoreria
                     var spName = $"pa_Tesoreria_CargaExcel_{nmBank}";
                     var parameters = new Dictionary<string, object>()
                     {
-                        { "@Ip", ip },
+                        { "@Ip", "10.128.10.19" },
                         { "@Excelname", nmFile }
                     };
 
