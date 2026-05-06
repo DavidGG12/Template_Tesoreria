@@ -24,7 +24,7 @@ namespace Template_Tesoreria.Helpers.Files
             this._nmBank = nmBank;
         }
 
-        public bool downloadTemplate()
+        public bool downloadTemplate(string downloadString)
         {
             this._log.writeLog($"(INFO) COMENZANDO CON LA DESCARGA DEL TEMPLATE");
             this._timer.startExecution();
@@ -36,7 +36,7 @@ namespace Template_Tesoreria.Helpers.Files
                 var pathDirectory = "";
                 var pathDestiny = "";
 
-                string htmlCode = client1.DownloadString("https://docs.oracle.com/en/cloud/saas/financials/25b/oefbf/cashmanagementbankstatementdataimport-3168.html#cashmanagementbankstatementdataimport-3168");
+                string htmlCode = client1.DownloadString(downloadString);
                 string[] lines = htmlCode.Split('\n');
 
                 HTML.HtmlDocument htmlDocument = new HTML.HtmlDocument();

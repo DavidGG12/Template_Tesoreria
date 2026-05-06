@@ -16,6 +16,7 @@ namespace Template_Tesoreria.Helpers.DataAccess
         {
             this._secretKey = Environment.GetEnvironmentVariable("SECRET_KEY");
             this._secretSalt = Environment.GetEnvironmentVariable("SECRET_SALT");
+
             this._log = new Log();
         }
 
@@ -26,7 +27,7 @@ namespace Template_Tesoreria.Helpers.DataAccess
             if (string.IsNullOrEmpty(this._secretKey))
                 error = error + "NO SE HA PODIDO LEER LA VARIABLE DE ENTORNO: SECRET_KEY \n";
 
-            if (string.IsNullOrEmpty(this._secretKey))
+            if (string.IsNullOrEmpty(this._secretSalt))
                 error = error + "NO SE HA PODIDO LEER LA VARIABLE DE ENTORNO: SECRET_SALT \n";
 
             if(string.IsNullOrEmpty(error.Trim()))

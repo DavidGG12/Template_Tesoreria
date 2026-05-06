@@ -108,6 +108,7 @@ namespace Template_Tesoreria
             var id = 1;
             var tryings = 1;
             var exception = "";
+            var urlDownload = new Tbl_Tesoreria_UrlDownload();
 
             ConsoleKey key;
 
@@ -118,9 +119,9 @@ namespace Template_Tesoreria
                 COMIENZO_PROCESO:
                     Console.Clear();
 
-                    ip = getIP(log);
-                    //var shrdDirectory = new SharedDirectory(ip);
-                    var shrdDirectory = new SharedDirectory("10.128.10.19");
+                    //ip = getIP(log);
+                    ip = "10.128.10.19";
+                    var shrdDirectory = new SharedDirectory(ip);
                     var filesMenu = shrdDirectory.getFiles();
 
                     log.writeLog("**COMENZANDO PROCESO**");
@@ -164,7 +165,7 @@ namespace Template_Tesoreria
                     var spName = $"pa_Tesoreria_CargaExcel_{nmBank}";
                     var parameters = new Dictionary<string, object>()
                     {
-                        { "@Ip", "10.128.10.19" },
+                        { "@Ip", ip },
                         { "@Excelname", nmFile }
                     };
 
@@ -206,10 +207,13 @@ namespace Template_Tesoreria
                     var dwnld = new PortalOracle(nmBank);
                 DESCARGA:
                     gui.viewInfoMessage("*Descargando el template desde el sitio de Oracle*");
+
+                    urlDownload = dtService.GetData<Tbl_Tesoreria_UrlDownload>(cnn.DbTesoreria1019(), "pa_Tesoreria_ExtctUrl", null);
+
                     var rsltDownload = false;
                     Task.Run(() =>
                     {
-                        rsltDownload = dwnld.downloadTemplate();
+                        rsltDownload = dwnld.downloadTemplate(urlDownload.Url);
                         cts.Cancel();
                     });
                     gui.Spinner("Descargando...", cts.Token);

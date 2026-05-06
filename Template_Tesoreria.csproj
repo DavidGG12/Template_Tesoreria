@@ -24,7 +24,7 @@
     <UpdateRequired>false</UpdateRequired>
     <MapFileExtensions>true</MapFileExtensions>
     <WebPage>publish.htm</WebPage>
-    <ApplicationRevision>19</ApplicationRevision>
+    <ApplicationRevision>23</ApplicationRevision>
     <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <PublishWizardCompleted>true</PublishWizardCompleted>
@@ -186,6 +186,7 @@
     <Compile Include="Models\MenuOption_Model.cs" />
     <Compile Include="Models\SheetError_Model.cs" />
     <Compile Include="Models\TblTesoreria_Model.cs" />
+    <Compile Include="Models\Tbl_Tesoreria_UrlDownload.cs" />
     <Compile Include="Models\ValueFile_Model.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
