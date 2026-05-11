@@ -7,14 +7,14 @@
     <framework targetVersion="4.8" profile="Full" supportedRuntime="4.0.30319" />
   </compatibleFrameworks>
   <dependency>
-    <dependentAssembly dependencyType="install" codebase="Template_Tesoreria.exe.manifest" size="14518">
+    <dependentAssembly dependencyType="install" codebase="Template_Tesoreria.exe.manifest" size="16598">
       <assemblyIdentity name="Template_Tesoreria.exe" version="1.0.0.23" publicKeyToken="0000000000000000" language="neutral" processorArchitecture="msil" type="win32" />
       <hash>
         <dsig:Transforms>
           <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
         </dsig:Transforms>
         <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" />
-        <dsig:DigestValue>MmdiOVG84uNzxCAxRGwfaTKZ6NC/eyyykzulJzL+H+g=</dsig:DigestValue>
+        <dsig:DigestValue>nRdY0CrmL7EgMaJlHf6rGkILBJ//Xvm6qrYXileV0jQ=</dsig:DigestValue>
       </hash>
     </dependentAssembly>
   </dependency>

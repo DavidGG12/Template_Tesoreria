@@ -122,7 +122,9 @@ namespace Template_Tesoreria
                     ip = getIP(log);
                     //ip = "10.128.10.19";
                     var shrdDirectory = new SharedDirectory(ip);
-                    var filesMenu = shrdDirectory.getFiles();
+                    var sharedDirectoryUser = new SharedDirectoryUser();
+                    //var filesMenu = shrdDirectory.getFiles();
+                    var filesMenu = sharedDirectoryUser.getFiles();
 
                     log.writeLog("**COMENZANDO PROCESO**");
 
