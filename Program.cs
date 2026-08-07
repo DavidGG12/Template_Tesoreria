@@ -14,6 +14,7 @@ using Template_Tesoreria.Helpers.GUI;
 using Template_Tesoreria.Helpers.Network;
 using System.Linq;
 using System.Text.RegularExpressions;
+using OfficeOpenXml.Interfaces.Drawing.Text;
 
 namespace Template_Tesoreria
 {
@@ -90,17 +91,19 @@ namespace Template_Tesoreria
             var cnn = new ConnectionDb();
             var cts = new CancellationTokenSource();
             var log = new Log();
-            var options = new List<MenuOption_Model>()
+
+            var listBanks = dtService.GetDataList<Tbl_Tesoreria_BancosDisponibles>(cnn.DbTesoreria1019(), "pa_Tesoreria_BancosDisponibles", null);
+            var options = new List<MenuOption_Model>();
+            var index = 1;
+
+            foreach (var item in listBanks)
             {
-                new MenuOption_Model() { ID = "1", Option = "1. - INBURSA", Value = "Inbursa" },
-                new MenuOption_Model() { ID = "2", Option = "2. - HSBC", Value = "HSBC" },
-                new MenuOption_Model() { ID = "3", Option = "3. - BANCOMER", Value = "Bancomer" },
-                new MenuOption_Model() { ID = "4", Option = "4. - SCOTIABANK", Value = "Scotiabank" },
-                new MenuOption_Model() { ID = "5", Option = "5. - CITIBANAMEX", Value = "Citibanamex" },
-                new MenuOption_Model() { ID = "6", Option = "6. - SANTANDER", Value = "Santander" },
-                new MenuOption_Model() { ID = "7", Option = "7. - BANORTE", Value = "Banorte" },
-                new MenuOption_Model() { ID = "8", Option = "     SALIR", Value = "Salir" },
-            };
+                options.Add(new MenuOption_Model() { ID = index.ToString(), Option = $"{index}. - {item.NombreBanco}", Value = item.ValorMenu });
+                index++;
+            }
+
+            options.Add(new MenuOption_Model() { ID = index.ToString(), Option = "     SALIR", Value = "Salir" });
+            
             var genDoc = new List<string>();
             var ip = "";
             var nmBank = "";
@@ -119,12 +122,12 @@ namespace Template_Tesoreria
                 COMIENZO_PROCESO:
                     Console.Clear();
 
-                    ip = getIP(log);
-                    //ip = "10.128.10.19";
+                    //ip = getIP(log);
+                    ip = "10.128.10.19";
                     var shrdDirectory = new SharedDirectory(ip);
                     var sharedDirectoryUser = new SharedDirectoryUser();
-                    //var filesMenu = shrdDirectory.getFiles();
-                    var filesMenu = sharedDirectoryUser.getFiles();
+                    var filesMenu = shrdDirectory.getFiles();
+                    //var filesMenu = sharedDirectoryUser.getFiles();
 
                     log.writeLog("**COMENZANDO PROCESO**");
 

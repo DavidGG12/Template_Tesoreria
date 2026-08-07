@@ -1,8 +1,7 @@
+C:\Users\OracleFin11\source\repos\Template_Tesoreria\bin\Debug\Template_Tesoreria.exe
 C:\Users\OracleFin11\source\repos\Template_Tesoreria\bin\Debug\Template_Tesoreria.exe.config
 C:\Users\OracleFin11\source\repos\Template_Tesoreria\bin\Debug\Template_Tesoreria.exe.manifest
 C:\Users\OracleFin11\source\repos\Template_Tesoreria\bin\Debug\Template_Tesoreria.application
-C:\Users\OracleFin11\source\repos\Template_Tesoreria\bin\Debug\Template_Tesoreria.exe
-C:\Users\OracleFin11\source\repos\Template_Tesoreria\bin\Debug\Template_Tesoreria.pdb
 C:\Users\OracleFin11\source\repos\Template_Tesoreria\bin\Debug\EPPlus.dll
 C:\Users\OracleFin11\source\repos\Template_Tesoreria\bin\Debug\EPPlus.Interfaces.dll
 C:\Users\OracleFin11\source\repos\Template_Tesoreria\bin\Debug\HarfBuzzSharp.dll

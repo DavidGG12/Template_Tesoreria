@@ -61,7 +61,7 @@
     <GenerateManifests>true</GenerateManifests>
   </PropertyGroup>
   <PropertyGroup>
-    <SignManifests>true</SignManifests>
+    <SignManifests>false</SignManifests>
   </PropertyGroup>
   <PropertyGroup>
     <ApplicationIcon>Tesoreria.ico</ApplicationIcon>
@@ -200,6 +200,7 @@
     <Compile Include="Models\MenuOption_Model.cs" />
     <Compile Include="Models\SheetError_Model.cs" />
     <Compile Include="Models\TblTesoreria_Model.cs" />
+    <Compile Include="Models\Tbl_Tesoreria_BancosDisponibles.cs" />
     <Compile Include="Models\Tbl_Tesoreria_UrlDownload.cs" />
     <Compile Include="Models\ValueFile_Model.cs" />
     <Compile Include="Program.cs" />
