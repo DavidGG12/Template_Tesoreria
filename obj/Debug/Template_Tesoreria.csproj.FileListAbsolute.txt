@@ -45,3 +45,4 @@ C:\Users\OracleFin11\source\repos\Template_Tesoreria\obj\Debug\Template_Tesoreri
 C:\Users\OracleFin11\source\repos\Template_Tesoreria\obj\Debug\Template.0C98FE87.Up2Date
 C:\Users\OracleFin11\source\repos\Template_Tesoreria\obj\Debug\Template_Tesoreria.exe
 C:\Users\OracleFin11\source\repos\Template_Tesoreria\obj\Debug\Template_Tesoreria.pdb
+C:\Users\OracleFin11\source\repos\Template_Tesoreria\bin\Debug\Template_Tesoreria.pdb
