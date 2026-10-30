@@ -122,12 +122,12 @@ namespace Template_Tesoreria
                 COMIENZO_PROCESO:
                     Console.Clear();
 
-                    //ip = getIP(log);
-                    ip = "10.128.10.19";
+                    ip = getIP(log);
+                    //ip = "10.128.10.19";
                     var shrdDirectory = new SharedDirectory(ip);
                     var sharedDirectoryUser = new SharedDirectoryUser();
-                    var filesMenu = shrdDirectory.getFiles();
-                    //var filesMenu = sharedDirectoryUser.getFiles();
+                    //var filesMenu = shrdDirectory.getFiles();
+                    var filesMenu = sharedDirectoryUser.getFiles();
 
                     log.writeLog("**COMENZANDO PROCESO**");
 
