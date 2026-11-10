@@ -171,6 +171,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Class1.cs" />
     <Compile Include="Helpers\DataAccess\ConnectionDb.cs" />
     <Compile Include="Helpers\DataAccess\Crypto.cs" />
     <Compile Include="Helpers\DataAccess\DataService.cs" />
