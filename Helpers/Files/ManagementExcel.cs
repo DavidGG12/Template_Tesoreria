@@ -249,6 +249,7 @@ namespace Template_Tesoreria.Helpers.Files
                             sheet.Cells[i, 10].Value = rows.Debit != "0.0" ? "DBIT" : "CRDT";
                             sheet.Cells[i, 11].Value = rows.Transaction_Identifier ?? "";
                             sheet.Cells[i, 12].Value = rows.Check_Number ?? "";
+                            sheet.Cells[i, 12].Value = rows.Transaction_Currency_Code ?? "";
                             sheet.Cells[i, 18].Value = rows.Addenda_Text ?? "";
                             sheet.Cells[i, 19].Value = rows.Account_Servicer_Reference ?? "";
                             sheet.Cells[i, 20].Value = rows.Customer_Reference ?? "";

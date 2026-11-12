@@ -16,6 +16,7 @@ namespace Template_Tesoreria.Models
         public string Credit { get; set; }
         public string Debit { get; set; }
         public string Check_Number { get; set; }
+        public string Transaction_Currency_Code { get; set; }
         public string Addenda_Text { get; set; }
         public string Account_Servicer_Reference { get; set; }
         public string Customer_Reference { get; set; }
@@ -30,6 +31,9 @@ namespace Template_Tesoreria.Models
         public string Reconciliation_Reference { get; set; }
         public string Message_Identifier { get; set; }
         public string Payment_Information_Identifier { get; set; }
+        public string Countparty_Name { get; set; }
+        public string Counterparty_Identifier { get; set; }
+        public string Counterparty_IBAN { get; set; }
         public string Open_Balance { get; set; }
         public string Close_Balance { get; set; }
 
