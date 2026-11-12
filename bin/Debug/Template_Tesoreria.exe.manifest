@@ -259,7 +259,7 @@
     </dependentAssembly>
   </dependency>
   <dependency>
-    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="Template_Tesoreria.exe" size="131072">
+    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="Template_Tesoreria.exe" size="130560">
       <assemblyIdentity name="Template_Tesoreria" version="1.0.0.0" language="neutral" processorArchitecture="msil" />
       <hash>
         <dsig:Transforms>

@@ -248,7 +248,10 @@ namespace Template_Tesoreria
                     gui.viewInfoMessage("*Limpiando template para su llenado*");
                     log.writeLog($"(INFO) LIMPIAMOS EL TEMPLATE PARA PODER INSERTAR LOS DATOS");
                     pathDestiny = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile) + @"\\Downloads\\Templates\\CashManagementBankStatementImportTemplate_" + nmBank + ".xlsm";
-                    var mngmntExcel = new ManagementExcel(pathDestiny, nmBank.Replace("_USD", ""));
+                    var mngmntExcel = new ManagementExcel(
+                        listBanks, 
+                        pathDestiny, 
+                        nmBank.Replace("_USD", ""));
 
                     var errorList = new List<SheetError_Model>()
                     {
@@ -270,7 +273,7 @@ namespace Template_Tesoreria
                         keyClose = Console.ReadKey(true).Key;
                         log.writeLog($"**********************************************************************");
                         break;
-                    }
+                    } 
 
                     log.writeLog($"(SUCCESS) TERMINO DE LIMPIEZA, SE PROSIGUE CON LA INSERCIÓN DE DATOS");
 

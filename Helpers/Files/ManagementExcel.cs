@@ -19,25 +19,16 @@ namespace Template_Tesoreria.Helpers.Files
         private FileInfo _file;
         private Log _log;
         private ExecutionTimer _et;
-        private List<BankPrefix_Model> _preBank;
+        private List<Tbl_Tesoreria_BancosDisponibles> _preBank;
 
-        public ManagementExcel(string pathExcel = null, string bank = "") 
+        public ManagementExcel(List<Tbl_Tesoreria_BancosDisponibles> listBanks, string pathExcel = null, string bank = "") 
         {
             this._bank = bank;
             this._path = pathExcel;
             this._file = new FileInfo(this._path);
             this._log = new Log();
             this._et = new ExecutionTimer();
-            this._preBank = new List<BankPrefix_Model>()
-            {
-                new BankPrefix_Model(){ NombreBanco = "Inbursa",       Prefijo = "INB"  },
-                new BankPrefix_Model(){ NombreBanco = "HSBC",          Prefijo = "HSBC" },
-                new BankPrefix_Model(){ NombreBanco = "Bancomer",      Prefijo = "BBVA" },
-                new BankPrefix_Model(){ NombreBanco = "Scotiabank",    Prefijo = "SCOT" },
-                new BankPrefix_Model(){ NombreBanco = "Citibanamex",   Prefijo = "CITI" },
-                new BankPrefix_Model(){ NombreBanco = "Santander",     Prefijo = "SANT" },
-                new BankPrefix_Model(){ NombreBanco = "Banorte",       Prefijo = "BAN"  }
-            };
+            this._preBank = listBanks;
             ExcelPackage.License.SetNonCommercialOrganization("Grupo Sanborns");
         }
 
@@ -99,7 +90,7 @@ namespace Template_Tesoreria.Helpers.Files
                         var hola = accounts.Substring(0, accounts.Length - 6);
 
                         var stmntNumber = string.Concat(
-                                this._preBank.Where(x => x.NombreBanco == this._bank).Select(x => x.Prefijo).FirstOrDefault(), "-",
+                                this._preBank.Where(x => x.ValorMenu == this._bank).Select(x => x.PrefijoBanco).FirstOrDefault(), "-",
                                 Int64.Parse(accounts), "-",
                                 minDate.ToString("MMddyyyy")
                             );
@@ -168,7 +159,7 @@ namespace Template_Tesoreria.Helpers.Files
                             .Max(x => DateTime.Parse(x.Booking_Date));
 
                         var stmntNumber = string.Concat(
-                                this._preBank.Where(x => x.NombreBanco == this._bank).Select(x => x.Prefijo).FirstOrDefault(), "-",
+                                this._preBank.Where(x => x.ValorMenu == this._bank).Select(x => x.PrefijoBanco).FirstOrDefault(), "-",
                                 Int64.Parse(accounts), "-",
                                 minDate.ToString("MMddyyyy")
                             );
@@ -233,7 +224,7 @@ namespace Template_Tesoreria.Helpers.Files
 
                         var minDate = fechas.Min;
                         var stmntNumber = string.Concat(
-                            this._preBank.Where(x => x.NombreBanco == this._bank).Select(x => x.Prefijo).FirstOrDefault(), "-",
+                            this._preBank.Where(x => x.ValorMenu == this._bank).Select(x => x.PrefijoBanco).FirstOrDefault(), "-",
                             Int64.Parse(rows.Bank_Account_Number), "-",
                             minDate.ToString("MMddyyyy")
                         );

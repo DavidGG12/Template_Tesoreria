@@ -259,14 +259,18 @@
     </dependentAssembly>
   </dependency>
   <dependency>
-    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="Template_Tesoreria.exe" size="131072">
+    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="Template_Tesoreria.exe" size="130560">
       <assemblyIdentity name="Template_Tesoreria" version="1.0.0.0" language="neutral" processorArchitecture="msil" />
       <hash>
         <dsig:Transforms>
           <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
         </dsig:Transforms>
         <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" />
+<<<<<<< HEAD
         <dsig:DigestValue>466ehQr7LntKZ//QgFXEt3JZdDQNKq4q4u+PrKHT5qw=</dsig:DigestValue>
+=======
+        <dsig:DigestValue>nOYOl5Qx7WkmfCHhZoVHrSYa4Wk3jaYKmvXyGp6RVhE=</dsig:DigestValue>
+>>>>>>> 2b03bbb49f9771b63bced1aea715eaad267d3685
       </hash>
     </dependentAssembly>
   </dependency>
